@@ -1,0 +1,123 @@
+{
+  "created_at": "2026-02-27T09:30:05.336193",
+  "feature_spec": {
+    "numeric": [
+      "Year",
+      "Rainfall",
+      "Temperature",
+      "Humidity",
+      "price",
+      "year",
+      "avg_temp",
+      "total_rainfall",
+      "avg_humidity",
+      "avg_solar_radiation",
+      "avg_windspeed",
+      "N",
+      "P",
+      "K",
+      "ph",
+      "nutrient_rainfall",
+      "rain_temp",
+      "temp_humidity"
+    ],
+    "categorical": [
+      "district",
+      "Crops",
+      "Season",
+      "Soil type",
+      "Irrigation"
+    ]
+  },
+  "rainfall_stats": {
+    "Rainfall": {
+      "mean": 2734.058620689655,
+      "std": 1212.1051720811636
+    },
+    "total_rainfall": {
+      "mean": 284.7956896551724,
+      "std": 93.53146542601388
+    },
+    "nutrient_rainfall": {
+      "mean": 172.4008319183206,
+      "std": 17.462324351241854
+    }
+  },
+  "numeric_means": {
+    "Year": 2012.4655172413793,
+    "Rainfall": 2734.058620689655,
+    "Temperature": 35.05258620689655,
+    "Humidity": 55.345689655172414,
+    "price": 82057.35344827586,
+    "year": 2016.853448275862,
+    "avg_temp": 24.154409542549033,
+    "total_rainfall": 284.7956896551724,
+    "avg_humidity": 3.134742926680864,
+    "avg_solar_radiation": 3.134742926680864,
+    "avg_windspeed": 3.134742926680864,
+    "N": 25.283103448275863,
+    "P": 17.940689655172417,
+    "K": 30.20965517241379,
+    "ph": 6.008841897555173,
+    "nutrient_rainfall": 172.4008319183206,
+    "rain_temp": 96525.53913793103,
+    "temp_humidity": 1937.035775862069
+  },
+  "model_name": "XGBRegressor_unified",
+  "version": "v20260227093010",
+  "selected_metrics": {
+    "r2": 0.07553118330756514,
+    "mae": 4.310111316330697,
+    "rmse": 6.750702212715508
+  },
+  "cv_r2_mean": -0.3134785648582429,
+  "cv_r2_std": 0.25460971317800496,
+  "confidence_pct": 34.32607175708786,
+  "references": {
+    "weather_by_district_season": {
+      "Mysuru": {
+        "Kharif": {
+          "Temperature": 24.234016393442623,
+          "Rainfall": 607.0777777777778,
+          "Humidity": 3.1347429266808637
+        },
+        "Rabi": {
+          "Temperature": 24.088793644121512,
+          "Rainfall": 332.3888888888889,
+          "Humidity": 3.1347429266808637
+        },
+        "Summer": {
+          "Temperature": 27.369489981785065,
+          "Rainfall": 205.41111111111113,
+          "Humidity": 3.1347429266808637
+        }
+      },
+      "Pune": {
+        "Kharif": {
+          "Temperature": 24.8882058287796,
+          "Rainfall": 889.3555555555555,
+          "Humidity": 2.9056282324307876
+        },
+        "Rabi": {
+          "Temperature": 24.056218265644493,
+          "Rainfall": 148.67777777777778,
+          "Humidity": 2.9056282324307876
+        },
+        "Summer": {
+          "Temperature": 29.5879781420765,
+          "Rainfall": 23.166666666666668,
+          "Humidity": 2.9056282324307876
+        }
+      }
+    },
+    "nutrients_by_district": {
+      "Pune": {
+        "N": 13.091266292542521,
+        "P": 52.506216033082126,
+        "K": 70.4914713007589,
+        "ph": 7.020802012724831
+      }
+    }
+  },
+  "target_transform": "log1p"
+}

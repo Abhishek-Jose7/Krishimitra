@@ -1,0 +1,867 @@
+{
+  "created_at": "2026-02-27T10:17:48.355673",
+  "feature_spec": {
+    "numeric": [
+      "Year",
+      "Rainfall",
+      "Temperature",
+      "Humidity",
+      "price",
+      "year",
+      "avg_temp",
+      "seasonal_rainfall_total",
+      "seasonal_avg_humidity",
+      "avg_solar_radiation",
+      "avg_windspeed",
+      "rainfall_variability",
+      "extreme_heat_days",
+      "total_rainfall",
+      "avg_humidity",
+      "N",
+      "P",
+      "K",
+      "ph",
+      "nutrient_rainfall",
+      "rain_temp",
+      "temp_humidity"
+    ],
+    "categorical": [
+      "district",
+      "Crops",
+      "Season",
+      "Soil type",
+      "Irrigation"
+    ]
+  },
+  "rainfall_stats": {
+    "Rainfall": {
+      "mean": 2918.990695443645,
+      "std": 1047.7444968187424
+    },
+    "seasonal_rainfall_total": {
+      "mean": 292.1989448441247,
+      "std": 183.08260309878537
+    },
+    "rainfall_variability": {
+      "mean": 4.5975336974229695,
+      "std": 1.6143658324716785
+    },
+    "total_rainfall": {
+      "mean": 292.1989448441247,
+      "std": 183.08260309878537
+    },
+    "nutrient_rainfall": {
+      "mean": 169.85304710421062,
+      "std": 22.8457374839563
+    }
+  },
+  "numeric_means": {
+    "Year": 2011.388489208633,
+    "Rainfall": 2918.990695443645,
+    "Temperature": 60.2674340527578,
+    "Humidity": 55.63899280575539,
+    "price": 80822.94244604316,
+    "year": 2020.9434052757795,
+    "avg_temp": 24.274561281257824,
+    "seasonal_rainfall_total": 292.1989448441247,
+    "seasonal_avg_humidity": 2.905628232430787,
+    "avg_solar_radiation": 2.905628232430787,
+    "avg_windspeed": 2.905628232430787,
+    "rainfall_variability": 4.5975336974229695,
+    "extreme_heat_days": 5.121342925659472,
+    "total_rainfall": 292.1989448441247,
+    "avg_humidity": 2.905628232430787,
+    "N": 26.598292565947244,
+    "P": 19.72458513189449,
+    "K": 30.02035491606714,
+    "ph": 6.064753757668974,
+    "nutrient_rainfall": 169.85304710421062,
+    "rain_temp": 172849.8023788969,
+    "temp_humidity": 3342.1872374100717
+  },
+  "model_name": "XGBRegressor_by_district",
+  "version": "v20260227101821",
+  "per_district": {
+    "Chikmangaluru": {
+      "n_rows": 192,
+      "cv_r2_mean": -0.3720070655724067,
+      "cv_r2_std": 0.4610074682449351,
+      "confidence_pct": 31.399646721379664,
+      "test_r2": 0.33877323586577823,
+      "mae": 3.4790042625714634,
+      "rmse": 6.0190717161032845,
+      "top_features": [
+        [
+          "cat__Soil type_Red",
+          0.20720016956329346
+        ],
+        [
+          "cat__Soil type_Black",
+          0.07552759349346161
+        ],
+        [
+          "cat__Soil type_Arid And Desert",
+          0.07319463044404984
+        ],
+        [
+          "num__N",
+          0.04498118907213211
+        ],
+        [
+          "cat__Irrigation_Basin",
+          0.04426170885562897
+        ],
+        [
+          "cat__Season_Kharif",
+          0.0391785092651844
+        ],
+        [
+          "cat__Season_Rabi",
+          0.03477809578180313
+        ],
+        [
+          "num__nutrient_rainfall",
+          0.03143828734755516
+        ],
+        [
+          "cat__Soil type_Loamy Sand",
+          0.029300734400749207
+        ],
+        [
+          "cat__Crops_Coconut",
+          0.02837812714278698
+        ],
+        [
+          "num__ph",
+          0.02663601003587246
+        ],
+        [
+          "num__P",
+          0.02618088386952877
+        ],
+        [
+          "cat__Soil type_Medium Textured",
+          0.02539149485528469
+        ],
+        [
+          "cat__Crops_Paddy",
+          0.024862797930836678
+        ],
+        [
+          "cat__Irrigation_Spray",
+          0.023270661011338234
+        ]
+      ]
+    },
+    "Gulbarga": {
+      "n_rows": 317,
+      "cv_r2_mean": -0.7638180507116219,
+      "cv_r2_std": 0.6977339744971215,
+      "confidence_pct": 11.809097464418905,
+      "test_r2": 0.11711464145713435,
+      "mae": 3.3496432339072437,
+      "rmse": 5.788000858166189,
+      "top_features": [
+        [
+          "cat__Soil type_Arid And Desert",
+          0.11667010933160782
+        ],
+        [
+          "cat__Soil type_Laterite",
+          0.08740299195051193
+        ],
+        [
+          "cat__Crops_Coffee",
+          0.08692701160907745
+        ],
+        [
+          "cat__Crops_Ginger",
+          0.061700355261564255
+        ],
+        [
+          "num__ph",
+          0.048116542398929596
+        ],
+        [
+          "cat__Soil type_Black",
+          0.044144462794065475
+        ],
+        [
+          "cat__Crops_Arecanut",
+          0.0424460843205452
+        ],
+        [
+          "cat__Irrigation_Drip",
+          0.04041885584592819
+        ],
+        [
+          "cat__Crops_Paddy",
+          0.03957846015691757
+        ],
+        [
+          "cat__Season_Zaid",
+          0.03427828103303909
+        ],
+        [
+          "cat__Irrigation_Basin",
+          0.03405294939875603
+        ],
+        [
+          "num__Temperature",
+          0.027887295931577682
+        ],
+        [
+          "num__K",
+          0.027040520682930946
+        ],
+        [
+          "cat__Crops_Coconut",
+          0.02486989088356495
+        ],
+        [
+          "cat__Soil type_Loam",
+          0.020031556487083435
+        ]
+      ]
+    },
+    "Hassan": {
+      "n_rows": 421,
+      "cv_r2_mean": -0.2079695057826311,
+      "cv_r2_std": 0.10153241672418122,
+      "confidence_pct": 39.601524710868446,
+      "test_r2": -0.007115656712067375,
+      "mae": 4.1619378548872135,
+      "rmse": 7.110819591233185,
+      "top_features": [
+        [
+          "cat__Crops_Cardamum",
+          0.08580989390611649
+        ],
+        [
+          "cat__Soil type_Medium Textured Clay",
+          0.06881335377693176
+        ],
+        [
+          "cat__Crops_Cashew",
+          0.05367805063724518
+        ],
+        [
+          "cat__Soil type_Red",
+          0.0403716042637825
+        ],
+        [
+          "cat__Soil type_Laterite",
+          0.03504867106676102
+        ],
+        [
+          "cat__Soil type_River Basins",
+          0.034570518881082535
+        ],
+        [
+          "cat__Soil type_Black Cotton",
+          0.03434716910123825
+        ],
+        [
+          "cat__Crops_Paddy",
+          0.03171420469880104
+        ],
+        [
+          "cat__Soil type_Well Drained",
+          0.030983125790953636
+        ],
+        [
+          "cat__Soil type_Clay Loam",
+          0.030786070972681046
+        ],
+        [
+          "cat__Season_Zaid",
+          0.02771996334195137
+        ],
+        [
+          "num__N",
+          0.027550136670470238
+        ],
+        [
+          "cat__Crops_Tea",
+          0.026155894622206688
+        ],
+        [
+          "cat__Crops_Ginger",
+          0.025691842660307884
+        ],
+        [
+          "cat__Crops_Groundnut",
+          0.02550584077835083
+        ]
+      ]
+    },
+    "Kasaragodu": {
+      "n_rows": 122,
+      "cv_r2_mean": -0.5338760444638695,
+      "cv_r2_std": 0.6792147385251766,
+      "confidence_pct": 23.306197776806524,
+      "test_r2": 0.02379740498411509,
+      "mae": 3.340349486088932,
+      "rmse": 6.503606772126828,
+      "top_features": [
+        [
+          "cat__Crops_Groundnut",
+          0.27787360548973083
+        ],
+        [
+          "cat__Crops_Paddy",
+          0.08642541617155075
+        ],
+        [
+          "cat__Season_Rabi",
+          0.07137394696474075
+        ],
+        [
+          "cat__Crops_Coconut",
+          0.059486273676157
+        ],
+        [
+          "num__Year",
+          0.037208836525678635
+        ],
+        [
+          "num__Temperature",
+          0.03505176678299904
+        ],
+        [
+          "cat__Season_Zaid",
+          0.031161751598119736
+        ],
+        [
+          "num__rain_temp",
+          0.02965121529996395
+        ],
+        [
+          "cat__Soil type_Clay",
+          0.029003189876675606
+        ],
+        [
+          "cat__Soil type_Red",
+          0.02897675521671772
+        ],
+        [
+          "cat__Soil type_Sandy Clay Loam",
+          0.02892119809985161
+        ],
+        [
+          "cat__Crops_Ginger",
+          0.028034791350364685
+        ],
+        [
+          "cat__Irrigation_Drip",
+          0.027369938790798187
+        ],
+        [
+          "cat__Irrigation_Basin",
+          0.025100044906139374
+        ],
+        [
+          "cat__Soil type_Clay Loam",
+          0.024503014981746674
+        ]
+      ]
+    },
+    "Kodagu": {
+      "n_rows": 121,
+      "cv_r2_mean": -1.4776996641124671,
+      "cv_r2_std": 2.2064688659557627,
+      "confidence_pct": 0.0,
+      "test_r2": 0.003630954712636636,
+      "mae": 3.330034846607225,
+      "rmse": 6.872705216369162,
+      "top_features": [
+        [
+          "cat__Soil type_Black",
+          0.3103543519973755
+        ],
+        [
+          "cat__Soil type_Sandy Loam",
+          0.08823582530021667
+        ],
+        [
+          "cat__Soil type_Red",
+          0.057945944368839264
+        ],
+        [
+          "cat__Crops_Arecanut",
+          0.053191255778074265
+        ],
+        [
+          "cat__Crops_Coconut",
+          0.04985672980546951
+        ],
+        [
+          "cat__Season_Rabi",
+          0.04407760873436928
+        ],
+        [
+          "cat__Season_Kharif",
+          0.04333958774805069
+        ],
+        [
+          "num__temp_humidity",
+          0.04066130891442299
+        ],
+        [
+          "cat__Soil type_Laterite",
+          0.038884468376636505
+        ],
+        [
+          "cat__Crops_Pepper",
+          0.037412866950035095
+        ],
+        [
+          "cat__Crops_Ginger",
+          0.036808934062719345
+        ],
+        [
+          "cat__Season_Zaid",
+          0.036422643810510635
+        ],
+        [
+          "num__rain_temp",
+          0.02902226522564888
+        ],
+        [
+          "num__Temperature",
+          0.025278568267822266
+        ],
+        [
+          "num__price",
+          0.024523090571165085
+        ]
+      ]
+    },
+    "Madikeri": {
+      "n_rows": 127,
+      "cv_r2_mean": -0.2869670385050003,
+      "cv_r2_std": 0.259166750859787,
+      "confidence_pct": 35.651648074749986,
+      "test_r2": 0.410583446696156,
+      "mae": 2.878697897120406,
+      "rmse": 3.927045905709696,
+      "top_features": [
+        [
+          "cat__Soil type_Black",
+          0.16791900992393494
+        ],
+        [
+          "cat__Soil type_Loam",
+          0.11243165284395218
+        ],
+        [
+          "cat__Irrigation_Drip",
+          0.06613533943891525
+        ],
+        [
+          "cat__Soil type_Clay",
+          0.05849064514040947
+        ],
+        [
+          "cat__Crops_Cardamum",
+          0.05082235485315323
+        ],
+        [
+          "num__temp_humidity",
+          0.04509539157152176
+        ],
+        [
+          "num__N",
+          0.03984403237700462
+        ],
+        [
+          "cat__Soil type_Red",
+          0.03576648235321045
+        ],
+        [
+          "cat__Soil type_Arid And Desert",
+          0.03455749526619911
+        ],
+        [
+          "cat__Irrigation_Basin",
+          0.0331878587603569
+        ],
+        [
+          "num__Temperature",
+          0.026844093576073647
+        ],
+        [
+          "cat__Crops_Coconut",
+          0.024340372532606125
+        ],
+        [
+          "num__price",
+          0.022960258647799492
+        ],
+        [
+          "num__rain_temp",
+          0.02237364463508129
+        ],
+        [
+          "cat__Crops_Tea",
+          0.022325193509459496
+        ]
+      ]
+    },
+    "Mangalore": {
+      "n_rows": 174,
+      "cv_r2_mean": -0.6016913497716049,
+      "cv_r2_std": 0.4068430173033851,
+      "confidence_pct": 19.915432511419755,
+      "test_r2": 0.24121144605490152,
+      "mae": 2.839406906359431,
+      "rmse": 4.756001130581098,
+      "top_features": [
+        [
+          "cat__Soil type_Sandy",
+          0.1812540739774704
+        ],
+        [
+          "num__P",
+          0.15335902571678162
+        ],
+        [
+          "cat__Irrigation_Spray",
+          0.10368840396404266
+        ],
+        [
+          "cat__Soil type_Laterite",
+          0.09613560885190964
+        ],
+        [
+          "num__K",
+          0.08743958175182343
+        ],
+        [
+          "cat__Soil type_Sandy Loam",
+          0.05056601017713547
+        ],
+        [
+          "cat__Crops_Cocoa",
+          0.026712924242019653
+        ],
+        [
+          "cat__Crops_Coconut",
+          0.025850091129541397
+        ],
+        [
+          "cat__Season_Rabi",
+          0.02453066036105156
+        ],
+        [
+          "cat__Season_Zaid",
+          0.024134458974003792
+        ],
+        [
+          "cat__Irrigation_Basin",
+          0.02306370623409748
+        ],
+        [
+          "num__Temperature",
+          0.017749818041920662
+        ],
+        [
+          "cat__Irrigation_Drip",
+          0.01588703878223896
+        ],
+        [
+          "cat__Crops_Cardamum",
+          0.01547268871217966
+        ],
+        [
+          "cat__Soil type_Clay",
+          0.015386853367090225
+        ]
+      ]
+    },
+    "Mysuru": {
+      "n_rows": 116,
+      "cv_r2_mean": -0.3587270945243629,
+      "cv_r2_std": 0.3508433976648632,
+      "confidence_pct": 32.06364527378186,
+      "test_r2": 0.11652234620022262,
+      "mae": 4.070165321019754,
+      "rmse": 6.599341492093381,
+      "top_features": [
+        [
+          "cat__Soil type_Black",
+          0.08708539605140686
+        ],
+        [
+          "cat__Crops_Tea",
+          0.08587856590747833
+        ],
+        [
+          "cat__Irrigation_Basin",
+          0.06421060115098953
+        ],
+        [
+          "cat__Soil type_Clay",
+          0.059848230332136154
+        ],
+        [
+          "cat__Season_Kharif",
+          0.05745884031057358
+        ],
+        [
+          "cat__Soil type_Light Sandy",
+          0.05636482313275337
+        ],
+        [
+          "num__temp_humidity",
+          0.046241022646427155
+        ],
+        [
+          "cat__Soil type_Teelah",
+          0.0442618653178215
+        ],
+        [
+          "cat__Season_Zaid",
+          0.036461684852838516
+        ],
+        [
+          "cat__Irrigation_Spray",
+          0.03593723475933075
+        ],
+        [
+          "cat__Crops_Ginger",
+          0.034547995775938034
+        ],
+        [
+          "cat__Crops_Groundnut",
+          0.033655427396297455
+        ],
+        [
+          "num__Year",
+          0.03264808654785156
+        ],
+        [
+          "cat__Crops_Arecanut",
+          0.032509658485651016
+        ],
+        [
+          "cat__Soil type_Loam",
+          0.031193817034363747
+        ]
+      ]
+    },
+    "Pune": {
+      "n_rows": 320,
+      "cv_r2_mean": -0.35815155900986023,
+      "cv_r2_std": 0.10974343018513617,
+      "confidence_pct": 32.09242204950699,
+      "test_r2": -0.37761005083917065,
+      "mae": 0.6978325128043459,
+      "rmse": 0.8486002953779215,
+      "top_features": [
+        [
+          "num__seasonal_rainfall_total",
+          0.19003090262413025
+        ],
+        [
+          "num__total_rainfall",
+          0.09567809104919434
+        ],
+        [
+          "cat__Irrigation_Drip",
+          0.09059888869524002
+        ],
+        [
+          "num__avg_temp",
+          0.0888676717877388
+        ],
+        [
+          "num__Year",
+          0.0734233558177948
+        ],
+        [
+          "cat__Irrigation_Sprinkler",
+          0.06894376128911972
+        ],
+        [
+          "num__extreme_heat_days",
+          0.0676283985376358
+        ],
+        [
+          "num__rainfall_variability",
+          0.06565133482217789
+        ],
+        [
+          "cat__Soil type_Black Soil (Regur)",
+          0.0614742711186409
+        ],
+        [
+          "num__year",
+          0.055609963834285736
+        ],
+        [
+          "cat__Soil type_Red/Brown Soil",
+          0.0508321113884449
+        ],
+        [
+          "cat__Crops_Arecanut",
+          0.049294110387563705
+        ],
+        [
+          "cat__Crops_Coconut",
+          0.041967153549194336
+        ],
+        [
+          "cat__Season_Kharif",
+          0.0
+        ],
+        [
+          "cat__Season_Rabi",
+          0.0
+        ]
+      ]
+    },
+    "Raichur": {
+      "n_rows": 134,
+      "cv_r2_mean": -0.987489386327929,
+      "cv_r2_std": 0.8185830492808043,
+      "confidence_pct": 0.6255306836035501,
+      "test_r2": -0.32554979635979264,
+      "mae": 5.64689209640613,
+      "rmse": 7.948224762644539,
+      "top_features": [
+        [
+          "cat__Crops_Blackgram",
+          0.10047999769449234
+        ],
+        [
+          "cat__Soil type_Sandy",
+          0.06195780262351036
+        ],
+        [
+          "cat__Crops_Pepper",
+          0.06045764312148094
+        ],
+        [
+          "cat__Irrigation_Spray",
+          0.05747910216450691
+        ],
+        [
+          "cat__Season_Kharif",
+          0.05423171818256378
+        ],
+        [
+          "cat__Crops_Arecanut",
+          0.053978729993104935
+        ],
+        [
+          "cat__Soil type_Heavy Clay",
+          0.042803805321455
+        ],
+        [
+          "num__N",
+          0.041565414518117905
+        ],
+        [
+          "cat__Season_Zaid",
+          0.03954347223043442
+        ],
+        [
+          "cat__Irrigation_Basin",
+          0.03627273067831993
+        ],
+        [
+          "cat__Soil type_Well Drained",
+          0.0353018082678318
+        ],
+        [
+          "cat__Crops_Coconut",
+          0.034930624067783356
+        ],
+        [
+          "cat__Irrigation_Drip",
+          0.031105997040867805
+        ],
+        [
+          "cat__Crops_Cashew",
+          0.02920551598072052
+        ],
+        [
+          "cat__Soil type_Sandy Loam",
+          0.028025241568684578
+        ]
+      ]
+    }
+  },
+  "references": {
+    "weather_by_district_season": {
+      "Pune": {
+        "Kharif": {
+          "Temperature": 24.8882058287796,
+          "Rainfall": 889.3555555555555,
+          "Humidity": 2.9056282324307876,
+          "seasonal_rainfall_total": 889.3555555555555,
+          "rainfall_variability": 10.68826371713076,
+          "extreme_heat_days": 3.0,
+          "seasonal_avg_humidity": 2.9056282324307876
+        },
+        "Rabi": {
+          "Temperature": 24.056218265644493,
+          "Rainfall": 148.67777777777778,
+          "Humidity": 2.9056282324307876,
+          "seasonal_rainfall_total": 148.67777777777778,
+          "rainfall_variability": 3.1914359127056446,
+          "extreme_heat_days": 10.777777777777779,
+          "seasonal_avg_humidity": 2.9056282324307876
+        },
+        "Summer": {
+          "Temperature": 29.5879781420765,
+          "Rainfall": 23.166666666666668,
+          "Humidity": 2.9056282324307876,
+          "seasonal_rainfall_total": 23.166666666666668,
+          "rainfall_variability": 1.1256155432920742,
+          "extreme_heat_days": 48.55555555555556,
+          "seasonal_avg_humidity": 2.9056282324307876
+        }
+      },
+      "Mysuru": {
+        "Kharif": {
+          "Temperature": 24.234016393442623,
+          "Rainfall": 607.0777777777778,
+          "Humidity": 3.1347429266808637,
+          "seasonal_rainfall_total": 607.0777777777778,
+          "rainfall_variability": 6.475249418598496,
+          "extreme_heat_days": 0.0,
+          "seasonal_avg_humidity": 3.1347429266808637
+        },
+        "Rabi": {
+          "Temperature": 24.088793644121512,
+          "Rainfall": 332.3888888888889,
+          "Humidity": 3.1347429266808637,
+          "seasonal_rainfall_total": 332.3888888888889,
+          "rainfall_variability": 4.771997898265822,
+          "extreme_heat_days": 5.222222222222222,
+          "seasonal_avg_humidity": 3.1347429266808637
+        },
+        "Summer": {
+          "Temperature": 27.369489981785065,
+          "Rainfall": 205.41111111111113,
+          "Humidity": 3.1347429266808637,
+          "seasonal_rainfall_total": 205.41111111111113,
+          "rainfall_variability": 5.726216913541026,
+          "extreme_heat_days": 9.777777777777779,
+          "seasonal_avg_humidity": 3.1347429266808637
+        }
+      }
+    },
+    "nutrients_by_district": {
+      "Pune": {
+        "N": 13.091266292542521,
+        "P": 52.506216033082126,
+        "K": 70.4914713007589,
+        "ph": 7.020802012724831
+      }
+    }
+  },
+  "target_transform": "log1p"
+}

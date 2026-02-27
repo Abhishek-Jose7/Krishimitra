@@ -1,0 +1,321 @@
+district,Year,Taluka,Crops,Season,Area,yeilds,Irrigation,Soil type
+Pune,2023,Indapur,Coconut,Rabi,38.14,99.55,Drip,Black Soil (Regur)
+Pune,2023,Indapur,Arecanut,Kharif,48.42,191.74,Drip,Black Soil (Regur)
+Pune,2018,Daund,Arecanut,Kharif,125.23,265.49,Sprinkler,Red/Brown Soil
+Pune,2019,Bhor,Arecanut,Rabi,144.44,473.76,Drip,Black Soil (Regur)
+Pune,2018,Bhor,Coconut,Rabi,124.93,477.23,Sprinkler,Red/Brown Soil
+Pune,2022,Indapur,Arecanut,Kharif,95.06,375.49,Sprinkler,Red/Brown Soil
+Pune,2018,Daund,Arecanut,Kharif,69.42,263.8,Drip,Black Soil (Regur)
+Pune,2020,Shirur,Arecanut,Rabi,111.24,453.86,Drip,Red/Brown Soil
+Pune,2018,Shirur,Coconut,Kharif,55.09,249.56,Sprinkler,Red/Brown Soil
+Pune,2023,Daund,Arecanut,Kharif,124.66,453.76,Drip,Black Soil (Regur)
+Pune,2018,Daund,Arecanut,Kharif,135.01,511.69,Sprinkler,Red/Brown Soil
+Pune,2019,Junnar,Coconut,Kharif,136.72,430.67,Sprinkler,Red/Brown Soil
+Pune,2019,Shirur,Arecanut,Kharif,39.87,116.02,Drip,Black Soil (Regur)
+Pune,2023,Bhor,Coconut,Rabi,88.78,393.3,Sprinkler,Red/Brown Soil
+Pune,2018,Indapur,Arecanut,Rabi,76.52,263.99,Drip,Red/Brown Soil
+Pune,2023,Junnar,Coconut,Kharif,39.87,171.84,Sprinkler,Black Soil (Regur)
+Pune,2022,Baramati,Arecanut,Rabi,140.78,682.78,Drip,Black Soil (Regur)
+Pune,2020,Daund,Coconut,Kharif,115.15,564.24,Drip,Black Soil (Regur)
+Pune,2022,Shirur,Coconut,Rabi,88.6,342.88,Drip,Red/Brown Soil
+Pune,2019,Daund,Arecanut,Rabi,136.95,428.65,Sprinkler,Red/Brown Soil
+Pune,2019,Daund,Coconut,Rabi,96.5,224.84,Drip,Black Soil (Regur)
+Pune,2023,Baramati,Coconut,Kharif,29.21,87.63,Drip,Red/Brown Soil
+Pune,2023,Mulshi,Coconut,Kharif,122.0,540.46,Sprinkler,Black Soil (Regur)
+Pune,2019,Indapur,Coconut,Rabi,73.44,305.51,Sprinkler,Red/Brown Soil
+Pune,2018,Indapur,Coconut,Rabi,52.33,136.06,Sprinkler,Black Soil (Regur)
+Pune,2021,Shirur,Arecanut,Kharif,52.47,237.16,Sprinkler,Red/Brown Soil
+Pune,2021,Indapur,Coconut,Kharif,41.62,162.32,Drip,Black Soil (Regur)
+Pune,2019,Bhor,Coconut,Kharif,148.09,435.38,Sprinkler,Black Soil (Regur)
+Pune,2021,Junnar,Arecanut,Rabi,58.57,299.29,Drip,Black Soil (Regur)
+Pune,2022,Baramati,Arecanut,Kharif,85.37,407.21,Drip,Red/Brown Soil
+Pune,2019,Baramati,Coconut,Kharif,107.78,338.43,Drip,Black Soil (Regur)
+Pune,2018,Daund,Coconut,Kharif,141.51,373.59,Sprinkler,Red/Brown Soil
+Pune,2023,Mawal,Coconut,Rabi,107.32,310.15,Sprinkler,Black Soil (Regur)
+Pune,2020,Indapur,Coconut,Rabi,89.89,338.89,Drip,Black Soil (Regur)
+Pune,2019,Mawal,Coconut,Kharif,40.51,173.79,Sprinkler,Red/Brown Soil
+Pune,2023,Junnar,Coconut,Rabi,54.38,265.37,Drip,Black Soil (Regur)
+Pune,2023,Shirur,Arecanut,Rabi,46.47,183.09,Drip,Red/Brown Soil
+Pune,2020,Mulshi,Arecanut,Kharif,127.82,311.88,Drip,Red/Brown Soil
+Pune,2020,Shirur,Arecanut,Kharif,92.92,222.08,Sprinkler,Red/Brown Soil
+Pune,2023,Shirur,Coconut,Rabi,36.57,111.54,Drip,Red/Brown Soil
+Pune,2018,Mawal,Coconut,Kharif,121.42,590.1,Drip,Red/Brown Soil
+Pune,2021,Shirur,Coconut,Kharif,23.22,103.1,Drip,Red/Brown Soil
+Pune,2020,Bhor,Coconut,Rabi,69.73,168.75,Drip,Black Soil (Regur)
+Pune,2021,Daund,Coconut,Rabi,126.67,529.48,Sprinkler,Red/Brown Soil
+Pune,2019,Baramati,Coconut,Rabi,132.37,585.08,Sprinkler,Red/Brown Soil
+Pune,2020,Mawal,Arecanut,Rabi,134.01,410.07,Drip,Black Soil (Regur)
+Pune,2022,Junnar,Coconut,Kharif,114.71,334.95,Sprinkler,Red/Brown Soil
+Pune,2022,Indapur,Arecanut,Kharif,112.14,247.83,Sprinkler,Black Soil (Regur)
+Pune,2022,Daund,Arecanut,Rabi,101.01,406.06,Drip,Red/Brown Soil
+Pune,2018,Junnar,Arecanut,Rabi,110.64,375.07,Sprinkler,Red/Brown Soil
+Pune,2019,Bhor,Arecanut,Kharif,91.23,191.58,Sprinkler,Red/Brown Soil
+Pune,2020,Daund,Arecanut,Rabi,77.48,196.02,Sprinkler,Red/Brown Soil
+Pune,2021,Shirur,Coconut,Rabi,126.4,514.45,Sprinkler,Black Soil (Regur)
+Pune,2023,Junnar,Coconut,Kharif,26.01,140.71,Drip,Black Soil (Regur)
+Pune,2022,Indapur,Arecanut,Rabi,84.27,241.85,Drip,Red/Brown Soil
+Pune,2023,Baramati,Coconut,Rabi,124.53,537.97,Drip,Black Soil (Regur)
+Pune,2021,Baramati,Coconut,Kharif,124.18,502.93,Sprinkler,Black Soil (Regur)
+Pune,2022,Mawal,Arecanut,Rabi,116.68,390.88,Sprinkler,Black Soil (Regur)
+Pune,2020,Daund,Arecanut,Rabi,77.18,321.07,Drip,Red/Brown Soil
+Pune,2019,Junnar,Arecanut,Rabi,39.61,135.47,Drip,Black Soil (Regur)
+Pune,2019,Daund,Coconut,Rabi,90.54,275.24,Sprinkler,Red/Brown Soil
+Pune,2019,Bhor,Arecanut,Kharif,20.77,62.73,Sprinkler,Red/Brown Soil
+Pune,2021,Bhor,Coconut,Rabi,76.66,174.78,Drip,Red/Brown Soil
+Pune,2020,Bhor,Coconut,Rabi,137.9,554.36,Drip,Black Soil (Regur)
+Pune,2023,Baramati,Coconut,Rabi,43.62,127.37,Drip,Red/Brown Soil
+Pune,2020,Daund,Arecanut,Rabi,56.17,246.02,Sprinkler,Red/Brown Soil
+Pune,2021,Junnar,Coconut,Rabi,149.99,497.97,Drip,Black Soil (Regur)
+Pune,2023,Indapur,Coconut,Kharif,129.1,556.42,Drip,Black Soil (Regur)
+Pune,2019,Shirur,Arecanut,Kharif,110.93,501.4,Drip,Red/Brown Soil
+Pune,2019,Indapur,Coconut,Rabi,140.76,558.82,Drip,Black Soil (Regur)
+Pune,2021,Bhor,Coconut,Kharif,110.64,369.54,Drip,Black Soil (Regur)
+Pune,2023,Indapur,Coconut,Rabi,28.96,104.84,Sprinkler,Red/Brown Soil
+Pune,2018,Bhor,Arecanut,Kharif,102.63,439.26,Sprinkler,Red/Brown Soil
+Pune,2023,Shirur,Arecanut,Kharif,80.43,343.44,Sprinkler,Red/Brown Soil
+Pune,2022,Junnar,Arecanut,Kharif,134.61,405.18,Drip,Red/Brown Soil
+Pune,2021,Bhor,Arecanut,Kharif,43.64,116.08,Sprinkler,Red/Brown Soil
+Pune,2020,Mawal,Arecanut,Rabi,31.13,136.66,Drip,Black Soil (Regur)
+Pune,2021,Daund,Arecanut,Rabi,32.1,86.03,Sprinkler,Black Soil (Regur)
+Pune,2023,Daund,Arecanut,Rabi,75.32,290.74,Sprinkler,Red/Brown Soil
+Pune,2020,Mawal,Arecanut,Rabi,49.97,189.89,Sprinkler,Red/Brown Soil
+Pune,2020,Indapur,Coconut,Kharif,55.94,224.32,Drip,Red/Brown Soil
+Pune,2022,Junnar,Coconut,Kharif,66.91,203.41,Sprinkler,Black Soil (Regur)
+Pune,2023,Shirur,Arecanut,Kharif,110.66,295.46,Drip,Red/Brown Soil
+Pune,2021,Indapur,Coconut,Rabi,77.26,190.06,Sprinkler,Red/Brown Soil
+Pune,2018,Junnar,Arecanut,Kharif,83.93,334.04,Drip,Red/Brown Soil
+Pune,2023,Baramati,Coconut,Kharif,149.21,377.5,Sprinkler,Black Soil (Regur)
+Pune,2021,Daund,Arecanut,Rabi,131.82,590.55,Sprinkler,Red/Brown Soil
+Pune,2020,Baramati,Coconut,Kharif,105.86,292.17,Drip,Red/Brown Soil
+Pune,2019,Indapur,Coconut,Kharif,109.62,365.03,Sprinkler,Red/Brown Soil
+Pune,2018,Daund,Arecanut,Rabi,109.36,495.4,Sprinkler,Black Soil (Regur)
+Pune,2023,Daund,Arecanut,Kharif,138.09,680.78,Drip,Black Soil (Regur)
+Pune,2018,Baramati,Coconut,Rabi,36.17,134.55,Sprinkler,Red/Brown Soil
+Pune,2023,Bhor,Arecanut,Rabi,97.74,432.99,Sprinkler,Black Soil (Regur)
+Pune,2023,Mawal,Arecanut,Kharif,145.05,719.45,Drip,Black Soil (Regur)
+Pune,2022,Baramati,Arecanut,Kharif,87.47,314.02,Drip,Red/Brown Soil
+Pune,2020,Shirur,Arecanut,Rabi,65.23,203.52,Drip,Red/Brown Soil
+Pune,2023,Indapur,Coconut,Rabi,57.47,250.57,Sprinkler,Red/Brown Soil
+Pune,2022,Baramati,Arecanut,Kharif,62.03,288.44,Sprinkler,Red/Brown Soil
+Pune,2021,Baramati,Arecanut,Rabi,87.4,359.21,Drip,Black Soil (Regur)
+Pune,2021,Mulshi,Coconut,Kharif,140.6,479.45,Sprinkler,Black Soil (Regur)
+Pune,2023,Mulshi,Coconut,Kharif,60.4,149.19,Drip,Black Soil (Regur)
+Pune,2021,Indapur,Coconut,Kharif,104.2,274.05,Sprinkler,Black Soil (Regur)
+Pune,2023,Junnar,Arecanut,Rabi,51.69,174.71,Sprinkler,Red/Brown Soil
+Pune,2021,Daund,Coconut,Kharif,64.18,267.63,Sprinkler,Red/Brown Soil
+Pune,2020,Baramati,Arecanut,Rabi,78.05,263.03,Sprinkler,Black Soil (Regur)
+Pune,2020,Bhor,Arecanut,Rabi,94.33,281.1,Drip,Black Soil (Regur)
+Pune,2021,Baramati,Arecanut,Rabi,148.49,590.99,Sprinkler,Red/Brown Soil
+Pune,2023,Shirur,Arecanut,Kharif,133.06,642.68,Drip,Red/Brown Soil
+Pune,2021,Indapur,Arecanut,Kharif,133.22,680.75,Drip,Red/Brown Soil
+Pune,2018,Mulshi,Arecanut,Rabi,130.73,567.37,Sprinkler,Black Soil (Regur)
+Pune,2022,Bhor,Arecanut,Rabi,50.52,216.73,Drip,Black Soil (Regur)
+Pune,2020,Daund,Coconut,Rabi,77.68,334.8,Drip,Black Soil (Regur)
+Pune,2018,Baramati,Arecanut,Kharif,68.73,170.45,Sprinkler,Red/Brown Soil
+Pune,2022,Bhor,Coconut,Kharif,99.23,356.24,Drip,Black Soil (Regur)
+Pune,2023,Daund,Arecanut,Kharif,102.93,374.67,Drip,Red/Brown Soil
+Pune,2023,Baramati,Arecanut,Rabi,77.42,256.26,Drip,Black Soil (Regur)
+Pune,2022,Junnar,Arecanut,Rabi,45.9,135.86,Sprinkler,Red/Brown Soil
+Pune,2021,Indapur,Coconut,Rabi,149.05,408.4,Sprinkler,Red/Brown Soil
+Pune,2023,Bhor,Arecanut,Kharif,128.27,631.09,Drip,Red/Brown Soil
+Pune,2019,Mawal,Coconut,Kharif,101.67,477.85,Sprinkler,Black Soil (Regur)
+Pune,2023,Baramati,Arecanut,Rabi,115.21,282.26,Drip,Red/Brown Soil
+Pune,2020,Mawal,Arecanut,Kharif,122.25,621.03,Drip,Black Soil (Regur)
+Pune,2020,Junnar,Coconut,Rabi,117.05,333.59,Sprinkler,Red/Brown Soil
+Pune,2018,Mulshi,Coconut,Kharif,145.75,674.82,Drip,Red/Brown Soil
+Pune,2020,Indapur,Arecanut,Kharif,79.12,321.23,Sprinkler,Black Soil (Regur)
+Pune,2023,Junnar,Arecanut,Rabi,81.29,333.29,Drip,Black Soil (Regur)
+Pune,2022,Mawal,Coconut,Kharif,104.4,251.6,Sprinkler,Red/Brown Soil
+Pune,2018,Baramati,Arecanut,Rabi,50.52,195.01,Drip,Black Soil (Regur)
+Pune,2021,Mulshi,Arecanut,Rabi,105.14,472.08,Drip,Red/Brown Soil
+Pune,2022,Bhor,Arecanut,Kharif,77.64,374.22,Sprinkler,Black Soil (Regur)
+Pune,2020,Indapur,Arecanut,Rabi,55.86,271.48,Drip,Red/Brown Soil
+Pune,2021,Indapur,Coconut,Kharif,51.66,137.93,Drip,Red/Brown Soil
+Pune,2022,Daund,Coconut,Kharif,62.71,179.98,Drip,Black Soil (Regur)
+Pune,2022,Baramati,Arecanut,Kharif,123.81,325.62,Drip,Red/Brown Soil
+Pune,2018,Shirur,Coconut,Rabi,22.05,64.61,Drip,Red/Brown Soil
+Pune,2019,Bhor,Coconut,Kharif,121.14,417.93,Sprinkler,Red/Brown Soil
+Pune,2018,Mulshi,Coconut,Kharif,103.63,225.91,Sprinkler,Red/Brown Soil
+Pune,2021,Bhor,Arecanut,Kharif,29.55,68.26,Sprinkler,Red/Brown Soil
+Pune,2022,Shirur,Coconut,Kharif,69.52,255.14,Sprinkler,Red/Brown Soil
+Pune,2020,Mulshi,Arecanut,Kharif,75.91,388.66,Drip,Black Soil (Regur)
+Pune,2021,Mawal,Arecanut,Rabi,60.63,177.04,Sprinkler,Black Soil (Regur)
+Pune,2020,Mawal,Coconut,Rabi,128.13,330.58,Drip,Black Soil (Regur)
+Pune,2018,Mawal,Coconut,Kharif,73.41,338.42,Sprinkler,Black Soil (Regur)
+Pune,2021,Baramati,Arecanut,Rabi,95.13,253.05,Sprinkler,Black Soil (Regur)
+Pune,2023,Mulshi,Coconut,Kharif,34.94,98.88,Sprinkler,Red/Brown Soil
+Pune,2019,Bhor,Coconut,Rabi,55.53,250.44,Drip,Black Soil (Regur)
+Pune,2020,Mawal,Coconut,Kharif,29.05,129.27,Drip,Red/Brown Soil
+Pune,2018,Indapur,Coconut,Rabi,64.32,188.46,Sprinkler,Red/Brown Soil
+Pune,2023,Mawal,Coconut,Kharif,118.08,304.65,Drip,Black Soil (Regur)
+Pune,2018,Junnar,Arecanut,Rabi,73.84,187.55,Sprinkler,Red/Brown Soil
+Pune,2022,Indapur,Arecanut,Rabi,108.17,414.29,Drip,Red/Brown Soil
+Pune,2022,Junnar,Coconut,Kharif,21.0,63.84,Sprinkler,Black Soil (Regur)
+Pune,2019,Shirur,Arecanut,Rabi,21.0,85.26,Sprinkler,Black Soil (Regur)
+Pune,2019,Shirur,Arecanut,Kharif,71.62,304.38,Sprinkler,Black Soil (Regur)
+Pune,2021,Baramati,Arecanut,Kharif,94.54,374.38,Sprinkler,Red/Brown Soil
+Pune,2021,Junnar,Coconut,Rabi,42.34,203.66,Drip,Red/Brown Soil
+Pune,2021,Mawal,Coconut,Rabi,76.64,265.94,Drip,Black Soil (Regur)
+Pune,2018,Bhor,Arecanut,Rabi,121.29,292.31,Drip,Red/Brown Soil
+Pune,2023,Indapur,Coconut,Rabi,50.71,125.76,Sprinkler,Black Soil (Regur)
+Pune,2019,Shirur,Coconut,Kharif,80.31,316.42,Drip,Red/Brown Soil
+Pune,2022,Mulshi,Arecanut,Rabi,28.88,98.77,Drip,Red/Brown Soil
+Pune,2020,Junnar,Coconut,Rabi,80.03,184.07,Drip,Red/Brown Soil
+Pune,2020,Junnar,Coconut,Kharif,95.44,439.02,Sprinkler,Red/Brown Soil
+Pune,2023,Baramati,Arecanut,Kharif,85.18,392.68,Sprinkler,Red/Brown Soil
+Pune,2021,Indapur,Arecanut,Kharif,52.21,195.79,Drip,Black Soil (Regur)
+Pune,2021,Shirur,Arecanut,Rabi,73.14,208.45,Sprinkler,Red/Brown Soil
+Pune,2022,Baramati,Arecanut,Kharif,92.54,302.61,Sprinkler,Black Soil (Regur)
+Pune,2020,Shirur,Arecanut,Kharif,60.33,253.39,Drip,Red/Brown Soil
+Pune,2023,Bhor,Coconut,Kharif,103.65,306.8,Sprinkler,Red/Brown Soil
+Pune,2019,Indapur,Arecanut,Rabi,60.15,289.92,Drip,Red/Brown Soil
+Pune,2020,Mulshi,Coconut,Kharif,30.03,149.85,Drip,Black Soil (Regur)
+Pune,2018,Baramati,Arecanut,Kharif,41.09,184.91,Sprinkler,Black Soil (Regur)
+Pune,2022,Shirur,Arecanut,Kharif,107.93,293.57,Sprinkler,Red/Brown Soil
+Pune,2021,Junnar,Arecanut,Kharif,145.53,665.07,Drip,Red/Brown Soil
+Pune,2019,Mawal,Arecanut,Rabi,85.38,260.41,Sprinkler,Red/Brown Soil
+Pune,2019,Daund,Coconut,Rabi,133.64,497.14,Drip,Red/Brown Soil
+Pune,2018,Indapur,Arecanut,Kharif,78.41,297.17,Drip,Red/Brown Soil
+Pune,2021,Indapur,Coconut,Rabi,73.94,232.17,Sprinkler,Black Soil (Regur)
+Pune,2020,Daund,Arecanut,Kharif,23.66,112.86,Sprinkler,Black Soil (Regur)
+Pune,2023,Mawal,Coconut,Kharif,139.26,511.08,Drip,Red/Brown Soil
+Pune,2019,Mulshi,Arecanut,Kharif,53.27,264.22,Drip,Black Soil (Regur)
+Pune,2022,Bhor,Coconut,Rabi,35.84,102.5,Drip,Red/Brown Soil
+Pune,2023,Mulshi,Coconut,Kharif,102.15,387.15,Sprinkler,Black Soil (Regur)
+Pune,2023,Shirur,Arecanut,Rabi,51.27,171.75,Drip,Red/Brown Soil
+Pune,2023,Indapur,Arecanut,Kharif,133.53,325.81,Drip,Red/Brown Soil
+Pune,2021,Mawal,Arecanut,Kharif,64.82,274.19,Sprinkler,Black Soil (Regur)
+Pune,2023,Indapur,Arecanut,Kharif,90.98,423.97,Drip,Red/Brown Soil
+Pune,2019,Mulshi,Arecanut,Kharif,113.09,598.25,Drip,Black Soil (Regur)
+Pune,2018,Junnar,Coconut,Kharif,61.03,205.67,Drip,Black Soil (Regur)
+Pune,2021,Mulshi,Arecanut,Kharif,66.41,302.83,Drip,Red/Brown Soil
+Pune,2023,Mawal,Arecanut,Kharif,135.63,549.3,Sprinkler,Red/Brown Soil
+Pune,2021,Mawal,Coconut,Rabi,140.16,462.53,Sprinkler,Red/Brown Soil
+Pune,2018,Bhor,Coconut,Rabi,61.76,149.46,Drip,Red/Brown Soil
+Pune,2023,Junnar,Arecanut,Rabi,109.67,331.2,Sprinkler,Black Soil (Regur)
+Pune,2018,Mawal,Arecanut,Rabi,107.25,373.23,Drip,Black Soil (Regur)
+Pune,2022,Shirur,Coconut,Kharif,36.41,104.13,Sprinkler,Black Soil (Regur)
+Pune,2023,Mawal,Arecanut,Rabi,108.28,546.81,Drip,Black Soil (Regur)
+Pune,2020,Mulshi,Coconut,Kharif,60.87,172.26,Sprinkler,Red/Brown Soil
+Pune,2018,Baramati,Coconut,Rabi,54.03,150.2,Sprinkler,Black Soil (Regur)
+Pune,2021,Daund,Arecanut,Rabi,37.64,94.85,Drip,Black Soil (Regur)
+Pune,2019,Mulshi,Coconut,Rabi,91.5,261.69,Sprinkler,Black Soil (Regur)
+Pune,2020,Shirur,Coconut,Rabi,148.07,681.12,Drip,Black Soil (Regur)
+Pune,2019,Mulshi,Coconut,Rabi,124.48,420.74,Sprinkler,Red/Brown Soil
+Pune,2022,Indapur,Coconut,Rabi,88.34,346.29,Sprinkler,Red/Brown Soil
+Pune,2022,Indapur,Coconut,Rabi,80.56,291.63,Drip,Red/Brown Soil
+Pune,2019,Shirur,Coconut,Rabi,87.35,278.65,Drip,Black Soil (Regur)
+Pune,2019,Mawal,Coconut,Rabi,52.58,198.23,Sprinkler,Black Soil (Regur)
+Pune,2022,Junnar,Coconut,Rabi,96.94,386.79,Drip,Black Soil (Regur)
+Pune,2019,Mawal,Coconut,Kharif,143.31,682.16,Drip,Black Soil (Regur)
+Pune,2020,Daund,Arecanut,Kharif,103.45,298.97,Sprinkler,Red/Brown Soil
+Pune,2019,Bhor,Arecanut,Rabi,40.55,142.33,Drip,Black Soil (Regur)
+Pune,2021,Daund,Arecanut,Kharif,115.45,503.36,Sprinkler,Red/Brown Soil
+Pune,2021,Shirur,Arecanut,Kharif,80.64,237.08,Sprinkler,Black Soil (Regur)
+Pune,2019,Shirur,Coconut,Kharif,132.34,423.49,Sprinkler,Red/Brown Soil
+Pune,2019,Mawal,Arecanut,Kharif,149.48,547.1,Drip,Red/Brown Soil
+Pune,2020,Mulshi,Coconut,Kharif,145.67,387.48,Sprinkler,Red/Brown Soil
+Pune,2020,Baramati,Coconut,Rabi,57.15,115.44,Sprinkler,Red/Brown Soil
+Pune,2018,Bhor,Coconut,Rabi,67.57,202.71,Sprinkler,Red/Brown Soil
+Pune,2022,Daund,Arecanut,Rabi,85.55,367.86,Drip,Red/Brown Soil
+Pune,2020,Indapur,Coconut,Kharif,123.34,368.79,Sprinkler,Red/Brown Soil
+Pune,2020,Shirur,Coconut,Rabi,25.06,109.51,Drip,Black Soil (Regur)
+Pune,2021,Mulshi,Coconut,Kharif,41.13,193.31,Sprinkler,Red/Brown Soil
+Pune,2023,Junnar,Arecanut,Rabi,126.05,368.07,Sprinkler,Red/Brown Soil
+Pune,2023,Indapur,Arecanut,Rabi,54.52,218.08,Drip,Red/Brown Soil
+Pune,2022,Daund,Coconut,Rabi,39.21,159.58,Drip,Red/Brown Soil
+Pune,2018,Indapur,Coconut,Kharif,74.44,236.72,Sprinkler,Red/Brown Soil
+Pune,2019,Bhor,Arecanut,Kharif,92.92,506.41,Drip,Black Soil (Regur)
+Pune,2021,Bhor,Arecanut,Kharif,91.02,352.25,Sprinkler,Red/Brown Soil
+Pune,2023,Junnar,Arecanut,Kharif,92.55,273.95,Drip,Red/Brown Soil
+Pune,2020,Junnar,Coconut,Rabi,65.34,282.92,Sprinkler,Red/Brown Soil
+Pune,2023,Junnar,Arecanut,Kharif,126.39,582.66,Sprinkler,Red/Brown Soil
+Pune,2019,Junnar,Coconut,Rabi,140.12,560.48,Drip,Red/Brown Soil
+Pune,2023,Mulshi,Coconut,Kharif,37.85,140.8,Sprinkler,Red/Brown Soil
+Pune,2022,Daund,Coconut,Kharif,26.82,98.7,Drip,Black Soil (Regur)
+Pune,2023,Mulshi,Coconut,Kharif,72.9,383.45,Drip,Black Soil (Regur)
+Pune,2021,Mulshi,Coconut,Rabi,103.97,443.95,Sprinkler,Red/Brown Soil
+Pune,2018,Daund,Coconut,Kharif,141.41,326.66,Sprinkler,Black Soil (Regur)
+Pune,2021,Mulshi,Coconut,Rabi,58.79,238.1,Drip,Black Soil (Regur)
+Pune,2020,Junnar,Arecanut,Rabi,55.47,245.18,Drip,Red/Brown Soil
+Pune,2020,Shirur,Arecanut,Rabi,115.76,531.34,Drip,Black Soil (Regur)
+Pune,2022,Daund,Coconut,Rabi,31.28,114.8,Sprinkler,Red/Brown Soil
+Pune,2019,Shirur,Arecanut,Rabi,53.9,161.16,Drip,Black Soil (Regur)
+Pune,2020,Mawal,Arecanut,Kharif,110.06,248.74,Sprinkler,Red/Brown Soil
+Pune,2018,Mulshi,Arecanut,Kharif,109.74,414.82,Sprinkler,Red/Brown Soil
+Pune,2020,Mawal,Coconut,Kharif,39.91,178.4,Drip,Red/Brown Soil
+Pune,2022,Mawal,Arecanut,Rabi,108.44,437.01,Drip,Black Soil (Regur)
+Pune,2018,Mulshi,Arecanut,Kharif,127.74,659.14,Drip,Black Soil (Regur)
+Pune,2019,Shirur,Coconut,Rabi,108.44,431.59,Sprinkler,Black Soil (Regur)
+Pune,2021,Indapur,Arecanut,Kharif,86.72,300.05,Sprinkler,Black Soil (Regur)
+Pune,2018,Mulshi,Arecanut,Kharif,126.14,512.13,Sprinkler,Red/Brown Soil
+Pune,2022,Indapur,Coconut,Rabi,90.35,204.19,Sprinkler,Black Soil (Regur)
+Pune,2018,Mulshi,Coconut,Rabi,119.97,493.08,Sprinkler,Black Soil (Regur)
+Pune,2023,Bhor,Arecanut,Rabi,68.83,255.36,Sprinkler,Red/Brown Soil
+Pune,2023,Shirur,Arecanut,Kharif,88.75,391.39,Drip,Red/Brown Soil
+Pune,2019,Baramati,Coconut,Rabi,89.15,361.95,Sprinkler,Red/Brown Soil
+Pune,2019,Mulshi,Arecanut,Kharif,141.86,595.81,Sprinkler,Black Soil (Regur)
+Pune,2018,Baramati,Arecanut,Kharif,28.75,121.61,Drip,Black Soil (Regur)
+Pune,2021,Baramati,Coconut,Kharif,50.46,134.73,Sprinkler,Red/Brown Soil
+Pune,2018,Shirur,Arecanut,Kharif,50.8,223.52,Sprinkler,Red/Brown Soil
+Pune,2023,Daund,Arecanut,Rabi,92.37,337.15,Sprinkler,Black Soil (Regur)
+Pune,2023,Shirur,Arecanut,Rabi,142.41,576.76,Drip,Red/Brown Soil
+Pune,2022,Mawal,Arecanut,Rabi,68.94,294.37,Drip,Red/Brown Soil
+Pune,2021,Daund,Coconut,Rabi,138.92,520.95,Drip,Red/Brown Soil
+Pune,2021,Shirur,Arecanut,Kharif,62.93,152.29,Sprinkler,Black Soil (Regur)
+Pune,2021,Mawal,Coconut,Kharif,69.03,280.26,Drip,Red/Brown Soil
+Pune,2018,Indapur,Coconut,Kharif,133.03,415.05,Sprinkler,Black Soil (Regur)
+Pune,2018,Daund,Coconut,Kharif,110.43,457.18,Sprinkler,Black Soil (Regur)
+Pune,2021,Daund,Arecanut,Rabi,89.37,259.17,Sprinkler,Red/Brown Soil
+Pune,2020,Mawal,Arecanut,Rabi,119.01,366.55,Drip,Red/Brown Soil
+Pune,2019,Mawal,Arecanut,Rabi,116.36,274.61,Drip,Black Soil (Regur)
+Pune,2022,Bhor,Arecanut,Kharif,49.9,197.6,Drip,Red/Brown Soil
+Pune,2019,Mulshi,Arecanut,Rabi,79.91,306.06,Sprinkler,Red/Brown Soil
+Pune,2020,Shirur,Coconut,Rabi,88.11,416.76,Drip,Black Soil (Regur)
+Pune,2018,Baramati,Coconut,Rabi,28.84,79.31,Drip,Black Soil (Regur)
+Pune,2019,Mulshi,Arecanut,Kharif,22.05,77.17,Sprinkler,Red/Brown Soil
+Pune,2021,Baramati,Coconut,Rabi,85.29,335.19,Sprinkler,Black Soil (Regur)
+Pune,2021,Shirur,Coconut,Kharif,44.95,180.7,Drip,Black Soil (Regur)
+Pune,2020,Junnar,Arecanut,Kharif,79.67,218.3,Sprinkler,Red/Brown Soil
+Pune,2023,Daund,Arecanut,Kharif,72.69,259.5,Drip,Black Soil (Regur)
+Pune,2021,Baramati,Coconut,Kharif,129.89,541.64,Drip,Red/Brown Soil
+Pune,2020,Indapur,Coconut,Kharif,55.24,275.1,Drip,Red/Brown Soil
+Pune,2023,Junnar,Coconut,Kharif,144.99,553.86,Sprinkler,Black Soil (Regur)
+Pune,2023,Bhor,Coconut,Rabi,93.67,445.87,Drip,Black Soil (Regur)
+Pune,2023,Mawal,Arecanut,Kharif,26.98,96.32,Drip,Red/Brown Soil
+Pune,2018,Mawal,Arecanut,Rabi,121.86,419.2,Drip,Red/Brown Soil
+Pune,2019,Mawal,Arecanut,Rabi,31.14,121.45,Drip,Red/Brown Soil
+Pune,2019,Indapur,Coconut,Rabi,112.52,443.33,Drip,Red/Brown Soil
+Pune,2023,Bhor,Arecanut,Rabi,20.68,66.18,Drip,Black Soil (Regur)
+Pune,2020,Junnar,Coconut,Kharif,76.03,312.48,Drip,Black Soil (Regur)
+Pune,2022,Bhor,Coconut,Kharif,92.05,370.96,Drip,Red/Brown Soil
+Pune,2020,Bhor,Coconut,Rabi,121.29,462.11,Sprinkler,Red/Brown Soil
+Pune,2022,Daund,Coconut,Rabi,54.96,169.83,Drip,Black Soil (Regur)
+Pune,2019,Indapur,Coconut,Rabi,58.97,233.52,Sprinkler,Red/Brown Soil
+Pune,2020,Junnar,Coconut,Rabi,33.91,103.09,Drip,Red/Brown Soil
+Pune,2021,Mawal,Arecanut,Rabi,75.98,308.48,Sprinkler,Red/Brown Soil
+Pune,2023,Shirur,Arecanut,Rabi,60.84,295.07,Drip,Red/Brown Soil
+Pune,2020,Junnar,Arecanut,Kharif,56.44,234.79,Sprinkler,Red/Brown Soil
+Pune,2020,Indapur,Coconut,Kharif,142.59,416.36,Drip,Red/Brown Soil
+Pune,2020,Indapur,Arecanut,Rabi,51.46,206.35,Drip,Red/Brown Soil
+Pune,2023,Bhor,Arecanut,Kharif,95.69,334.91,Sprinkler,Red/Brown Soil
+Pune,2023,Bhor,Coconut,Rabi,119.96,505.03,Drip,Black Soil (Regur)
+Pune,2020,Shirur,Coconut,Rabi,33.77,75.98,Sprinkler,Red/Brown Soil
+Pune,2019,Daund,Arecanut,Rabi,120.4,417.79,Sprinkler,Red/Brown Soil
+Pune,2022,Shirur,Arecanut,Kharif,58.41,276.86,Sprinkler,Black Soil (Regur)
+Pune,2018,Indapur,Coconut,Rabi,79.19,199.56,Sprinkler,Red/Brown Soil
+Pune,2021,Mawal,Arecanut,Kharif,61.46,177.62,Sprinkler,Red/Brown Soil
+Pune,2023,Indapur,Coconut,Rabi,140.89,626.96,Drip,Black Soil (Regur)
+Pune,2022,Shirur,Coconut,Rabi,50.14,150.92,Sprinkler,Red/Brown Soil
+Pune,2019,Shirur,Arecanut,Rabi,78.44,278.46,Drip,Black Soil (Regur)
+Pune,2018,Daund,Coconut,Rabi,123.94,478.41,Drip,Black Soil (Regur)
+Pune,2020,Mawal,Coconut,Rabi,107.19,380.52,Drip,Red/Brown Soil
+Pune,2023,Mawal,Arecanut,Rabi,65.76,227.53,Drip,Red/Brown Soil
+Pune,2019,Junnar,Coconut,Kharif,51.01,129.06,Sprinkler,Black Soil (Regur)
+Pune,2020,Shirur,Arecanut,Rabi,75.0,265.5,Drip,Red/Brown Soil
+Pune,2022,Shirur,Coconut,Rabi,44.32,191.02,Sprinkler,Black Soil (Regur)
+Pune,2022,Baramati,Arecanut,Kharif,45.37,147.91,Sprinkler,Black Soil (Regur)
+Pune,2022,Mulshi,Arecanut,Rabi,83.53,184.6,Sprinkler,Red/Brown Soil
+Pune,2018,Daund,Arecanut,Kharif,89.89,240.01,Sprinkler,Black Soil (Regur)
+Pune,2021,Mulshi,Coconut,Kharif,90.47,370.02,Sprinkler,Red/Brown Soil
+Pune,2023,Mulshi,Coconut,Rabi,58.7,305.24,Drip,Black Soil (Regur)
