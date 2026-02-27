@@ -1189,13 +1189,10 @@ class KarnatakaForecaster:
 
     @classmethod
     def is_supported(cls, state: str, crop: str) -> bool:
-        """Check if this state + crop combo should use Karnataka models."""
-        if not state or not crop:
+        """Check if this crop should use Karnataka models (demo forces it for supported crops)."""
+        if not crop:
             return False
-        return (
-            state.lower().strip() in ("karnataka", "ka")
-            and cls._normalize_crop(crop) in {"groundnut", "coconut", "paddy"}
-        )
+        return cls._normalize_crop(crop) in {"groundnut", "coconut", "paddy"}
 
     @classmethod
     def get_forecast(cls, crop: str, market: str,

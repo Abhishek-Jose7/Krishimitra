@@ -38,6 +38,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Map<String, dynamic>? _weatherData;
   Map<String, dynamic>? _riskData;
   Map<String, dynamic>? _recommendation;
+  Map<String, dynamic>? _karnatakaForecast;
   List<dynamic>? _mandiPrices;
   bool _isLoading = true;
   String? _lastUpdated;
@@ -100,11 +101,30 @@ class _DashboardScreenState extends State<DashboardScreen> {
         _mandiPrices = resp['mandi_prices'] as List<dynamic>?;
         _riskData = resp['market_risk'];
         _recommendation = resp['recommendation'];
+        _karnatakaForecast = resp['karnataka_forecast'];
+
         if (resp['strategy'] != null) {
           _strategy = RegionCropStrategy.fromJson(resp);
           _alerts = _strategy.alerts;
           _mspContext = _strategy.mspContext;
         }
+
+        if (_karnatakaForecast != null) {
+          final today = _karnatakaForecast!['today'];
+          final bestDay = _karnatakaForecast!['best_day'];
+          bool isSell = today['decision'] == 'SELL';
+          _recommendation = {
+            'recommendation': isSell ? 'SELL NOW' : 'HOLD INVENTORY',
+            'explanation':
+                'Based on highly-trained local models. Expected optimal sale day: ${bestDay["day"]} at ₹${bestDay["price"]}. ${today["msp_note"]}',
+            'risk_level': today['above_msp'] ? 'LOW' : 'HIGH',
+            'revenue_today': today['revenue'],
+            'severity_color': isSell ? 'green' : 'orange',
+          };
+          // Clear general alerts so we just show the Karnataka insight directly
+          _alerts.clear();
+        }
+
         usedIntelligent = true;
       } catch (_) {}
 
@@ -237,24 +257,40 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final loc = Provider.of<LocalizationProvider>(context);
     final rec = _recommendation;
     final isSell = rec?['recommendation'] == 'SELL NOW';
-    final waitDays = rec?['wait_days'] ?? 10;
-    final extraProfit = (rec?['extra_profit'] ?? 0).toDouble();
     final riskLevel = rec?['risk_level'] ?? 'LOW';
     final explanation = rec?['explanation'] ?? '';
+    final severityColor = rec?['severity_color'];
+    final karnatakaRev = rec?['revenue_today'];
 
     final todayPrice = (_mandiPrices != null && _mandiPrices!.isNotEmpty)
         ? (_mandiPrices![0]['today_price']?.toDouble() ?? 2120.0)
         : 2120.0;
-    final revenueToday = expectedYield * todayPrice;
+    final revenueToday = karnatakaRev != null
+        ? (karnatakaRev as int).toDouble()
+        : (expectedYield * todayPrice);
 
     return Container(
       decoration: BoxDecoration(
-        color: Colors.white,
+        color: severityColor == 'orange' 
+            ? const Color(0xFFFFF3E0) 
+            : severityColor == 'red' 
+                ? const Color(0xFFFFEBEE) 
+                : isSell 
+                    ? const Color(0xFFE8F5E9) 
+                    : const Color(0xFFFFF3E0),
         borderRadius: const BorderRadius.only(
           topLeft: Radius.circular(24),
           topRight: Radius.circular(24),
         ), // Modal-like top corners, touches bottom edges
-        border: Border.all(color: Colors.grey.withOpacity(0.1)),
+        border: Border.all(
+          color: severityColor == 'orange' 
+              ? Colors.orange.withOpacity(0.3) 
+              : severityColor == 'red' 
+                  ? Colors.red.withOpacity(0.3) 
+                  : isSell 
+                      ? Colors.green.withOpacity(0.3) 
+                      : Colors.orange.withOpacity(0.3),
+        ),
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -388,9 +424,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                 : "${loc.translate('hold_inventory')} $crop"
                                     .toUpperCase()),
                         style: GoogleFonts.dmSans(
-                          color: isSell
-                              ? AppTheme.primaryGreen
-                              : AppTheme.accentOrange,
+                          color: severityColor == 'orange'
+                              ? AppTheme.accentOrange
+                              : severityColor == 'red'
+                                  ? Colors.red
+                                  : isSell
+                                      ? AppTheme.primaryGreen
+                                      : AppTheme.accentOrange,
                           fontSize: 22, // Huge text grabbing attention
                           fontWeight: FontWeight.w900,
                           letterSpacing: 0.5,
@@ -420,8 +460,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
                             horizontal: 12, vertical: 6),
                         decoration: BoxDecoration(
                           color: riskLevel.toUpperCase() == 'LOW'
-                              ? const Color(0xFFE8F5E9)
-                              : const Color(0xFFFFF3E0),
+                              ? Colors.white.withOpacity(0.7)
+                              : Colors.white.withOpacity(0.7),
                           borderRadius: BorderRadius.circular(14),
                         ),
                         child: Text(
@@ -461,9 +501,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
       decoration: BoxDecoration(
-        color: Colors.grey.shade50,
+        color: Colors.white.withOpacity(0.5),
         borderRadius: BorderRadius.circular(8),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: Colors.white.withOpacity(0.8)),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
