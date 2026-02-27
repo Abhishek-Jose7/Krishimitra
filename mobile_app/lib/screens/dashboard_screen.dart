@@ -13,6 +13,7 @@ import 'price_screen.dart';
 import 'recommendation_screen.dart';
 import 'yield_screen.dart';
 import 'profit_calculator_screen.dart';
+import 'pest_vision_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -227,7 +228,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                                   const EdgeInsets.symmetric(horizontal: 16),
                               scrollDirection: Axis.horizontal,
                               clipBehavior: Clip.none,
-                              children: _buildStrategyActions(),
+                              children: _buildStrategyActions(crop),
                             ),
                           ),
                         ),
@@ -1189,7 +1190,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // ═══════════════════════════════════════════════════
   // STRATEGY-ORDERED QUICK ACTIONS
   // ═══════════════════════════════════════════════════
-  List<Widget> _buildStrategyActions() {
+  List<Widget> _buildStrategyActions(String crop) {
     final actions = <Widget>[];
     final added = <String>{};
 
@@ -1207,6 +1208,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
           () => Navigator.push(
               context, MaterialPageRoute(builder: (_) => screen))));
     }
+
+    addAction('pest', "Scan Leaf", "Identify issues", Icons.camera_alt,
+        AppTheme.primaryGreen, PestVisionScreen(currentCrop: crop));
 
     for (final card in _strategy.cardPriority) {
       if (card.contains('price') || card == 'daily_price') {

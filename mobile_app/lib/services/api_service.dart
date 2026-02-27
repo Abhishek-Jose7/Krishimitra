@@ -223,6 +223,14 @@ class ApiService {
     }
   }
 
+  /// AI Pest Vision — Analyze leaf image
+  Future<Map<String, dynamic>> analyzePest(String imageBase64, String crop) async {
+    return _post('/farm/analyze-pest', {
+      'image': imageBase64,
+      'crop': crop,
+    });
+  }
+
   // ── Private Helpers ──
   Future<Map<String, dynamic>> _post(String endpoint, Map<String, dynamic> data) async {
     try {
