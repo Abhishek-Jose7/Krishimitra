@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import '../providers/farmer_profile_provider.dart';
 import '../services/api_service.dart';
@@ -133,7 +134,10 @@ class _DashboardScreenState extends State<DashboardScreen> {
         title: Row(children: [
           const Icon(Icons.eco, size: 22),
           const SizedBox(width: 8),
-          Text("KrishiMitra", style: AppTheme.headingMedium.copyWith(color: Colors.white, fontSize: 18)),
+          Text.rich(TextSpan(children: [
+            TextSpan(text: 'Krishi', style: GoogleFonts.dmSans(color: Colors.white, fontSize: 19, fontWeight: FontWeight.w400)),
+            TextSpan(text: 'Mitra', style: GoogleFonts.playfairDisplay(color: AppTheme.accentGold, fontSize: 19, fontWeight: FontWeight.w700, fontStyle: FontStyle.italic)),
+          ])),
         ]),
         actions: [
           IconButton(icon: const Icon(Icons.notifications_outlined), onPressed: () {}),
@@ -190,7 +194,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                     const SizedBox(height: 16),
 
                     // ═══ 8. QUICK ACTIONS ═══
-                    Text("Quick Actions", style: AppTheme.headingMedium.copyWith(fontSize: 16)),
+                    _buildSectionHeader("Quick Actions"),
                     const SizedBox(height: 10),
                     GridView.count(
                       crossAxisCount: 2, shrinkWrap: true,
@@ -352,7 +356,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           // THE ANSWER
           Text(
             isSell ? "SELL TODAY" : "WAIT ~$waitDays days",
-            style: const TextStyle(color: Colors.white, fontSize: 28, fontWeight: FontWeight.w800, letterSpacing: 0.5),
+            style: GoogleFonts.roboto(color: Colors.white, fontSize: 30, fontWeight: FontWeight.w900, letterSpacing: 0.5),
           ),
           const SizedBox(height: 4),
 
@@ -521,7 +525,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget _mspPill(String label, String value, Color color) {
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 8, vertical: 4),
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(4), border: Border.all(color: Colors.grey.shade200)),
+      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(AppTheme.chipRadius), border: Border.all(color: AppTheme.cardBorder)),
       child: Column(children: [
         Text(label, style: AppTheme.bodyMedium.copyWith(fontSize: 9)),
         Text(value, style: TextStyle(color: color, fontSize: 13, fontWeight: FontWeight.bold)),
@@ -532,6 +536,32 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // ═══════════════════════════════════════════════════
   // GREETING + WEATHER
   // ═══════════════════════════════════════════════════
+  // ═══════════════════════════════════════════════════
+  // SECTION HEADER — Playfair Display italic + gold divider
+  // ═══════════════════════════════════════════════════
+  Widget _buildSectionHeader(String title) {
+    return Row(
+      children: [
+        Text(
+          title,
+          style: GoogleFonts.playfairDisplay(
+            fontSize: 18,
+            fontWeight: FontWeight.w700,
+            fontStyle: FontStyle.italic,
+            color: AppTheme.textDark,
+          ),
+        ),
+        const SizedBox(width: 12),
+        Expanded(
+          child: Container(
+            height: 1,
+            color: AppTheme.accentGold.withOpacity(0.4),
+          ),
+        ),
+      ],
+    );
+  }
+
   Widget _buildGreetingWeatherCard(FarmerProfile profile) {
     final temp = (_weatherData?['temp'] ?? 30).toDouble();
     final humidity = (_weatherData?['humidity'] ?? 60).toDouble();
@@ -542,59 +572,128 @@ class _DashboardScreenState extends State<DashboardScreen> {
     else if (condition.toLowerCase().contains('cloud')) weatherIcon = Icons.cloud;
     else if (condition.toLowerCase().contains('haze') || condition.toLowerCase().contains('mist')) weatherIcon = Icons.foggy;
 
-    return Container(
-      decoration: BoxDecoration(color: AppTheme.primaryGreen, borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
-      child: Column(children: [
-        Padding(
-          padding: const EdgeInsets.fromLTRB(16, 16, 16, 12),
-          child: Row(children: [
-            Container(
-              width: 44, height: 44,
-              decoration: BoxDecoration(color: Colors.white.withOpacity(0.2), borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
-              child: const Icon(Icons.person, color: Colors.white, size: 24),
-            ),
-            const SizedBox(width: 12),
-            Expanded(child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text("Namaste, ${profile.displayName} 🙏", style: AppTheme.headingMedium.copyWith(color: Colors.white, fontSize: 18)),
-              Text("${profile.displayCrops} · ${profile.district ?? 'Location'}", style: AppTheme.bodyMedium.copyWith(color: Colors.white70, fontSize: 12)),
-            ])),
-          ]),
-        ),
-        Container(
-          margin: const EdgeInsets.fromLTRB(8, 0, 8, 8),
-          padding: const EdgeInsets.all(12),
-          decoration: BoxDecoration(color: Colors.white.withOpacity(0.15), borderRadius: BorderRadius.circular(AppTheme.cardRadius)),
-          child: Row(children: [
-            Icon(weatherIcon, color: Colors.white, size: 32),
-            const SizedBox(width: 10),
-            Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text("${temp.toStringAsFixed(0)}°C", style: AppTheme.headingLarge.copyWith(color: Colors.white, fontSize: 22)),
-              Text(condition, style: AppTheme.bodyMedium.copyWith(color: Colors.white70, fontSize: 11)),
-            ]),
-            const Spacer(),
-            Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
-              Row(mainAxisSize: MainAxisSize.min, children: [
-                Icon(Icons.water_drop_outlined, color: Colors.white.withOpacity(0.7), size: 14),
-                const SizedBox(width: 4),
-                Text("${humidity.toStringAsFixed(0)}%", style: AppTheme.bodyMedium.copyWith(color: Colors.white.withOpacity(0.8), fontSize: 11)),
-              ]),
-              const SizedBox(height: 4),
-              Row(mainAxisSize: MainAxisSize.min, children: [
-                Icon(Icons.umbrella_outlined, color: Colors.white.withOpacity(0.7), size: 14),
-                const SizedBox(width: 4),
-                Text("${rainfall.toStringAsFixed(1)}mm", style: AppTheme.bodyMedium.copyWith(color: Colors.white.withOpacity(0.8), fontSize: 11)),
-              ]),
-            ]),
-            if (_strategy.showExtendedWeather && rainfall > 30) ...[
-              const SizedBox(width: 8),
-              Container(
-                padding: const EdgeInsets.all(4),
-                decoration: BoxDecoration(color: Colors.red.withOpacity(0.3), borderRadius: BorderRadius.circular(4)),
-                child: const Icon(Icons.warning_amber, color: Colors.white, size: 16),
+    // Pick a weather-appropriate photo URL
+    String weatherPhotoUrl;
+    if (condition.toLowerCase().contains('rain')) {
+      weatherPhotoUrl = 'https://images.unsplash.com/photo-1534274988757-a28bf1a57c17?w=800&q=80';
+    } else if (condition.toLowerCase().contains('cloud')) {
+      weatherPhotoUrl = 'https://images.unsplash.com/photo-1500382017468-9049fed747ef?w=800&q=80';
+    } else {
+      weatherPhotoUrl = 'https://images.unsplash.com/photo-1625246333195-78d9c38ad449?w=800&q=80';
+    }
+
+    return SizedBox(
+      height: 220,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+        child: Stack(
+          fit: StackFit.expand,
+          children: [
+            // Photo background with fallback
+            Image.network(
+              weatherPhotoUrl,
+              fit: BoxFit.cover,
+              errorBuilder: (_, __, ___) => Container(
+                decoration: const BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [Color(0xFF1A4731), Color(0xFF2D6A4F)],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
               ),
-            ],
-          ]),
+            ),
+            // Dark gradient overlay
+            Container(
+              decoration: const BoxDecoration(
+                gradient: LinearGradient(
+                  colors: [Color(0x10000000), Color(0xCC000000)],
+                  begin: Alignment.topCenter,
+                  end: Alignment.bottomCenter,
+                ),
+              ),
+            ),
+            // Content
+            Padding(
+              padding: const EdgeInsets.all(18),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  // Top row: greeting + location pill
+                  Row(
+                    children: [
+                      Container(
+                        padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+                        decoration: BoxDecoration(
+                          color: Colors.white.withOpacity(0.2),
+                          borderRadius: BorderRadius.circular(AppTheme.chipRadius),
+                        ),
+                        child: Row(mainAxisSize: MainAxisSize.min, children: [
+                          const Icon(Icons.location_on, color: Colors.white, size: 13),
+                          const SizedBox(width: 4),
+                          Text(profile.district ?? 'Location', style: GoogleFonts.dmSans(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600)),
+                        ]),
+                      ),
+                      const Spacer(),
+                      Text("Namaste, ${profile.displayName} 🙏", style: GoogleFonts.dmSans(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w500)),
+                    ],
+                  ),
+                  const Spacer(),
+                  // Big temperature
+                  Row(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text(
+                        "${temp.toStringAsFixed(0)}°",
+                        style: GoogleFonts.roboto(color: Colors.white, fontSize: 64, fontWeight: FontWeight.w900, height: 1.0),
+                      ),
+                      const SizedBox(width: 12),
+                      Padding(
+                        padding: const EdgeInsets.only(bottom: 10),
+                        child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+                          Text(condition, style: GoogleFonts.dmSans(color: Colors.white, fontSize: 16, fontWeight: FontWeight.w600)),
+                          Text("${profile.displayCrops}", style: GoogleFonts.dmSans(color: Colors.white70, fontSize: 11)),
+                        ]),
+                      ),
+                    ],
+                  ),
+                  const SizedBox(height: 10),
+                  // Bottom pills
+                  Row(
+                    children: [
+                      _weatherPill(Icons.water_drop_outlined, "${humidity.toStringAsFixed(0)}%"),
+                      const SizedBox(width: 8),
+                      _weatherPill(Icons.air, "${rainfall.toStringAsFixed(1)}mm"),
+                      if (_strategy.showExtendedWeather && rainfall > 30) ...[
+                        const SizedBox(width: 8),
+                        Container(
+                          padding: const EdgeInsets.all(4),
+                          decoration: BoxDecoration(color: Colors.red.withOpacity(0.4), borderRadius: BorderRadius.circular(8)),
+                          child: const Icon(Icons.warning_amber, color: Colors.white, size: 14),
+                        ),
+                      ],
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ],
         ),
+      ),
+    );
+  }
+
+  Widget _weatherPill(IconData icon, String text) {
+    return Container(
+      padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(0.2),
+        borderRadius: BorderRadius.circular(AppTheme.chipRadius),
+      ),
+      child: Row(mainAxisSize: MainAxisSize.min, children: [
+        Icon(icon, color: Colors.white, size: 13),
+        const SizedBox(width: 4),
+        Text(text, style: GoogleFonts.dmSans(color: Colors.white, fontSize: 11, fontWeight: FontWeight.w600)),
       ]),
     );
   }
@@ -646,9 +745,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ]),
         const SizedBox(height: 8),
         Row(crossAxisAlignment: CrossAxisAlignment.end, children: [
-          Text("₹${todayPrice.toStringAsFixed(0)}", style: AppTheme.headingLarge.copyWith(fontSize: 28)),
+          Text("₹${todayPrice.toStringAsFixed(0)}", style: GoogleFonts.playfairDisplay(fontSize: 30, fontWeight: FontWeight.w700, color: AppTheme.textDark)),
           const SizedBox(width: 4),
-          Padding(padding: const EdgeInsets.only(bottom: 4), child: Text("/Quintal", style: AppTheme.bodyMedium.copyWith(fontSize: 10))),
+          Padding(padding: const EdgeInsets.only(bottom: 6), child: Text("/Quintal", style: GoogleFonts.dmSans(fontSize: 10, color: AppTheme.textMuted))),
           const Spacer(),
           Column(crossAxisAlignment: CrossAxisAlignment.end, children: [
             Text("Yesterday: ₹${yesterdayPrice.toStringAsFixed(0)}", style: AppTheme.bodyMedium.copyWith(fontSize: 10)),
@@ -732,23 +831,73 @@ class _DashboardScreenState extends State<DashboardScreen> {
     return actions.take(4).toList();
   }
 
+  // Photo URLs for quick action cards
+  static const _actionPhotos = {
+    'Price Forecast': 'asset:assets/images/price_forecast.png',
+    'Yield Estimate': 'https://images.unsplash.com/photo-1574323347407-f5e1ad6d020b?w=400&q=80',
+    'Sell/Hold Advice': 'https://images.unsplash.com/photo-1595508064774-5ff825a07340?w=400&q=80',
+    'Mandi Prices': 'https://images.unsplash.com/photo-1488459716781-31db52582fe9?w=400&q=80',
+  };
+
   Widget _buildActionCard(String title, String subtitle, IconData icon, Color color, VoidCallback onTap) {
-    return Container(
-      decoration: BoxDecoration(color: Colors.white, borderRadius: BorderRadius.circular(AppTheme.cardRadius), border: Border.all(color: Colors.grey.shade200)),
+    final photoUrl = _actionPhotos[title];
+    return ClipRRect(
+      borderRadius: BorderRadius.circular(AppTheme.cardRadius),
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: onTap, borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-          child: Padding(
-            padding: const EdgeInsets.all(12),
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, mainAxisAlignment: MainAxisAlignment.center, children: [
-              Container(padding: const EdgeInsets.all(6), decoration: BoxDecoration(color: color.withOpacity(0.1), borderRadius: BorderRadius.circular(2)),
-                child: Icon(icon, color: color, size: 20)),
-              const Spacer(),
-              Text(title, style: AppTheme.headingMedium.copyWith(fontSize: 13)),
-              const SizedBox(height: 1),
-              Text(subtitle, style: AppTheme.bodyMedium.copyWith(fontSize: 10)),
-            ]),
+          onTap: onTap,
+          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Photo background or color fallback
+              if (photoUrl != null && photoUrl.startsWith('asset:'))
+                Image.asset(
+                  photoUrl.substring(6),
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(color: color.withOpacity(0.15)),
+                )
+              else if (photoUrl != null)
+                Image.network(
+                  photoUrl,
+                  fit: BoxFit.cover,
+                  errorBuilder: (_, __, ___) => Container(color: color.withOpacity(0.15)),
+                )
+              else
+                Container(color: color.withOpacity(0.15)),
+              // Gradient overlay
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [color.withOpacity(0.0), color.withOpacity(0.85)],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(12),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.25),
+                        borderRadius: BorderRadius.circular(10),
+                      ),
+                      child: Icon(icon, color: Colors.white, size: 18),
+                    ),
+                    const Spacer(),
+                    Text(title, style: GoogleFonts.dmSans(color: Colors.white, fontSize: 13, fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 2),
+                    Text(subtitle, style: GoogleFonts.dmSans(color: Colors.white70, fontSize: 10)),
+                  ],
+                ),
+              ),
+            ],
           ),
         ),
       ),

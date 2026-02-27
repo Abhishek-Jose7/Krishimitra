@@ -229,7 +229,7 @@ class _PriceScreenState extends State<PriceScreen> {
                   show: true,
                   drawVerticalLine: false,
                   horizontalInterval: (maxY - minY) / 4,
-                  getDrawingHorizontalLine: (value) => FlLine(color: Colors.grey.shade200, strokeWidth: 1),
+                  getDrawingHorizontalLine: (value) => FlLine(color: AppTheme.cardBorder, strokeWidth: 1),
                 ),
                 titlesData: FlTitlesData(
                   show: true,

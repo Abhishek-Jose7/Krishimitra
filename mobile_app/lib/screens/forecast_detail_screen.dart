@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import '../theme.dart';
+import '../widgets/animated_bar.dart';
 
 /// Detailed forecast screen — shows full 7-day price forecast
 /// with chart, per-day breakdown, and reasoning.
@@ -39,8 +40,8 @@ class ForecastDetailScreen extends StatelessWidget {
               decoration: BoxDecoration(
                 color: isModel
                     ? AppTheme.accentBlue.withOpacity(0.08)
-                    : Colors.grey.shade100,
-                borderRadius: BorderRadius.circular(4),
+                    : AppTheme.selectedBg,
+                borderRadius: BorderRadius.circular(AppTheme.chipRadius),
               ),
               child: Row(
                 mainAxisSize: MainAxisSize.min,
@@ -48,7 +49,7 @@ class ForecastDetailScreen extends StatelessWidget {
                   Icon(
                     isModel ? Icons.auto_awesome : Icons.show_chart,
                     size: 14,
-                    color: isModel ? AppTheme.accentBlue : AppTheme.textLight,
+                    color: isModel ? AppTheme.accentBlue : AppTheme.textMuted,
                   ),
                   const SizedBox(width: 6),
                   Text(
@@ -56,7 +57,7 @@ class ForecastDetailScreen extends StatelessWidget {
                     style: AppTheme.bodyMedium.copyWith(
                       fontSize: 11,
                       fontWeight: FontWeight.w600,
-                      color: isModel ? AppTheme.accentBlue : AppTheme.textLight,
+                      color: isModel ? AppTheme.accentBlue : AppTheme.textMuted,
                     ),
                   ),
                 ],
@@ -130,7 +131,7 @@ class ForecastDetailScreen extends StatelessWidget {
                   color: isBest ? AppTheme.primaryGreen.withOpacity(0.06) : Colors.white,
                   borderRadius: BorderRadius.circular(AppTheme.cardRadius),
                   border: Border.all(
-                    color: isBest ? AppTheme.primaryGreen : Colors.grey.shade200,
+                    color: isBest ? AppTheme.primaryGreen : AppTheme.cardBorder,
                     width: isBest ? 1.5 : 1,
                   ),
                 ),
@@ -285,7 +286,7 @@ class ForecastDetailScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: AppTheme.cardBorder),
       ),
       child: SizedBox(
         height: 120,
@@ -310,11 +311,12 @@ class ForecastDetailScreen extends StatelessWidget {
                               ? AppTheme.primaryGreen
                               : isMin
                                   ? AppTheme.error
-                                  : AppTheme.textLight,
+                                  : AppTheme.textMuted,
                         )),
                     const SizedBox(height: 4),
-                    Container(
-                      height: barHeight,
+                     AnimatedBar(
+                      targetHeight: barHeight,
+                      delay: Duration(milliseconds: i * 120),
                       decoration: BoxDecoration(
                         color: isMax
                             ? AppTheme.primaryGreen
@@ -325,8 +327,8 @@ class ForecastDetailScreen extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 4),
-                    Text("Day ${i + 1}",
-                        style: TextStyle(fontSize: 9, color: Colors.grey.shade600)),
+                     Text("Day ${i + 1}",
+                        style: TextStyle(fontSize: 9, color: AppTheme.textMuted)),
                   ],
                 ),
               ),
@@ -347,7 +349,7 @@ class ForecastDetailScreen extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 5),
       decoration: BoxDecoration(
         color: color,
-        borderRadius: BorderRadius.circular(4),
+        borderRadius: BorderRadius.circular(AppTheme.chipRadius),
       ),
       child: Row(
         mainAxisSize: MainAxisSize.min,
@@ -367,7 +369,14 @@ class ForecastDetailScreen extends StatelessWidget {
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-        border: Border.all(color: Colors.grey.shade200),
+        border: Border.all(color: AppTheme.cardBorder),
+        boxShadow: [
+          BoxShadow(
+            color: const Color(0xFF1A4731).withOpacity(0.08),
+            blurRadius: 12,
+            offset: const Offset(0, 2),
+          ),
+        ],
       ),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,

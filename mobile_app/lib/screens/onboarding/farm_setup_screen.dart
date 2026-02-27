@@ -284,29 +284,38 @@ class _FarmSetupScreenState extends State<FarmSetupScreen>
                         onTap: () => _toggleCrop(crop['name']),
                         child: AnimatedContainer(
                           duration: const Duration(milliseconds: 200),
-                          padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 10),
+                          padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 8),
                           decoration: BoxDecoration(
-                            color: isSelected ? (crop['color'] as Color) : Colors.white,
+                            color: isSelected ? const Color(0xFFFDF3DC) : Colors.white, // wheat/parchment background
                             borderRadius: BorderRadius.circular(AppTheme.chipRadius),
                             border: Border.all(
-                              color: isSelected ? (crop['color'] as Color) : Colors.grey.shade300,
+                              color: isSelected ? const Color(0xFFE9C46A) : Colors.grey.shade300, // gold border
                               width: isSelected ? 2 : 1,
                             ),
-                            boxShadow: isSelected
-                                ? [BoxShadow(color: (crop['color'] as Color).withOpacity(0.25), blurRadius: 8, offset: const Offset(0, 2))]
-                                : [],
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
                             children: [
-                              Text(crop['icon'], style: const TextStyle(fontSize: 18)),
+                              Text(crop['icon'], style: const TextStyle(fontSize: 16)),
                               const SizedBox(width: 6),
                               Text(crop['name'], style: TextStyle(fontSize: 13, fontWeight: FontWeight.w600,
-                                  color: isSelected ? Colors.white : AppTheme.textDark)),
-                              if (isSelected) ...[
-                                const SizedBox(width: 4),
-                                const Icon(Icons.check_circle, color: Colors.white, size: 16),
-                              ],
+                                  color: isSelected ? AppTheme.primaryGreen : AppTheme.textDark)),
+                              const SizedBox(width: 8),
+                              
+                              // Square Add/Confirmed Button
+                              Container(
+                                width: 28,
+                                height: 28,
+                                decoration: BoxDecoration(
+                                  color: isSelected ? const Color(0xFFD8F3DC) : AppTheme.primaryGreen,
+                                  borderRadius: BorderRadius.circular(8),
+                                ),
+                                child: Icon(
+                                  isSelected ? Icons.check : Icons.add,
+                                  color: isSelected ? AppTheme.primaryGreen : Colors.white,
+                                  size: 18,
+                                ),
+                              ),
                             ],
                           ),
                         ),
@@ -357,9 +366,9 @@ class _FarmSetupScreenState extends State<FarmSetupScreen>
                             hintStyle: TextStyle(color: Colors.grey.shade400, fontSize: 14),
                             filled: true, fillColor: Colors.white,
                             prefixIcon: const Icon(Icons.eco, color: AppTheme.primaryGreen, size: 20),
-                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(AppTheme.inputRadius),
+                            border: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0),
                                 borderSide: BorderSide(color: Colors.grey.shade300)),
-                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(AppTheme.inputRadius),
+                            focusedBorder: OutlineInputBorder(borderRadius: BorderRadius.circular(12.0),
                                 borderSide: const BorderSide(color: AppTheme.primaryGreen, width: 2)),
                             contentPadding: const EdgeInsets.symmetric(horizontal: 14, vertical: 14),
                           ),
@@ -374,7 +383,7 @@ class _FarmSetupScreenState extends State<FarmSetupScreen>
                           style: ElevatedButton.styleFrom(
                             backgroundColor: AppTheme.primaryGreen,
                             foregroundColor: Colors.white,
-                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(AppTheme.inputRadius)),
+                            shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(12.0)),
                             padding: const EdgeInsets.symmetric(horizontal: 16),
                           ),
                           child: const Text("Add", style: TextStyle(fontWeight: FontWeight.w600)),
@@ -422,7 +431,7 @@ class _FarmSetupScreenState extends State<FarmSetupScreen>
                       decoration: BoxDecoration(
                         color: Colors.white,
                         borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-                        border: Border.all(color: Colors.grey.shade200),
+                        border: Border.all(color: AppTheme.cardBorder),
                       ),
                       child: Row(
                         children: [
@@ -542,7 +551,7 @@ class _FarmSetupScreenState extends State<FarmSetupScreen>
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-                      border: Border.all(color: Colors.grey.shade200),
+                      border: Border.all(color: AppTheme.cardBorder),
                     ),
                     child: Row(
                       children: [

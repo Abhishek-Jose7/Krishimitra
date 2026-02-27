@@ -50,7 +50,7 @@ class _LanguageScreenState extends State<LanguageScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: AppTheme.background,
+      backgroundColor: AppTheme.surface, // changed to surface (warm cream)
       body: SafeArea(
         child: FadeTransition(
           opacity: _fadeAnim,
@@ -124,23 +124,23 @@ class _LanguageScreenState extends State<LanguageScreen>
                           duration: const Duration(milliseconds: 200),
                           decoration: BoxDecoration(
                             color: isSelected
-                                ? AppTheme.primaryGreen
-                                : Colors.white,
+                                ? const Color(0xFFFDF3DC) // warm glow parchment
+                                : Colors.white, // default parchment card
                             borderRadius:
                                 BorderRadius.circular(AppTheme.cardRadius),
                             border: Border.all(
                               color: isSelected
-                                  ? AppTheme.primaryGreen
+                                  ? AppTheme.accentGold
                                   : Colors.grey.shade300,
                               width: isSelected ? 2 : 1,
                             ),
                             boxShadow: isSelected
                                 ? [
                                     BoxShadow(
-                                      color: AppTheme.primaryGreen
-                                          .withOpacity(0.2),
-                                      blurRadius: 8,
-                                      offset: const Offset(0, 2),
+                                      color: AppTheme.accentGold
+                                          .withOpacity(0.3),
+                                      blurRadius: 12,
+                                      offset: const Offset(0, 4),
                                     )
                                   ]
                                 : [],
@@ -165,7 +165,7 @@ class _LanguageScreenState extends State<LanguageScreen>
                                           fontSize: 14,
                                           fontWeight: FontWeight.w600,
                                           color: isSelected
-                                              ? Colors.white
+                                              ? AppTheme.primaryGreen
                                               : AppTheme.textDark,
                                         ),
                                       ),
@@ -174,7 +174,7 @@ class _LanguageScreenState extends State<LanguageScreen>
                                         style: TextStyle(
                                           fontSize: 11,
                                           color: isSelected
-                                              ? Colors.white70
+                                              ? AppTheme.primaryGreen.withOpacity(0.8)
                                               : AppTheme.textLight,
                                         ),
                                       ),
@@ -183,7 +183,7 @@ class _LanguageScreenState extends State<LanguageScreen>
                                 ),
                                 if (isSelected)
                                   const Icon(Icons.check_circle,
-                                      color: Colors.white, size: 20),
+                                      color: AppTheme.accentGold, size: 20),
                               ],
                             ),
                           ),
