@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import '../theme.dart';
 import 'dashboard_screen.dart';
+import 'financial_protection_screen.dart';
 import 'mandi_screen.dart';
 import 'profile_screen.dart';
 
@@ -16,6 +17,7 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
     const DashboardScreen(),
+    const FinancialProtectionScreen(),
     const MandiScreen(),
     const ProfileScreen(),
   ];
@@ -57,6 +59,11 @@ class _HomeScreenState extends State<HomeScreen> {
               icon: const Icon(Icons.home_outlined),
               activeIcon: _buildActiveIcon(Icons.home),
               label: 'Home',
+            ),
+            BottomNavigationBarItem(
+              icon: const Icon(Icons.shield_outlined),
+              activeIcon: _buildActiveIcon(Icons.shield),
+              label: 'Protection',
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.storefront_outlined),
