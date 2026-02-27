@@ -262,237 +262,185 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final severityColor = rec?['severity_color'];
     final karnatakaRev = rec?['revenue_today'];
 
-    final todayPrice = (_mandiPrices != null && _mandiPrices!.isNotEmpty)
-        ? (_mandiPrices![0]['today_price']?.toDouble() ?? 2120.0)
-        : 2120.0;
     final revenueToday = karnatakaRev != null
         ? (karnatakaRev as int).toDouble()
-        : (expectedYield * todayPrice);
+        : (expectedYield * 2120.0);
+
+    final bgColor = severityColor == 'orange'
+        ? const Color(0xFFE65100)
+        : severityColor == 'red'
+            ? const Color(0xFFD32F2F)
+            : isSell
+                ? const Color(0xFF2E7D32)
+                : const Color(0xFFE65100);
 
     return Container(
       decoration: BoxDecoration(
-        color: severityColor == 'orange' 
-            ? const Color(0xFFFFF3E0) 
-            : severityColor == 'red' 
-                ? const Color(0xFFFFEBEE) 
-                : isSell 
-                    ? const Color(0xFFE8F5E9) 
-                    : const Color(0xFFFFF3E0),
+        color: bgColor,
         borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(24),
-          topRight: Radius.circular(24),
-        ), // Modal-like top corners, touches bottom edges
-        border: Border.all(
-          color: severityColor == 'orange' 
-              ? Colors.orange.withOpacity(0.3) 
-              : severityColor == 'red' 
-                  ? Colors.red.withOpacity(0.3) 
-                  : isSell 
-                      ? Colors.green.withOpacity(0.3) 
-                      : Colors.orange.withOpacity(0.3),
+          topLeft: Radius.circular(32),
+          topRight: Radius.circular(32),
         ),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.2),
+            blurRadius: 20,
+            offset: const Offset(0, -5),
+          )
+        ],
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        children: [
-          // Header Row
-          Padding(
-            padding: const EdgeInsets.fromLTRB(20, 24, 20, 16),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+      child: Padding(
+        // Reduced bottom padding slightly to make it more compact
+        padding: const EdgeInsets.fromLTRB(24, 28, 24, 80),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            // Simplified Status Line
+            Row(
               children: [
-                Row(
-                  children: [
-                    const Icon(Icons.psychology,
-                        color: AppTheme.primaryGreen, size: 20),
-                    const SizedBox(width: 8),
-                    Text(
-                      loc.translate('market_intelligence'),
-                      style: GoogleFonts.dmSans(
-                        color: AppTheme.textDark,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                      ),
-                    ),
-                  ],
-                ),
-                Row(
-                  children: [
-                    // TTS Audio Button
-                    Consumer<LocalizationProvider>(builder: (context, loc, _) {
-                      return GestureDetector(
-                        onTap: () {
-                          String textToSpeak = _alerts.isNotEmpty
-                              ? _alerts.first.message
-                              : (isSell
-                                  ? "Good time to sell. Storage costs exceed benefits."
-                                  : explanation);
-                          loc.speak(textToSpeak);
-                        },
-                        child: Container(
-                          padding: const EdgeInsets.symmetric(
-                              horizontal: 10, vertical: 4),
-                          decoration: BoxDecoration(
-                            color: AppTheme.primaryGreen,
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: Row(
-                            children: [
-                              const Icon(Icons.volume_up,
-                                  color: Colors.white, size: 14),
-                              const SizedBox(width: 4),
-                              Text(
-                                "Listen",
-                                style: GoogleFonts.dmSans(
-                                  color: Colors.white,
-                                  fontSize: 12,
-                                  fontWeight: FontWeight.w700,
-                                ),
-                              ),
-                            ],
-                          ),
+                Container(
+                  padding:
+                      const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                  decoration: BoxDecoration(
+                    color: Colors.white.withOpacity(0.2),
+                    borderRadius: BorderRadius.circular(20),
+                  ),
+                  child: Row(
+                    children: [
+                      Icon(
+                          isSell
+                              ? Icons.check_circle
+                              : Icons.pause_circle_filled,
+                          color: Colors.white,
+                          size: 14),
+                      const SizedBox(width: 6),
+                      Text(
+                        isSell ? "Ready to Sell" : "Wait Support",
+                        style: GoogleFonts.dmSans(
+                          color: Colors.white,
+                          fontSize: 11,
+                          fontWeight: FontWeight.bold,
                         ),
-                      );
-                    }),
-                    const SizedBox(width: 8),
-                    Container(
-                      padding: const EdgeInsets.symmetric(
-                          horizontal: 10, vertical: 4),
-                      decoration: BoxDecoration(
-                        color: AppTheme.primaryGreen.withOpacity(0.1),
-                        borderRadius: BorderRadius.circular(12),
                       ),
-                      child: Row(
-                        children: [
-                          const Icon(Icons.lightbulb,
-                              color: AppTheme.accentOrange, size: 14),
-                          const SizedBox(width: 4),
-                          Text(
-                            loc.translate('suggestion'),
-                            style: GoogleFonts.dmSans(
-                              color: AppTheme.primaryGreen,
-                              fontSize: 12,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
+                    ],
+                  ),
+                ),
+                const Spacer(),
+                Text(
+                  "Risk: ${riskLevel}",
+                  style: GoogleFonts.dmSans(
+                    color: Colors.white70,
+                    fontSize: 11,
+                    fontWeight: FontWeight.bold,
+                  ),
                 ),
               ],
             ),
-          ),
+            const SizedBox(height: 20),
 
-          // Content Row (Making it huge like Market Intelligence box)
-          Padding(
-            padding:
-                const EdgeInsets.fromLTRB(20, 0, 20, 32), // More bottom padding
-            child: Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
+            // Big Visual Instruction - EMOJI DRIVEN
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                // Larger Rectangle Image
-                ClipRRect(
-                  borderRadius: BorderRadius.circular(24),
-                  child: Image.network(
-                    'https://images.unsplash.com/photo-1595508064774-5ff825a07340?w=400&q=80',
-                    width: 120, // Huge size
-                    height: 120,
-                    fit: BoxFit.cover,
-                    errorBuilder: (_, __, ___) => Container(
-                      width: 120,
-                      height: 120,
-                      color: AppTheme.lightGreen,
-                      child:
-                          const Icon(Icons.grass, color: AppTheme.primaryGreen),
-                    ),
+                Container(
+                  padding: const EdgeInsets.all(12),
+                  decoration: const BoxDecoration(
+                    color: Colors.white24,
+                    shape: BoxShape.circle,
+                  ),
+                  child: Icon(
+                    isSell ? Icons.shopping_cart_checkout : Icons.inventory_2,
+                    color: Colors.white,
+                    size: 32,
                   ),
                 ),
                 const SizedBox(width: 16),
-
-                // Details Column
                 Expanded(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        _alerts.isNotEmpty
-                            ? _alerts.first.title.toUpperCase()
-                            : (isSell
-                                ? "${loc.translate('sell_today')} $crop"
-                                    .toUpperCase()
-                                : "${loc.translate('hold_inventory')} $crop"
-                                    .toUpperCase()),
+                        isSell ? "SELL $crop" : "STORE $crop",
                         style: GoogleFonts.dmSans(
-                          color: severityColor == 'orange'
-                              ? AppTheme.accentOrange
-                              : severityColor == 'red'
-                                  ? Colors.red
-                                  : isSell
-                                      ? AppTheme.primaryGreen
-                                      : AppTheme.accentOrange,
-                          fontSize: 22, // Huge text grabbing attention
+                          color: Colors.white,
+                          fontSize: 32,
                           fontWeight: FontWeight.w900,
-                          letterSpacing: 0.5,
-                          height: 1.1,
+                          height: 1.0,
                         ),
                       ),
-                      const SizedBox(height: 8),
                       Text(
-                        _alerts.isNotEmpty
-                            ? _alerts.first.message
-                            : (isSell
-                                ? "Good time to sell. Storage costs exceed benefits."
-                                : explanation),
-                        maxLines: 4,
-                        overflow: TextOverflow.ellipsis,
+                        isSell ? "Best Profit Today" : "Prices will go up soon",
                         style: GoogleFonts.dmSans(
-                          color: AppTheme.textDark,
+                          color: Colors.white.withOpacity(0.8),
                           fontSize: 14,
-                          height: 1.3,
+                          fontWeight: FontWeight.w500,
                         ),
-                      ),
-                      const SizedBox(height: 12),
-
-                      // Status Chip Light Green Capsule
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                            horizontal: 12, vertical: 6),
-                        decoration: BoxDecoration(
-                          color: riskLevel.toUpperCase() == 'LOW'
-                              ? Colors.white.withOpacity(0.7)
-                              : Colors.white.withOpacity(0.7),
-                          borderRadius: BorderRadius.circular(14),
-                        ),
-                        child: Text(
-                          "Risk: $riskLevel",
-                          style: GoogleFonts.dmSans(
-                            color: riskLevel.toUpperCase() == 'LOW'
-                                ? const Color(0xFF1B4332)
-                                : AppTheme.accentOrange, // Dark green text
-                            fontSize: 12,
-                            fontWeight: FontWeight.w700,
-                          ),
-                        ),
-                      ),
-                      const SizedBox(height: 16),
-
-                      // Metric pills (larger)
-                      Row(
-                        children: [
-                          _buildMiniPill(Icons.landscape, "$landSize ha"),
-                          const SizedBox(width: 8),
-                          _buildMiniPill(Icons.currency_rupee,
-                              "Rev: ₹${_formatNumber(revenueToday)}"),
-                        ],
                       ),
                     ],
                   ),
                 ),
               ],
             ),
-          ),
-        ],
+            const SizedBox(height: 24),
+
+            // The 'Farmer's Money' Summary Box
+            Container(
+              padding: const EdgeInsets.all(16),
+              decoration: BoxDecoration(
+                color: Colors.white.withOpacity(0.1),
+                borderRadius: BorderRadius.circular(16),
+                border: Border.all(color: Colors.white24),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Estimated Income",
+                          style: GoogleFonts.dmSans(
+                              color: Colors.white70, fontSize: 12)),
+                      Text("₹${_formatNumber(revenueToday)}",
+                          style: GoogleFonts.dmSans(
+                              color: Colors.white,
+                              fontSize: 24,
+                              fontWeight: FontWeight.w800)),
+                    ],
+                  ),
+                  const Icon(Icons.arrow_forward_ios,
+                      color: Colors.white38, size: 16),
+                ],
+              ),
+            ),
+            const SizedBox(height: 20),
+
+            // Simple Why-To-Do logic
+            Text(
+              isSell
+                  ? "Market price is high right now. Selling now gives you more cash than waiting."
+                  : "Prices are rising. If you wait a few more days, you will earn more money.",
+              style: GoogleFonts.dmSans(
+                color: Colors.white.withOpacity(0.9),
+                fontSize: 14,
+                height: 1.4,
+              ),
+            ),
+
+            const SizedBox(height: 20),
+            // Footer Trust Badge - Tiny
+            Row(
+              children: [
+                const Icon(Icons.security, color: Colors.white54, size: 12),
+                const SizedBox(width: 6),
+                Text(
+                  "KrishiMitra AI Protected Advice",
+                  style:
+                      GoogleFonts.dmSans(color: Colors.white54, fontSize: 10),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
