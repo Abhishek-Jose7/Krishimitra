@@ -566,15 +566,22 @@ class _FarmSetupScreenState extends State<FarmSetupScreen>
     final profile = Provider.of<FarmerProfile>(context, listen: false);
     final cropsList = _cropAreas.keys.toList();
     final primaryCrop = cropsList.first;
-    // Convert to hectares for storage
-    final totalHa = _areaUnit == 'Acres' ? _toHectares(_totalArea) : _totalArea;
 
-    // Build crop areas map (always in acres for backend)
-    final cropAreasMap = <String, double>{};
-    _cropAreas.forEach((k, v) {
-      cropAreasMap[k] = _areaUnit == 'Acres' ? v : _fromHectares(v);
-    });
+    // Convert all areas to hectares
+    final cropsPayload = <Map<String, dynamic>>[];
+    for (final entry in _cropAreas.entries) {
+      final areaInAcres = _areaUnit == 'Acres' ? entry.value : _fromHectares(entry.value);
+      final areaHectares = areaInAcres * 0.4047;
+      cropsPayload.add({
+        'crop_name': entry.key,
+        'area_hectares': areaHectares,
+        'preferred_mandi': profile.nearestMandi,
+      });
+    }
 
+    final totalHa = cropsPayload.fold<double>(0, (sum, c) => sum + (c['area_hectares'] as double));
+
+    // Save locally first (with temporary IDs)
     await profile.setFarmProfile(
       crop: primaryCrop,
       crops: cropsList,
@@ -582,12 +589,13 @@ class _FarmSetupScreenState extends State<FarmSetupScreen>
       storage: _autoStorage,
       soil: _soilType,
       irrigation: _irrigationType,
+      cropAreas: _cropAreas,
     );
     await profile.completeOnboarding();
 
-    // Sync to backend
+    // Sync to backend — send structured payload
     try {
-      await http.post(
+      final response = await http.post(
         Uri.parse('${ApiService.baseUrl}/auth/update-profile'),
         headers: {'Content-Type': 'application/json'},
         body: json.encode({
@@ -597,17 +605,27 @@ class _FarmSetupScreenState extends State<FarmSetupScreen>
           'district': profile.district,
           'latitude': profile.latitude,
           'longitude': profile.longitude,
-          'primary_crop': primaryCrop,
-          'crops': cropsList,
-          'crop_areas': cropAreasMap,
-          'preferred_mandi': profile.nearestMandi,
-          'land_size': totalHa,
-          'storage_available': _autoStorage,
-          'soil_type': _soilType,
-          'irrigation_type': _irrigationType,
           'onboarding_complete': true,
+          // Structured farm + crops payload
+          'farm': {
+            'farm_name': 'My Farm',
+            'soil_type': _soilType,
+            'irrigation_type': _irrigationType,
+            'has_storage': _autoStorage,
+          },
+          'crops': cropsPayload,
+          'preferred_mandi': profile.nearestMandi,
         }),
       );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        // Reload farms from backend (they now have real IDs)
+        if (data['farms'] != null && (data['farms'] as List).isNotEmpty) {
+          profile.loadFarmsFromJson(data['farms'] as List<dynamic>);
+          await profile.saveToLocal();
+        }
+      }
     } catch (_) {}
 
     if (mounted) {

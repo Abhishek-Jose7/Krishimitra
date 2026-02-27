@@ -4,7 +4,7 @@ import 'theme.dart';
 import 'services/api_service.dart';
 import 'providers/farmer_profile_provider.dart';
 import 'screens/home_screen.dart';
-import 'screens/onboarding/language_screen.dart';
+import 'screens/onboarding/welcome_screen.dart';
 
 void main() {
   FlutterError.onError = (FlutterErrorDetails details) {
@@ -111,7 +111,7 @@ class _SplashRouterState extends State<SplashRouter> {
     if (profile.onboardingComplete) {
       return const HomeScreen();
     } else {
-      return const LanguageScreen();
+      return const WelcomeScreen();
     }
   }
 }

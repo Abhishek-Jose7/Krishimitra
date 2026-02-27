@@ -72,7 +72,7 @@ class ApiService {
     return _post('/farmer/register', data);
   }
 
-  Future<Map<String, dynamic>> getProfile(int id) async {
+  Future<Map<String, dynamic>> getProfile(String id) async {
     final response = await http.get(Uri.parse('$baseUrl/farmer/$id'));
     if (response.statusCode == 200) {
       return json.decode(response.body);
@@ -82,8 +82,11 @@ class ApiService {
   }
 
   // ── Actual Yield Feedback ──
-  Future<Map<String, dynamic>> submitActualYield(double actualProduction) async {
-    return _post('/yield/actual', {'actual_production': actualProduction});
+  Future<Map<String, dynamic>> submitActualYield(double actualProduction, {String? farmCropId}) async {
+    return _post('/yield/actual', {
+      'actual_production': actualProduction,
+      if (farmCropId != null) 'farm_crop_id': farmCropId,
+    });
   }
 
   // ── Intelligent Dashboard (single call) ──
@@ -114,6 +117,66 @@ class ApiService {
     });
   }
 
+  // ══════════════════════════════════════════
+  // FARM & CROP CRUD
+  // ══════════════════════════════════════════
+
+  /// Get all farms + nested crops for a user
+  Future<Map<String, dynamic>> getUserFarms(String userId) async {
+    final response = await http.get(Uri.parse('$baseUrl/user/$userId/farms'));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load farms');
+    }
+  }
+
+  /// Get the default active crop context for a user
+  Future<Map<String, dynamic>> getActiveCrop(String userId) async {
+    final response = await http.get(Uri.parse('$baseUrl/user/$userId/active-crop'));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load active crop');
+    }
+  }
+
+  /// Create a new farm
+  Future<Map<String, dynamic>> createFarm(Map<String, dynamic> data) async {
+    return _post('/farms', data);
+  }
+
+  /// Add a crop to a farm
+  Future<Map<String, dynamic>> addCropToFarm(String farmId, Map<String, dynamic> data) async {
+    return _post('/farms/$farmId/crops', data);
+  }
+
+  /// Update a crop record
+  Future<Map<String, dynamic>> updateCrop(String farmId, String cropId, Map<String, dynamic> data) async {
+    final response = await http.put(
+      Uri.parse('$baseUrl/farms/$farmId/crops/$cropId'),
+      headers: {'Content-Type': 'application/json'},
+      body: json.encode(data),
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to update crop');
+    }
+  }
+
+  /// Delete a crop record
+  Future<Map<String, dynamic>> deleteCrop(String farmId, String cropId) async {
+    final response = await http.delete(
+      Uri.parse('$baseUrl/farms/$farmId/crops/$cropId'),
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to delete crop');
+    }
+  }
+
   // ── Private Helpers ──
   Future<Map<String, dynamic>> _post(String endpoint, Map<String, dynamic> data) async {
     try {
@@ -126,7 +189,6 @@ class ApiService {
       if (response.statusCode == 200 || response.statusCode == 201) {
         return json.decode(response.body);
       } else {
-        // Parse error message from response body if available
         try {
           final errorBody = json.decode(response.body);
           throw Exception(errorBody['error'] ?? 'Request failed: ${response.statusCode}');
@@ -140,4 +202,3 @@ class ApiService {
     }
   }
 }
-

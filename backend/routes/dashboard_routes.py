@@ -7,7 +7,7 @@ Returns a personalized dashboard payload:
   - MSP context
   - Sync recommendations
 
-Called by the Flutter app on every dashboard load.
+Now supports farm_crop_id for per-crop context loading.
 """
 
 from flask import Blueprint, request, jsonify
@@ -15,6 +15,7 @@ from services.intelligence_engine import IntelligenceEngine
 from services.weather_service import WeatherService
 from services.mandi_service import MandiService
 from services.recommendation_service import RecommendationService
+from services.farmer_service import FarmerService
 
 dashboard_bp = Blueprint('dashboard_bp', __name__)
 
@@ -24,32 +25,74 @@ def get_intelligent_dashboard():
     """
     POST /dashboard/intelligent
     Body: { state, crop, district, land_size, storage_available, mandi }
+      OR: { farm_crop_id }  ← crop-context-driven (preferred)
 
-    Returns everything the dashboard needs in ONE call — no 5 separate requests.
+    When farm_crop_id is provided, all params are loaded from the DB.
+    Falls back to flat params for backward compatibility.
     """
     data = request.json or {}
 
-    state = data.get('state', 'Maharashtra')
-    crop = data.get('crop', 'Rice')
-    district = data.get('district', 'Pune')
-    land_size = float(data.get('land_size', 2.0))
-    storage = data.get('storage_available', False)
-    mandi = data.get('mandi', f'{district} Mandi')
+    # ── Load context from farm_crop_id if provided ──
+    farm_crop_id = data.get('farm_crop_id')
+    if farm_crop_id:
+        ctx = FarmerService.get_crop_context(farm_crop_id)
+        if ctx:
+            state = ctx['state'] or data.get('state', 'Maharashtra')
+            crop = ctx['crop']
+            district = ctx['district'] or data.get('district', 'Pune')
+            land_size = ctx['area_hectares'] or float(data.get('land_size', 2.0))
+            storage = ctx['has_storage']
+            mandi = ctx['preferred_mandi'] or f'{district} Mandi'
+            soil_type = ctx.get('soil_type')
+            irrigation_type = ctx.get('irrigation_type')
+            sowing_date = ctx.get('sowing_date')
+        else:
+            # farm_crop_id not found — fall through to flat params
+            farm_crop_id = None
 
-    # 1. Get intelligence strategy
-    intelligence = IntelligenceEngine.get_intelligence(
-        state=state,
-        crop=crop,
-        district=district,
-        land_size=land_size,
-        storage_available=storage,
-    )
+    # ── Flat param fallback ──
+    if not farm_crop_id:
+        state = data.get('state', 'Maharashtra')
+        crop = data.get('crop', 'Rice')
+        district = data.get('district', 'Pune')
+        land_size = float(data.get('land_size', 2.0))
+        storage = data.get('storage_available', False)
+        mandi = data.get('mandi', f'{district} Mandi')
+        soil_type = data.get('soil_type')
+        irrigation_type = data.get('irrigation_type')
+        sowing_date = data.get('sowing_date')
 
-    # 2. Fetch weather (weight decides prominence)
+    # Track which sections failed so the frontend can show "unavailable" UI
+    unavailable = []
+
+    # 1. Get intelligence strategy (core — has fallback default)
+    intelligence = None
+    try:
+        intelligence = IntelligenceEngine.get_intelligence(
+            state=state,
+            crop=crop,
+            district=district,
+            land_size=land_size,
+            storage_available=storage,
+        )
+    except Exception:
+        unavailable.append('strategy')
+        intelligence = {
+            'region_focus': 'generic', 'region_label': state or 'India',
+            'crop_type': 'grain', 'advice_style': 'balanced',
+            'forecast_horizon': '7-day', 'card_priority': ['weather', 'price', 'recommendation'],
+            'weights': {}, 'sync_interval_hours': 6,
+            'region_alerts': [], 'crop_alerts': [],
+            'msp': None, 'govt_schemes': {},
+            'shelf_life_days': 180, 'storage_critical': False,
+        }
+
+    # 2. Fetch weather
     weather = None
     try:
         weather = WeatherService.get_weather(district)
     except Exception:
+        unavailable.append('weather')
         weather = {'temp': 30, 'humidity': 60, 'rainfall': 0, 'condition': 'Unknown'}
 
     # 3. Fetch mandi prices
@@ -57,16 +100,16 @@ def get_intelligent_dashboard():
     try:
         mandi_prices = MandiService.get_nearby_prices(crop, district=district)
     except Exception:
-        pass
+        unavailable.append('mandi_prices')
 
     # 4. Market risk
     market_risk = None
     try:
         market_risk = MandiService.get_market_risk()
     except Exception:
-        pass
+        unavailable.append('market_risk')
 
-    # 5. Recommendation (sell/hold) — now includes trust, features, season context
+    # 5. Recommendation (sell/hold)
     recommendation = None
     try:
         recommendation = RecommendationService.get_recommendation({
@@ -75,9 +118,13 @@ def get_intelligent_dashboard():
             'land_size': land_size,
             'mandi': mandi,
             'state': state,
+            'storage_available': storage,
+            'soil_type': soil_type,
+            'irrigation_type': irrigation_type,
+            'farm_crop_id': farm_crop_id,
         })
     except Exception:
-        pass
+        unavailable.append('recommendation')
 
     # 6. Feature data (for transparency)
     features = None
@@ -85,7 +132,7 @@ def get_intelligent_dashboard():
         from services.feature_engine import FeatureEngine
         features = FeatureEngine.compute_all_features(crop, district, mandi)
     except Exception:
-        pass
+        unavailable.append('features')
 
     # 7. Crop calendar context
     season_context = None
@@ -93,9 +140,9 @@ def get_intelligent_dashboard():
         from services.crop_calendar import CropCalendar
         season_context = CropCalendar.get_current_phase(crop, state)
     except Exception:
-        pass
+        unavailable.append('season_context')
 
-    # 8. Karnataka-specific forecast (if applicable)
+    # 8. Karnataka-specific forecast (only if applicable)
     karnataka_forecast = None
     try:
         from services.karnataka_predictor import KarnatakaForecaster
@@ -103,12 +150,12 @@ def get_intelligent_dashboard():
             karnataka_forecast = KarnatakaForecaster.get_forecast(
                 crop=crop,
                 market=mandi,
-                quantity=land_size * 10,  # rough quintals estimate
+                quantity=land_size * 10,
             )
     except Exception:
-        pass
+        unavailable.append('karnataka_forecast')
 
-    # 9. Assemble response — card ordering from intelligence
+    # 9. Assemble response — every section present even if None
     response = {
         # Strategy metadata
         'strategy': {
@@ -122,13 +169,13 @@ def get_intelligent_dashboard():
             'sync_interval_hours': intelligence['sync_interval_hours'],
         },
 
-        # Alerts (region + crop)
+        # Alerts
         'alerts': intelligence['region_alerts'] + intelligence['crop_alerts'],
 
         # MSP context
         'msp': intelligence['msp'],
 
-        # Govt schemes (region-specific)
+        # Govt schemes
         'govt_schemes': intelligence.get('govt_schemes', {}),
 
         # Storage context
@@ -138,19 +185,33 @@ def get_intelligent_dashboard():
             'has_storage': storage,
         },
 
-        # Data payloads
+        # Crop context metadata (so frontend knows what context was used)
+        'crop_context': {
+            'farm_crop_id': farm_crop_id,
+            'crop': crop,
+            'land_size': land_size,
+            'mandi': mandi,
+            'state': state,
+            'district': district,
+            'sowing_date': sowing_date,
+        },
+
+        # Data payloads — each is None if the service failed
         'weather': weather,
         'mandi_prices': mandi_prices,
         'market_risk': market_risk,
         'recommendation': recommendation,
 
-        # NEW: Production-readiness fields
+        # Production fields
         'features': features,
         'season_context': season_context,
         'trust': recommendation.get('trust') if recommendation else None,
 
-        # Karnataka XGBoost forecasts (if applicable)
+        # Karnataka XGBoost forecasts
         'karnataka_forecast': karnataka_forecast,
+
+        # Sections that failed — frontend can show "unavailable" UI
+        'unavailable': unavailable,
     }
 
     return jsonify(response), 200
@@ -161,9 +222,7 @@ def get_strategy_only():
     """
     GET /dashboard/strategy?state=Kerala&crop=Rice
 
-    Lightweight endpoint — returns ONLY the strategy (card order, alerts, weights)
-    without fetching weather/mandi/recommendation data.
-    Used by the app to configure UI layout before data loads.
+    Lightweight — returns ONLY the strategy without data payloads.
     """
     state = request.args.get('state', 'Maharashtra')
     crop = request.args.get('crop', 'Rice')

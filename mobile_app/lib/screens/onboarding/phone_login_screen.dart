@@ -6,6 +6,7 @@ import 'package:http/http.dart' as http;
 import '../../providers/farmer_profile_provider.dart';
 import '../../services/api_service.dart';
 import '../../theme.dart';
+import '../home_screen.dart';
 import 'location_screen.dart';
 
 class PhoneLoginScreen extends StatefulWidget {
@@ -184,15 +185,30 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen>
     final profile = Provider.of<FarmerProfile>(context, listen: false);
     await profile.setAuth(
       tkn: data['token'],
-      id: data['farmer_id'],
+      id: data['farmer_id'].toString(),
       ph: phone,
     );
 
+    // Load farms if returned (returning user)
+    if (data['farms'] != null && (data['farms'] as List).isNotEmpty) {
+      profile.loadFarmsFromJson(data['farms'] as List<dynamic>);
+      await profile.saveToLocal();
+    }
+
     if (mounted) {
-      Navigator.pushReplacement(
-        context,
-        MaterialPageRoute(builder: (_) => const LocationScreen()),
-      );
+      // If onboarding already complete (returning user), go to home
+      if (data['onboarding_complete'] == true) {
+        Navigator.pushAndRemoveUntil(
+          context,
+          MaterialPageRoute(builder: (_) => const HomeScreen()),
+          (route) => false,
+        );
+      } else {
+        Navigator.pushReplacement(
+          context,
+          MaterialPageRoute(builder: (_) => const LocationScreen()),
+        );
+      }
     }
   }
 

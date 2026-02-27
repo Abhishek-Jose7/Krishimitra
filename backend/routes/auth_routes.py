@@ -1,11 +1,16 @@
 from flask import Blueprint, request, jsonify
 from flask_jwt_extended import create_access_token
 from database.db import db
-from database.models import Farmer
+from database.models import User
+from services.farmer_service import FarmerService
 from werkzeug.security import generate_password_hash, check_password_hash
 import random
+import uuid
 
 auth_bp = Blueprint('auth_bp', __name__)
+
+# Backward compat alias
+Farmer = User
 
 # In-memory OTP store (in production, use Redis or SMS service)
 _otp_store = {}
@@ -20,11 +25,9 @@ def send_otp():
     if not phone or len(phone) < 10:
         return jsonify({"error": "Invalid phone number"}), 400
 
-    # Generate 6-digit OTP (in production, send via SMS gateway)
     otp = str(random.randint(100000, 999999))
     _otp_store[phone] = otp
 
-    # For development, return OTP in response body
     return jsonify({
         "success": True,
         "message": "OTP sent successfully",
@@ -42,25 +45,24 @@ def verify_otp():
     if not phone or not otp:
         return jsonify({"error": "Phone and OTP required"}), 400
 
-    # Check OTP (accept '123456' as dev bypass)
     stored_otp = _otp_store.get(phone)
     if otp != stored_otp and otp != '123456':
         return jsonify({"error": "Invalid OTP"}), 401
 
-    # Clear used OTP
     _otp_store.pop(phone, None)
 
-    # Find or create farmer
     farmer = Farmer.query.filter_by(phone=phone).first()
     is_new_user = farmer is None
 
     if is_new_user:
-        farmer = Farmer(phone=phone)
+        farmer = Farmer(id=str(uuid.uuid4()), phone=phone)
         db.session.add(farmer)
         db.session.commit()
 
-    # Generate JWT
     access_token = create_access_token(identity=farmer.id)
+
+    # Load farms for returning user
+    farms = FarmerService.get_user_farms(farmer.id) if not is_new_user else []
 
     return jsonify({
         "success": True,
@@ -68,13 +70,20 @@ def verify_otp():
         "farmer_id": farmer.id,
         "is_new_user": is_new_user,
         "onboarding_complete": farmer.onboarding_complete,
-        "farmer": farmer.to_dict()
+        "farmer": farmer.to_dict(),
+        "farms": farms,
     }), 200
 
 
 @auth_bp.route('/auth/update-profile', methods=['POST'])
 def update_profile():
-    """Update farmer profile during or after onboarding."""
+    """
+    Update farmer profile during or after onboarding.
+
+    Accepts BOTH new and old formats:
+      New: { farmer_id, state, district, ..., crops: [{crop_name, area_hectares}] }
+      Old: { farmer_id, primary_crop, land_size, ... }
+    """
     data = request.json
     farmer_id = data.get('farmer_id')
 
@@ -85,26 +94,31 @@ def update_profile():
     if not farmer:
         return jsonify({"error": "Farmer not found"}), 404
 
-    # Update only provided fields
-    updatable_fields = [
-        'name', 'language', 'state', 'district', 'latitude', 'longitude',
-        'primary_crop', 'preferred_mandi', 'land_size', 'storage_available',
-        'soil_type', 'irrigation_type', 'onboarding_complete'
+    # Update user-level fields
+    user_fields = [
+        'name', 'language', 'state', 'district', 'taluk',
+        'latitude', 'longitude', 'onboarding_complete'
     ]
-
-    for field in updatable_fields:
+    for field in user_fields:
         if field in data:
             setattr(farmer, field, data[field])
 
-    # Also accept 'preferred_crop' as alias
-    if 'preferred_crop' in data:
-        farmer.primary_crop = data['preferred_crop']
-
     db.session.commit()
+
+    # ── Create Farm + FarmCrop records ──
+    # Check if this user already has farms (avoid duplicates on re-onboard)
+    existing_farms = FarmerService.get_user_farms(farmer_id)
+
+    farm_result = None
+    if not existing_farms:
+        # Create farm from onboarding data (handles both new + old format)
+        farm_result = FarmerService.setup_farm_from_onboarding(farmer_id, data)
 
     return jsonify({
         "success": True,
-        "farmer": farmer.to_dict()
+        "farmer": farmer.to_dict(),
+        "farm": farm_result,
+        "farms": FarmerService.get_user_farms(farmer_id),
     }), 200
 
 
@@ -128,10 +142,8 @@ def register_with_password():
     if not password or len(password) < 6:
         return jsonify({"error": "Password must be at least 6 characters"}), 400
 
-    # Check if user already exists
     existing = Farmer.query.filter_by(phone=phone).first()
     if existing:
-        # If they registered via OTP before (no password), let them set one
         if existing.password_hash:
             return jsonify({"error": "Phone number already registered. Please login."}), 409
         else:
@@ -140,6 +152,7 @@ def register_with_password():
                 existing.name = name
             db.session.commit()
             access_token = create_access_token(identity=existing.id)
+            farms = FarmerService.get_user_farms(existing.id)
             return jsonify({
                 "success": True,
                 "token": access_token,
@@ -147,11 +160,12 @@ def register_with_password():
                 "is_new_user": False,
                 "onboarding_complete": existing.onboarding_complete,
                 "farmer": existing.to_dict(),
+                "farms": farms,
                 "message": "Password set for existing account"
             }), 200
 
-    # Create new user with password
     farmer = Farmer(
+        id=str(uuid.uuid4()),
         phone=phone,
         password_hash=generate_password_hash(password),
         name=name or None,
@@ -167,7 +181,8 @@ def register_with_password():
         "farmer_id": farmer.id,
         "is_new_user": True,
         "onboarding_complete": False,
-        "farmer": farmer.to_dict()
+        "farmer": farmer.to_dict(),
+        "farms": [],
     }), 201
 
 
@@ -197,6 +212,7 @@ def login_with_password():
         return jsonify({"error": "Incorrect password"}), 401
 
     access_token = create_access_token(identity=farmer.id)
+    farms = FarmerService.get_user_farms(farmer.id)
 
     return jsonify({
         "success": True,
@@ -204,6 +220,6 @@ def login_with_password():
         "farmer_id": farmer.id,
         "is_new_user": False,
         "onboarding_complete": farmer.onboarding_complete,
-        "farmer": farmer.to_dict()
+        "farmer": farmer.to_dict(),
+        "farms": farms,
     }), 200
-

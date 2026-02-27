@@ -7,6 +7,7 @@ from routes.price_routes import price_bp
 from routes.mandi_routes import mandi_bp
 from routes.recommendation_routes import recommendation_bp
 from routes.farmer_routes import farmer_bp
+from routes.farm_routes import farm_bp as farm_crud_bp
 from routes.weather_routes import weather_bp
 from routes.auth_routes import auth_bp
 from routes.dashboard_routes import dashboard_bp
@@ -62,6 +63,7 @@ def create_app(config_class=Config):
     # Register new blueprints
     app.register_blueprint(notification_bp)
     app.register_blueprint(evaluation_bp)
+    app.register_blueprint(farm_crud_bp)
 
     with app.app_context():
         db.create_all()

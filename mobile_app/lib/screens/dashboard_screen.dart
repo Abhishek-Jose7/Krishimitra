@@ -34,14 +34,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   List<IntelligenceAlert> _alerts = [];
   MspContext? _mspContext;
 
-  // Crop switcher
-  String _activeCrop = 'Rice';
-
   @override
   void initState() {
     super.initState();
-    final profile = Provider.of<FarmerProfile>(context, listen: false);
-    _activeCrop = profile.primaryCrop ?? 'Rice';
     _loadDashboard();
   }
 
@@ -51,11 +46,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
     try {
       final profile = Provider.of<FarmerProfile>(context, listen: false);
       final api = Provider.of<ApiService>(context, listen: false);
-      final crop = _activeCrop;
+      final activeCrop = profile.activeCrop;
+      final crop = activeCrop?.cropName ?? profile.primaryCrop ?? 'Rice';
       final district = profile.district ?? 'Pune';
-      final mandi = profile.nearestMandi ?? '$district Mandi';
-      final landSize = profile.landSize ?? 2.0;
+      final mandi = activeCrop?.preferredMandi ?? profile.nearestMandi ?? '$district Mandi';
+      final landSize = activeCrop?.areaHectares ?? profile.landSize ?? 2.0;
       final state = profile.state ?? 'Maharashtra';
+      final farmCropId = activeCrop?.id;
 
       _strategy = RegionCropStrategy.fromLocal(
         state: state, crop: crop, storageAvailable: profile.storageAvailable,
@@ -65,11 +62,16 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
       bool usedIntelligent = false;
       try {
-        final resp = await api.postIntelligentDashboard({
+        final payload = <String, dynamic>{
           'state': state, 'crop': crop, 'district': district,
           'land_size': landSize, 'storage_available': profile.storageAvailable,
           'mandi': mandi,
-        });
+        };
+        // Pass farm_crop_id if available (enables DB-driven crop context)
+        if (farmCropId != null && !farmCropId.startsWith('local_')) {
+          payload['farm_crop_id'] = farmCropId;
+        }
+        final resp = await api.postIntelligentDashboard(payload);
         _weatherData = resp['weather'];
         _mandiPrices = resp['mandi_prices'] as List<dynamic>?;
         _riskData = resp['market_risk'];
@@ -92,9 +94,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
         } catch (_) { _mandiPrices = profile.cachedMandiPrices; }
         try { _riskData = await api.getMarketRisk(); } catch (_) {}
         try {
-          _recommendation = await api.getRecommendation({
+          final recPayload = <String, dynamic>{
             'crop': crop, 'district': district, 'land_size': landSize, 'mandi': mandi,
-          });
+          };
+          if (farmCropId != null && !farmCropId.startsWith('local_')) {
+            recPayload['farm_crop_id'] = farmCropId;
+          }
+          _recommendation = await api.getRecommendation(recPayload);
           if (_recommendation != null) profile.cacheData(forecast: json.encode(_recommendation));
         } catch (_) { _recommendation = profile.cachedForecast; }
       }
@@ -115,10 +121,11 @@ class _DashboardScreenState extends State<DashboardScreen> {
   @override
   Widget build(BuildContext context) {
     final profile = Provider.of<FarmerProfile>(context);
-    final crop = _activeCrop;
+    final activeCrop = profile.activeCrop;
+    final crop = activeCrop?.cropName ?? profile.primaryCrop ?? 'Rice';
     final district = profile.district ?? 'Pune';
-    final mandi = profile.nearestMandi ?? '$district Mandi';
-    final landSize = profile.landSize ?? 2.0;
+    final mandi = activeCrop?.preferredMandi ?? profile.nearestMandi ?? '$district Mandi';
+    final landSize = activeCrop?.areaHectares ?? profile.landSize ?? 2.0;
     final expectedYield = profile.expectedYield;
 
     return Scaffold(
@@ -144,7 +151,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
                     // ═══ CROP SWITCHER (if multi-crop) ═══
-                    if (profile.crops.length > 1) ...[
+                    if (profile.allFarmCrops.length > 1) ...[
                       _buildCropSwitcher(profile),
                       const SizedBox(height: 12),
                     ],
@@ -228,6 +235,18 @@ class _DashboardScreenState extends State<DashboardScreen> {
       'Cotton': '☁️', 'Sugarcane': '🎋', 'Groundnut': '🥜', 'Onion': '🧅',
       'Tomato': '🍅', 'Potato': '🥔',
     };
+    final allCrops = profile.allFarmCrops;
+    if (allCrops.isEmpty) return const SizedBox.shrink();
+
+    // Guard: ensure activeCropId actually exists in the list
+    final allIds = allCrops.map((c) => c.id).toSet();
+    String activeCropId = profile.activeCrop?.id ?? '';
+    if (!allIds.contains(activeCropId)) {
+      // Stale local ID — reset to first crop
+      activeCropId = allCrops.first.id;
+      Future.microtask(() => profile.setActiveCropById(activeCropId));
+    }
+
     return Container(
       padding: const EdgeInsets.symmetric(horizontal: 14, vertical: 6),
       decoration: BoxDecoration(
@@ -238,26 +257,28 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ),
       child: Row(
         children: [
-          Text(cropIcons[_activeCrop] ?? '🌱', style: const TextStyle(fontSize: 20)),
+          Text(cropIcons[profile.activeCrop?.cropName] ?? '🌱', style: const TextStyle(fontSize: 20)),
           const SizedBox(width: 10),
           Expanded(
             child: DropdownButtonHideUnderline(
               child: DropdownButton<String>(
-                value: _activeCrop,
+                value: activeCropId,
                 isExpanded: true,
                 icon: const Icon(Icons.keyboard_arrow_down, color: AppTheme.primaryGreen),
                 style: AppTheme.headingMedium.copyWith(fontSize: 15, color: AppTheme.textDark),
-                items: profile.crops.map((c) => DropdownMenuItem(
-                  value: c,
+                items: allCrops.map((fc) => DropdownMenuItem(
+                  value: fc.id,
                   child: Row(children: [
-                    Text(cropIcons[c] ?? '🌱', style: const TextStyle(fontSize: 16)),
+                    Text(cropIcons[fc.cropName] ?? '🌱', style: const TextStyle(fontSize: 16)),
                     const SizedBox(width: 8),
-                    Text(c),
+                    Expanded(child: Text(fc.cropName)),
+                    Text('${fc.areaHectares.toStringAsFixed(1)} ha',
+                        style: AppTheme.bodyMedium.copyWith(fontSize: 10, color: AppTheme.textLight)),
                   ]),
                 )).toList(),
-                onChanged: (v) {
-                  if (v != null) {
-                    setState(() => _activeCrop = v);
+                onChanged: (cropId) {
+                  if (cropId != null) {
+                    profile.setActiveCropById(cropId);
                     _loadDashboard();
                   }
                 },
@@ -267,7 +288,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
             decoration: BoxDecoration(color: AppTheme.lightGreen, borderRadius: BorderRadius.circular(4)),
-            child: Text("${profile.crops.length} crops", style: AppTheme.bodyMedium.copyWith(
+            child: Text("${allCrops.length} crops", style: AppTheme.bodyMedium.copyWith(
                 fontSize: 10, color: AppTheme.primaryGreen, fontWeight: FontWeight.w600)),
           ),
         ],
