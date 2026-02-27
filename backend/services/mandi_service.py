@@ -217,14 +217,17 @@ class MandiService:
                 "is_nearest": is_local,
             })
 
-        # Sort: nearest mandis first (by distance), then the rest by best effective price
-        nearest = [r for r in results if r['is_nearest']]
-        others = [r for r in results if not r['is_nearest']]
+        # Calculate is_nearest and other flags
+        for r in results:
+            r['is_best_profit'] = False
 
-        nearest.sort(key=lambda x: x['distance_km'])
-        others.sort(key=lambda x: x['effective_price'], reverse=True)
+        # Global Sort: Best Effective Price (Profit after transport)
+        results.sort(key=lambda x: x['effective_price'], reverse=True)
+        
+        if results:
+            results[0]['is_best_profit'] = True
 
-        return nearest + others
+        return results
 
     @staticmethod
     def get_mandi_forecast(crop, state, mandi_name=None):

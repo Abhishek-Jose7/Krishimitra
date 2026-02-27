@@ -1,0 +1,24 @@
+{
+  "description": "Monthly residual correction \u2014 add to raw model output",
+  "commodity": "Cabbage",
+  "state": "Maharashtra",
+  "price_unit": "Rs. per quintal (100 kg)",
+  "no_msp": true,
+  "crash_threshold": 150,
+  "glut_threshold": 400,
+  "high_threshold": 2500,
+  "cold_store_loss_pct": 0.3,
+  "cold_store_max_days": 21,
+  "ambient_max_days": 7,
+  "corrections": {
+    "1": 7.76,
+    "2": 6.3,
+    "6": -14.03,
+    "7": -15.14,
+    "8": -15.04,
+    "9": -4.85,
+    "10": -5.87,
+    "11": -6.42,
+    "12": 1.83
+  }
+}

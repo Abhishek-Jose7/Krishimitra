@@ -11,6 +11,7 @@ GET    /user/<user_id>/active-crop         — Return the default crop context
 
 from flask import Blueprint, request, jsonify
 from services.farmer_service import FarmerService
+from services.vision_service import VisionService
 
 farm_bp = Blueprint('farm_bp', __name__)
 
@@ -99,3 +100,25 @@ def suggest_crops():
     from services.groq_crop_advisor import suggest_crops as do_suggest
     result = do_suggest(state, district or None)
     return jsonify(result), 200
+
+
+# ──────────────────────────────────────────
+# PEST VISION AI
+# ──────────────────────────────────────────
+
+@farm_bp.route('/farm/analyze-pest', methods=['POST'])
+def analyze_pest():
+    """
+    POST /farm/analyze-pest
+    Body: { "image": "base64_string", "crop": "Rice" }
+    """
+    data = request.json or {}
+    image_b64 = data.get('image')
+    crop = data.get('crop', 'Crop')
+
+    if not image_b64:
+        return jsonify({"error": "No image data provided"}), 400
+
+    result = VisionService.analyze_leaf_image(image_b64, crop)
+    return jsonify(result), 200
+

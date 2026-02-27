@@ -1,0 +1,15 @@
+{
+  "MAE_inr": 41.44,
+  "MAPE_pct": 3.38,
+  "avg_test_price": 1164.8,
+  "note_mape": "MAPE > 20% is normal for cabbage \u2014 40x annual price swing",
+  "train_start": "2021-01-31",
+  "train_end": "2025-06-07",
+  "test_start": "2025-06-07",
+  "test_end": "2026-02-27",
+  "n_train": 37569,
+  "n_test": 6630,
+  "n_markets": 49,
+  "n_features": 34,
+  "built_at": "20260227_201542"
+}
