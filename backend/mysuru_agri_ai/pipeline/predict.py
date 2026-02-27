@@ -151,6 +151,10 @@ def batch_predict(
     """
     Run batch prediction for a set of farming scenarios and compute
     confidence intervals and risk scores.
+
+    Supports both:
+    - Unified model (single Pipeline for all districts) — new default
+    - Per-district dict of Pipelines — legacy backward compat
     """
     model = bundle.model
     preprocessor = bundle.preprocessor
@@ -204,11 +208,103 @@ def batch_predict(
         if col not in X_full.columns:
             X_full[col] = "Unknown"
 
+    # Add interaction features that the model expects
+    if {"Rainfall", "Temperature"}.issubset(X_full.columns):
+        if "rain_per_degree" not in X_full.columns:
+            X_full["rain_per_degree"] = X_full["Rainfall"] / X_full["Temperature"].replace(0, np.nan)
+            X_full["rain_per_degree"] = X_full["rain_per_degree"].fillna(0.0)
+    if {"Temperature", "Humidity"}.issubset(X_full.columns):
+        if "heat_stress_index" not in X_full.columns:
+            X_full["heat_stress_index"] = X_full["Temperature"] * (100 - X_full["Humidity"]) / 100.0
+
     # Inverse-transform support (if training used log1p target)
     transform = str(bundle.metadata.get("target_transform", "none")).lower()
     use_log1p = transform == "log1p"
 
+    # ── Determine if this is a unified model or per-district dict ──
+    is_unified = False
+    unified_pipeline = None
+
     if isinstance(model, dict):
+        # New format: dict with "__unified__" key containing single Pipeline
+        if "__unified__" in model:
+            is_unified = True
+            unified_pipeline = model["__unified__"]
+        # else: legacy per-district dict format
+    elif hasattr(model, "predict") and hasattr(model, "named_steps"):
+        # Direct Pipeline object (unified model saved as yield_model.pkl)
+        is_unified = True
+        unified_pipeline = model
+
+    # Also check metadata for explicit model_type flag
+    if bundle.metadata.get("model_type") == "unified" and unified_pipeline is None:
+        # Try loading from the Pipeline object itself
+        if hasattr(model, "predict"):
+            is_unified = True
+            unified_pipeline = model
+
+    if is_unified and unified_pipeline is not None:
+        # ── UNIFIED MODEL PATH ──
+        X_trans = unified_pipeline.named_steps["preprocessor"].transform(X_full)
+        mean_pred, ci_low, ci_high = _tree_based_confidence_interval(
+            unified_pipeline.named_steps["model"],
+            X_trans,
+        )
+
+        if use_log1p:
+            mean_pred = np.expm1(mean_pred)
+            ci_low = np.expm1(ci_low)
+            ci_high = np.expm1(ci_high)
+
+        rel_width, risk_level = _confidence_and_risk_from_interval(
+            mean_pred, ci_low, ci_high
+        )
+
+        # Use per-district confidence if available, else global
+        per_district = bundle.metadata.get("per_district", {})
+        global_metrics = bundle.metadata.get("global_metrics", {})
+        global_conf = float(global_metrics.get("confidence_pct", 50.0))
+
+        # Compute per-row confidence using district-specific or global CV
+        if "district" in scenarios.columns:
+            district_conf = []
+            for _, row in scenarios.iterrows():
+                d = str(row["district"]).strip().title()
+                meta = per_district.get(d, {})
+                cv_conf = float(meta.get("confidence_pct", global_conf))
+                district_conf.append(cv_conf)
+            cv_conf_array = np.array(district_conf)
+        else:
+            cv_conf_array = np.full(len(scenarios), global_conf)
+
+        scenario_conf = _compute_scenario_confidence(
+            mean_pred, ci_low, ci_high, float(np.mean(cv_conf_array))
+        )
+
+        # Adjust per-row confidence by district
+        for i in range(len(scenario_conf)):
+            district_weight = cv_conf_array[i] / max(global_conf, 1.0)
+            scenario_conf[i] = np.clip(scenario_conf[i] * district_weight, 5.0, 98.0)
+
+        results = scenarios.copy()
+        results["predicted_yield"] = mean_pred
+        results["ci_low"] = ci_low
+        results["ci_high"] = ci_high
+        results["confidence"] = scenario_conf
+        results["risk_level"] = risk_level
+
+        # Evidence level based on whether district was in training data
+        results["evidence_level"] = "High"
+        if "district" in results.columns:
+            trained_districts = set(per_district.keys())
+            if trained_districts:
+                results.loc[
+                    ~results["district"].astype(str).str.title().isin(trained_districts),
+                    "evidence_level",
+                ] = "Low"
+
+    elif isinstance(model, dict):
+        # ── LEGACY PER-DISTRICT DICT PATH ──
         if "district" not in X_full.columns:
             raise ValueError("district column is required for district-specific models.")
 
@@ -220,8 +316,6 @@ def batch_predict(
             district_model = model.get(d_norm)
 
             evidence_level = "High"
-            # If no model was trained for this district (e.g. Pune with no labels),
-            # fall back to a reference district instead of failing hard.
             if district_model is None:
                 fallback_key = "Mysuru" if "Mysuru" in model else next(iter(model.keys()))
                 district_model = model[fallback_key]
@@ -229,9 +323,9 @@ def batch_predict(
                 evidence_level = "Low"
 
             X_sub = group
-            X_trans = district_model.named_steps["preprocessor"].transform(X_sub)  # type: ignore[index]
+            X_trans = district_model.named_steps["preprocessor"].transform(X_sub)
             mean_pred, ci_low, ci_high = _tree_based_confidence_interval(
-                district_model.named_steps["model"],  # type: ignore[index]
+                district_model.named_steps["model"],
                 X_trans,
             )
 
@@ -263,10 +357,11 @@ def batch_predict(
 
         results = pd.concat(out_parts, axis=0).loc[scenarios.index]
     else:
+        # Fallback: single model with separate preprocessor
         if hasattr(model, "predict") and preprocessor is not None:
             X_trans = preprocessor.transform(X_full)
             mean_pred, ci_low, ci_high = _tree_based_confidence_interval(
-                model.named_steps.get("model", model),  # type: ignore[arg-type]
+                model.named_steps.get("model", model),
                 X_trans,
             )
         else:
@@ -278,6 +373,17 @@ def batch_predict(
             mean_pred = np.expm1(mean_pred)
             ci_low = np.expm1(ci_low)
             ci_high = np.expm1(ci_high)
+
+        # ── PHASE 2 FIX: De-normalization ──
+        # The model predicts RYI. Multiply by crop_median to get raw units.
+        crop_medians = bundle.metadata.get("crop_medians", {})
+        
+        # We need to map each scenario's crop to its median
+        scenario_crop_medians = scenarios["Crops"].map(crop_medians).fillna(1.0).values
+        
+        mean_pred = mean_pred * scenario_crop_medians
+        ci_low = ci_low * scenario_crop_medians
+        ci_high = ci_high * scenario_crop_medians
 
         rel_width, risk_level = _confidence_and_risk_from_interval(
             mean_pred, ci_low, ci_high
