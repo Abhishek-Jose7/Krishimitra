@@ -130,14 +130,25 @@ def generate_scenarios(
         )
 
     scenarios = pd.DataFrame(rows)
-    scenarios = _validate_combinations_against_history(scenarios, history)
 
-    if scenarios.empty:
-        raise ValueError(
-            "No valid scenarios generated; please adjust your selections to match "
-            "historical crop–season–soil–irrigation combinations."
+    # Validate against historical crop–season patterns to prefer well-supported
+    # combinations where possible.
+    validated = _validate_combinations_against_history(scenarios, history)
+
+    if validated.empty:
+        # Fall back to using all generated permutations, but clearly mark that
+        # historical coverage is limited so downstream components can adjust
+        # confidence and messaging instead of failing the request.
+        logger.warning(
+            "Limited historical coverage used for district=%s, crops=%s",
+            district,
+            ", ".join(sorted({str(r['Crops']) for r in rows})) if rows else "",
         )
+        scenarios["coverage_flag"] = "limited"
+    else:
+        scenarios = validated
+        scenarios["coverage_flag"] = "full"
 
-    logger.info("Generated %d valid farming scenarios.", len(scenarios))
+    logger.info("Generated %d farming scenarios (coverage_flag=%s).", len(scenarios), scenarios.get("coverage_flag", "full").iloc[0] if not scenarios.empty else "unknown")
     return scenarios
 

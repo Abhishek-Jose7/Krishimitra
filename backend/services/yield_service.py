@@ -286,7 +286,19 @@ def get_yield_advisory(user_input: Dict[str, Any]) -> Dict[str, Any]:
         district=districts[0],
     )
 
+    coverage_warning = False
+    if "coverage_flag" in scenarios.columns:
+        coverage_warning = (scenarios["coverage_flag"] == "limited").any()
+
     prediction_results = batch_predict(bundle, scenarios)
+
+    # If coverage is limited, down-weight confidence scores but never below 5%.
+    if coverage_warning and "confidence" in prediction_results.columns:
+        prediction_results = prediction_results.copy()
+        prediction_results["confidence"] = prediction_results["confidence"].apply(
+            lambda c: max(5.0, float(c) * 0.75)
+        )
+
     ranked, analytics = rank_strategies(prediction_results)
     district_label = (
         ", ".join(sorted(set(scenarios["district"])))
@@ -298,8 +310,27 @@ def get_yield_advisory(user_input: Dict[str, Any]) -> Dict[str, Any]:
         ranked=ranked,
         analytics=analytics,
     )
+    coverage_message = None
+    if coverage_warning:
+        coverage_message = (
+            "The selected combination has limited historical data coverage "
+            f"for {district_label} district. We are generating indicative predictions "
+            "based on similar historical patterns."
+        )
+        advisory_note = (
+            "No exact historical match found for the selected crop, season, soil, and irrigation "
+            f"combination in {district_label}. Predictions are based on similar historical patterns "
+            "and should be treated as indicative."
+        )
+        advisory = advisory + "\n\n" + advisory_note if advisory else advisory_note
     # Take the first scenario row (there is typically only one)
     row = prediction_results.iloc[0]
+    base_confidence = float(row.get("confidence", 0.0))
+    if coverage_warning:
+        confidence_adjusted = max(5.0, base_confidence * 0.75)
+    else:
+        confidence_adjusted = base_confidence
+
     summary = {
         "district": str(row.get("district", "")),
         "crop": str(row.get("Crops", "")),
@@ -317,7 +348,13 @@ def get_yield_advisory(user_input: Dict[str, Any]) -> Dict[str, Any]:
             row.get("estimated_total_yield", row.get("predicted_yield", 0.0) * area_val)
         ),
     }
-    return {"advisory": advisory, "summary": summary}
+    return {
+        "advisory": advisory,
+        "summary": summary,
+        "coverage_warning": coverage_warning,
+        "confidence_adjusted": confidence_adjusted,
+        "coverage_message": coverage_message,
+    }
 
 
 def get_yield_options(district: str | None = None) -> Dict[str, Any]:

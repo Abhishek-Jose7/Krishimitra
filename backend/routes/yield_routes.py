@@ -62,6 +62,9 @@ def simulate_yield():
         payload = get_yield_advisory(data)
         advisory = payload.get("advisory", "")
         summary = payload.get("summary")
+        coverage_warning = bool(payload.get("coverage_warning", False))
+        confidence_adjusted = float(payload.get("confidence_adjusted", 0.0))
+        coverage_message = payload.get("coverage_message")
     except ValueError as exc:
         return jsonify({"status": "error", "message": str(exc)}), 400
     except Exception as exc:  # pragma: no cover - defensive
@@ -77,7 +80,24 @@ def simulate_yield():
             500,
         )
 
-    return jsonify({"status": "success", "advisory": advisory, "summary": summary}), 200
+    status = "warning" if coverage_warning else "success"
+
+    response_body = {
+        "status": status,
+        "advisory": advisory,
+        "summary": summary,
+        "coverage_warning": coverage_warning,
+        "confidence_adjusted": confidence_adjusted,
+    }
+
+    if coverage_warning:
+        response_body["message"] = coverage_message or (
+            "The selected combination has limited historical data coverage. "
+            "We are generating indicative predictions based on similar historical patterns."
+        )
+        response_body["confidence_adjustment"] = "low"
+
+    return jsonify(response_body), 200
 
 
 @yield_bp.route('/yield/options', methods=['GET'])

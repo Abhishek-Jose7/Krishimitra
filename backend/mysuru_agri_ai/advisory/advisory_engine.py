@@ -13,10 +13,16 @@ def _format_strategy_row(row: pd.Series) -> str:
         total_txt = f" (~{float(row['estimated_total_yield']):.2f} tons total)"
 
     soil = row.get("Soil type", "unspecified soil")
+    conf = float(row.get("confidence", 0.0))
+    if conf >= 80.0:
+        tail = f"(confidence {conf:.0f}%, risk {row['risk_level']})"
+    else:
+        tail = f"(risk {row['risk_level']})"
+
     return (
         f"{row['Crops']} - {row['Season']} - {row['Irrigation']} on {soil}"
         f"{area_txt} - {row['predicted_yield']:.2f} tons/acre{total_txt} "
-        f"(confidence {row['confidence']:.0f}%, risk {row['risk_level']})"
+        f"{tail}"
     )
 
 
@@ -40,7 +46,7 @@ def build_advisory_report(
     best_irrig = best_row["Irrigation"]
     best_soil = best_row.get("Soil type", "unspecified soil")
     best_yield = best_row["predicted_yield"]
-    best_conf = best_row["confidence"]
+    best_conf = float(best_row.get("confidence", 0.0))
     best_risk = best_row["risk_level"]
 
     yield_difference = analytics.get("yield_difference")
@@ -59,9 +65,13 @@ def build_advisory_report(
         f"{best_crop} during the {best_season} season using {best_irrig.lower()} irrigation "
         f"on {best_soil.lower()}."
     )
+    if best_conf >= 80.0:
+        conf_fragment = f"(confidence {best_conf:.0f}%, risk level: {best_risk})."
+    else:
+        conf_fragment = f"(risk level: {best_risk})."
+
     lines.append(
-        f"Estimated yield: {best_yield:.2f} tons/acre "
-        f"(confidence {best_conf:.0f}%, risk level: {best_risk})."
+        f"Estimated yield: {best_yield:.2f} tons/acre {conf_fragment}"
     )
     lines.append("")
 

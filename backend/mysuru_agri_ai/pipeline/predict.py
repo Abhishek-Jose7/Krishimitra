@@ -103,14 +103,45 @@ def _confidence_and_risk_from_interval(
     width = ci_high - ci_low
     with np.errstate(divide="ignore", invalid="ignore"):
         rel_width = np.where(mean_pred != 0, width / np.abs(mean_pred), width)
-    # Map relative width to qualitative risk only; confidence itself is derived
-    # from global cross-validation performance.
+
     dummy = np.zeros_like(rel_width)
     risk = np.full_like(dummy, fill_value="Moderate", dtype=object)
     risk[rel_width <= 0.15] = "Low"
     risk[rel_width >= 0.35] = "High"
     # Second return value is kept for backward-compatibility with callers.
     return rel_width, risk
+
+
+def _compute_scenario_confidence(
+    mean_pred: np.ndarray,
+    ci_low: np.ndarray,
+    ci_high: np.ndarray,
+    cv_conf_pct: float,
+) -> np.ndarray:
+    """
+    Compute a more informative per-scenario confidence score (0–100%).
+
+    The score combines:
+      - Global cross-validation confidence (cv_conf_pct), and
+      - Scenario-specific interval width (narrower intervals => higher confidence).
+    """
+    base = float(np.clip(cv_conf_pct, 0.0, 100.0))
+
+    width = ci_high - ci_low
+    with np.errstate(divide="ignore", invalid="ignore"):
+        rel_width = np.where(mean_pred != 0, width / np.abs(mean_pred), width)
+
+    # Map relative interval width into a [0, 1] multiplier where:
+    #   very narrow (<= 10%)   -> ~1.0
+    #   moderate (~25%)        -> ~0.7
+    #   very wide (>= 50%)     -> ~0.3
+    rel_width_clipped = np.clip(rel_width, 0.05, 0.5)
+    interval_factor = 1.2 - (rel_width_clipped / 0.5)  # 0.05 -> ~1.1, 0.5 -> 0.2
+    interval_factor = np.clip(interval_factor, 0.3, 1.1)
+
+    conf = base * interval_factor
+    conf = np.clip(conf, 5.0, 98.0)
+    return conf
 
 
 def batch_predict(
@@ -209,17 +240,22 @@ def batch_predict(
                 ci_low = np.expm1(ci_low)
                 ci_high = np.expm1(ci_high)
 
-            _, risk_level = _confidence_and_risk_from_interval(mean_pred, ci_low, ci_high)
+            rel_width, risk_level = _confidence_and_risk_from_interval(
+                mean_pred, ci_low, ci_high
+            )
 
             meta = per_district.get(d_norm, {})
             cv_conf = float(meta.get("confidence_pct", 50.0))
             cv_conf = float(np.clip(cv_conf, 0.0, 100.0))
+            scenario_conf = _compute_scenario_confidence(
+                mean_pred, ci_low, ci_high, cv_conf
+            )
 
             res = scenarios.loc[X_sub.index].copy()
             res["predicted_yield"] = mean_pred
             res["ci_low"] = ci_low
             res["ci_high"] = ci_high
-            res["confidence"] = cv_conf
+            res["confidence"] = scenario_conf
             res["risk_level"] = risk_level
             res["evidence_level"] = evidence_level
 
@@ -243,18 +279,21 @@ def batch_predict(
             ci_low = np.expm1(ci_low)
             ci_high = np.expm1(ci_high)
 
-        _, risk_level = _confidence_and_risk_from_interval(
+        rel_width, risk_level = _confidence_and_risk_from_interval(
             mean_pred, ci_low, ci_high
         )
 
         cv_conf = float(bundle.metadata.get("confidence_pct", 50.0))
         cv_conf = float(np.clip(cv_conf, 0.0, 100.0))
+        scenario_conf = _compute_scenario_confidence(
+            mean_pred, ci_low, ci_high, cv_conf
+        )
 
         results = scenarios.copy()
         results["predicted_yield"] = mean_pred
         results["ci_low"] = ci_low
         results["ci_high"] = ci_high
-        results["confidence"] = cv_conf
+        results["confidence"] = scenario_conf
         results["risk_level"] = risk_level
         results["evidence_level"] = "High"
         if "district" in scenarios.columns:
