@@ -45,6 +45,23 @@ class ApiService {
     }
   }
 
+  // ── Farm Financial Protection Center ──
+  Future<Map<String, dynamic>> getFinancialProtection({
+    required String crop,
+    required String district,
+    String? mandi,
+  }) async {
+    final mandiParam = (mandi != null && mandi.isNotEmpty) ? '&mandi=$mandi' : '';
+    final response = await http.get(
+      Uri.parse('$baseUrl/financial-protection?crop=$crop&district=$district$mandiParam'),
+    );
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load financial protection');
+    }
+  }
+
   // ── Recommendation / Sell-Hold Advice ──
   Future<Map<String, dynamic>> getRecommendation(Map<String, dynamic> data) async {
     return _post('/recommendation', data);
