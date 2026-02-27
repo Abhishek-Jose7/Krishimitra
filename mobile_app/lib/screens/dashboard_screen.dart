@@ -533,6 +533,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
   // GREETING + WEATHER
   // ═══════════════════════════════════════════════════
   Widget _buildGreetingWeatherCard(FarmerProfile profile) {
+    final rec = _recommendation;
+    final weatherRisk = rec?['weather_risk'] as Map<String, dynamic>?;
+    final rainRisk = weatherRisk?['rain_risk'] ?? 'LOW';
+    final heatRisk = weatherRisk?['heat_risk'] ?? 'LOW';
+    final humidityRisk = weatherRisk?['humidity_risk'] ?? 'LOW';
+
     final temp = (_weatherData?['temp'] ?? 30).toDouble();
     final humidity = (_weatherData?['humidity'] ?? 60).toDouble();
     final rainfall = (_weatherData?['rainfall'] ?? 0).toDouble();
@@ -570,6 +576,24 @@ class _DashboardScreenState extends State<DashboardScreen> {
             Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Text("${temp.toStringAsFixed(0)}°C", style: AppTheme.headingLarge.copyWith(color: Colors.white, fontSize: 22)),
               Text(condition, style: AppTheme.bodyMedium.copyWith(color: Colors.white70, fontSize: 11)),
+              if (weatherRisk != null) ...[
+                const SizedBox(height: 10),
+                Container(
+                  padding: const EdgeInsets.symmetric(vertical: 6, horizontal: 10),
+                  decoration: BoxDecoration(
+                    color: Colors.black.withOpacity(0.1),
+                    borderRadius: BorderRadius.circular(8),
+                  ),
+                  child: Text(
+                    "Risk – Rain: $rainRisk | Heat: $heatRisk | Humidity: $humidityRisk",
+                    style: const TextStyle(
+                      color: Colors.white,
+                      fontSize: 12,
+                      fontWeight: FontWeight.w500,
+                    ),
+                  ),
+                ),
+              ],
             ]),
             const Spacer(),
             Column(crossAxisAlignment: CrossAxisAlignment.end, children: [

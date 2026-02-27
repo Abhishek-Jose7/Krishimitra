@@ -1,6 +1,7 @@
 from services.yield_service import YieldService
 from services.price_service import PriceService
 from services.mandi_service import MandiService
+from services.weather_service import WeatherService
 import datetime
 import math
 
@@ -104,6 +105,9 @@ class RecommendationService:
         volatility = price_result.get('volatility', 0.1)
         forecast = price_result.get('forecast', [])
 
+        # NEW: Weather-aware intelligence
+        weather_risk = WeatherService.calculate_weather_risk(district)
+
         # 3. Calculate revenues in TOTAL RUPEES
         sell_now_revenue = total_quintals * current_price
         sell_peak_revenue = total_quintals * peak_price
@@ -203,7 +207,7 @@ class RecommendationService:
         if spoilage_prob > 0.3:
             recommendation = "SELL NOW"
 
-        # 8. Simple explanation
+        # 8. Simple explanation with weather-aware context
         if recommendation == "HOLD":
             explanation = f"Prices usually rise after harvest season. Wait ~{wait_days} days for better rate."
             if net_hold_benefit > 0:
@@ -217,6 +221,25 @@ class RecommendationService:
                 explanation = "Storage costs exceed the price benefit of waiting. Sell now."
             else:
                 explanation = "Current price is near peak. Good time to sell."
+
+        # Append weather-based advisory to recommendation text
+        if isinstance(weather_risk, dict):
+            rain_risk = weather_risk.get("rain_risk")
+            heat_risk = weather_risk.get("heat_risk")
+            humidity_risk = weather_risk.get("humidity_risk")
+
+            if rain_risk == "HIGH":
+                recommendation += " Heavy rainfall expected in coming days. Consider early harvesting or protective storage."
+            elif rain_risk == "MODERATE":
+                recommendation += " Moderate rainfall forecasted. Monitor crop drying and transport plans."
+
+            if heat_risk == "HIGH":
+                recommendation += " Extreme heat risk detected. Ensure adequate irrigation."
+            elif heat_risk == "MODERATE":
+                recommendation += " Rising temperatures expected. Review water management strategy."
+
+            if humidity_risk == "HIGH":
+                recommendation += " High humidity may increase fungal infection risk."
 
         # 9. Storage advice (only if HOLD)
         storage = None
@@ -260,6 +283,7 @@ class RecommendationService:
             "storage_cost": storage_cost_breakdown,
             "crop": crop,
             "mandi": mandi,
+            "weather_risk": weather_risk,
         }
 
         if storage:
