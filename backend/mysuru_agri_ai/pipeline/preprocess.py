@@ -461,10 +461,39 @@ def build_feature_matrix(
                 left_on=crop_keys,
                 right_on=weather_keys,
                 how="left",
+                suffixes=("_mgmt", "_sensor") # ── PHASE 3 FIX 1: Resolve Conflicts ──
             )
         else:
             # Fallback to season-only merge if district/year columns are missing
-            merged = pd.merge(crop_mgmt, weather_seasonal, on="Season", how="left")
+            merged = pd.merge(
+                crop_mgmt, 
+                weather_seasonal, 
+                on="Season", 
+                how="left",
+                suffixes=("_mgmt", "_sensor")
+            )
+
+        # ── PHASE 3 FIX 2: Feature Coalescing ──
+        # data_season.csv already contains base climate data (mgmt). 
+        # External sensor files (sensor) provide bonus features.
+        # Merge them so that Sensor > Mgmt.
+        COALESCE_MAP = {
+            "Rainfall": "Rainfall_sensor",
+            "Temperature": "Temperature_sensor",
+            "Humidity": "Humidity_sensor"
+        }
+        
+        for base_col, sensor_col in COALESCE_MAP.items():
+            mgmt_col = f"{base_col}_mgmt"
+            if sensor_col in merged.columns and mgmt_col in merged.columns:
+                # Use sensor data if present, else fallback to management CSV data
+                merged[base_col] = merged[sensor_col].fillna(merged[mgmt_col])
+                # Drop the temporary conflict columns
+                merged.drop(columns=[sensor_col, mgmt_col], inplace=True)
+            elif mgmt_col in merged.columns:
+                merged.rename(columns={mgmt_col: base_col}, inplace=True)
+            elif sensor_col in merged.columns:
+                merged.rename(columns={sensor_col: base_col}, inplace=True)
 
         # ── INTER-PHASE FIX 2: Regional Weather Proxy ──
         # If a row has no weather data (because of missing district files),
