@@ -112,7 +112,7 @@ class _LanguageScreenState extends State<LanguageScreen>
                       crossAxisCount: 2,
                       mainAxisSpacing: 10,
                       crossAxisSpacing: 10,
-                      childAspectRatio: 2.4,
+                      childAspectRatio: 1.8,
                     ),
                     itemCount: _languages.length,
                     itemBuilder: (context, index) {

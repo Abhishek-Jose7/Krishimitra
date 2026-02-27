@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import 'theme.dart';
 import 'services/api_service.dart';
 import 'providers/farmer_profile_provider.dart';
+import 'providers/localization_provider.dart';
 import 'screens/home_screen.dart';
 import 'screens/onboarding/welcome_screen.dart';
 
@@ -22,6 +23,7 @@ class MyApp extends StatelessWidget {
       providers: [
         Provider<ApiService>(create: (_) => ApiService()),
         ChangeNotifierProvider<FarmerProfile>(create: (_) => FarmerProfile()),
+        ChangeNotifierProvider<LocalizationProvider>(create: (_) => LocalizationProvider()),
       ],
       child: MaterialApp(
         title: 'KrishiMitra AI',
