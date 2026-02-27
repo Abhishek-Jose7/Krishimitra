@@ -2,7 +2,10 @@ from flask import Blueprint, request, jsonify
 from services.recommendation_service import RecommendationService
 from services.farmer_service import FarmerService
 
-recommendation_bp = Blueprint('recommendation_bp', __name__)
+# Expose this endpoint under the /api prefix so that
+# both the frontend and direct browser calls like
+# http://127.0.0.1:5000/api/recommendation work.
+recommendation_bp = Blueprint('recommendation_bp', __name__, url_prefix='/api')
 
 @recommendation_bp.route('/recommendation', methods=['POST', 'GET'])
 def get_recommendation():

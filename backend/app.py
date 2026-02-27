@@ -1,5 +1,7 @@
 from flask import Flask
 from flask_cors import CORS
+from sqlalchemy import text
+
 from config import Config
 from database.db import db
 from routes.yield_routes import yield_bp
@@ -67,6 +69,19 @@ def create_app(config_class=Config):
 
     with app.app_context():
         db.create_all()
+        # Lightweight compatibility migration for existing Postgres DBs:
+        # ensure `password_hash` exists on `users` table so OTP + password
+        # auth flows don't crash on old schemas.
+        try:
+            db.session.execute(
+                text(
+                    "ALTER TABLE users "
+                    "ADD COLUMN IF NOT EXISTS password_hash VARCHAR(256);"
+                )
+            )
+            db.session.commit()
+        except Exception as e:  # pragma: no cover - defensive
+            app.logger.warning(f"Schema compatibility check failed: {e}")
 
     # ── Background Scheduler ──
     try:

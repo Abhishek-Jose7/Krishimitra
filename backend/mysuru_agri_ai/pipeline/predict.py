@@ -2,7 +2,7 @@ import json
 import logging
 from dataclasses import dataclass
 from pathlib import Path
-from typing import Dict, Tuple
+from typing import Dict, Optional, Tuple
 
 import joblib
 import numpy as np
@@ -43,6 +43,22 @@ def load_latest_model() -> ModelBundle:
         "Loaded model version %s", metadata.get("version", "unknown")
     )
     return ModelBundle(model=model, preprocessor=preprocessor, metadata=metadata)
+
+
+_CACHED_BUNDLE: Optional[ModelBundle] = None
+
+
+def get_model_bundle() -> ModelBundle:
+    """
+    Lazily load and cache the latest model bundle for reuse across
+    multiple calls (Flask services, FastAPI app, CLI, etc.).
+
+    This ensures we do not reload the model artifacts on every request.
+    """
+    global _CACHED_BUNDLE
+    if _CACHED_BUNDLE is None:
+        _CACHED_BUNDLE = load_latest_model()
+    return _CACHED_BUNDLE
 
 
 def _tree_based_confidence_interval(

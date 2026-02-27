@@ -15,6 +15,23 @@ class ApiService {
     return _post('/yield/predict', data);
   }
 
+  Future<Map<String, dynamic>> simulateYield(Map<String, dynamic> data) async {
+    return _post('/yield/simulate', data);
+  }
+
+  Future<Map<String, dynamic>> getYieldOptions({String? district}) async {
+    String url = '$baseUrl/yield/options';
+    if (district != null && district.isNotEmpty) {
+      url += '?district=$district';
+    }
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load yield options');
+    }
+  }
+
   // ── Price Forecast ──
   Future<Map<String, dynamic>> forecastPrice(String crop, String mandi, {String? state}) async {
     final stateParam = state != null && state.isNotEmpty ? '&state=$state' : '';

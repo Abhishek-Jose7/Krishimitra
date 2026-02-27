@@ -1,5 +1,5 @@
 from flask import Blueprint, request, jsonify
-from services.yield_service import YieldService
+from services.yield_service import get_yield_advisory, get_yield_options, YieldService
 from services.farmer_service import FarmerService
 from flask_jwt_extended import jwt_required, get_jwt_identity
 from database.models import YieldPrediction
@@ -38,6 +38,61 @@ def predict_yield():
     if result:
         return jsonify(result), 200
     return jsonify({"error": "Prediction failed"}), 500
+
+
+@yield_bp.route('/yield/simulate', methods=['POST'])
+@jwt_required(optional=True)
+def simulate_yield():
+    """
+    Run the Mysuru smart-yield simulation pipeline and return
+    a plain-text advisory for the given configuration.
+
+    Request JSON body:
+      {
+        "district": "...",
+        "crop": "...",
+        "season": "...",
+        "soil_type": "...",
+        "irrigation": "...",
+        "area": 1.5
+      }
+    """
+    data = request.json or {}
+    try:
+        payload = get_yield_advisory(data)
+        advisory = payload.get("advisory", "")
+        summary = payload.get("summary")
+    except ValueError as exc:
+        return jsonify({"status": "error", "message": str(exc)}), 400
+    except Exception as exc:  # pragma: no cover - defensive
+        # Log but do not leak internals to clients
+        print(f"Yield simulation failed: {exc}")
+        return (
+            jsonify(
+                {
+                    "status": "error",
+                    "message": "Yield simulation failed. Please try again later.",
+                }
+            ),
+            500,
+        )
+
+    return jsonify({"status": "success", "advisory": advisory, "summary": summary}), 200
+
+
+@yield_bp.route('/yield/options', methods=['GET'])
+def yield_options():
+    """
+    Return dynamic option lists (district, crop, season, soil_type, irrigation, area)
+    backed by mysuru_agri_ai datasets.
+    """
+    district = request.args.get("district") or "Mysuru"
+    try:
+        opts = get_yield_options(district)
+    except Exception as exc:  # pragma: no cover - defensive
+        print(f"Failed to load yield options: {exc}")
+        return jsonify({"error": "Failed to load yield options"}), 500
+    return jsonify(opts), 200
 
 @yield_bp.route('/yield/actual', methods=['POST'])
 @jwt_required()

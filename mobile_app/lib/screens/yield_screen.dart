@@ -14,28 +14,82 @@ class YieldScreen extends StatefulWidget {
 
 class _YieldScreenState extends State<YieldScreen> {
   final _formKey = GlobalKey<FormState>();
-  String? _crop = 'Rice';
-  String? _district = 'Pune';
+  String? _crop;
+  String? _district;
   final _landController = TextEditingController();
 
   Map<String, dynamic>? _result;
+  String? _advisory;
   bool _isLoading = false;
 
-  final List<String> _crops = ['Rice', 'Wheat', 'Maize', 'Soybean'];
-  final List<String> _districts = ['Pune', 'Nashik', 'Nagpur', 'Aurangabad'];
+  List<String> _crops = [];
+  List<String> _districts = [];
+
+  @override
+  void initState() {
+    super.initState();
+    _loadOptions();
+  }
+
+  Future<void> _loadOptions() async {
+    try {
+      final api = Provider.of<ApiService>(context, listen: false);
+      final opts = await api.getYieldOptions();
+      final crops = (opts['crop'] as List<dynamic>? ?? []).cast<String>();
+      final districts = (opts['district'] as List<dynamic>? ?? []).cast<String>();
+      setState(() {
+        _crops = crops;
+        _districts = districts;
+        _crop ??= _crops.isNotEmpty ? _crops.first : null;
+        _district ??= _districts.isNotEmpty ? _districts.first : null;
+      });
+    } catch (e) {
+      // Fallback to hardcoded defaults if options fetch fails
+      setState(() {
+        _crops = ['Rice', 'Wheat', 'Maize', 'Soybean'];
+        _districts = ['Mysuru', 'Pune'];
+        _crop ??= _crops.first;
+        _district ??= _districts.first;
+      });
+    }
+  }
 
   Future<void> _predict() async {
     if (_formKey.currentState!.validate()) {
       setState(() => _isLoading = true);
       try {
         final api = Provider.of<ApiService>(context, listen: false);
-        final result = await api.predictYield({
-          'crop': _crop,
+        final landSize = double.parse(_landController.text);
+
+        final advisoryResp = await api.simulateYield({
           'district': _district,
-          'land_size': double.parse(_landController.text),
+          'crop': _crop,
+          'season': 'Kharif',
           'soil_type': 'Black',
+          'irrigation': 'Canal',
+          'area': landSize,
         });
-        setState(() => _result = result);
+
+        final summary = (advisoryResp['summary'] as Map<String, dynamic>?);
+        final predictedYieldPerHa = (summary?['predicted_yield'] ?? 0).toDouble();
+        final totalYield = (summary?['estimated_total_yield'] ?? 0).toDouble();
+        final confidencePct = (summary?['confidence'] ?? 0).toDouble();
+        final riskLevel = summary?['risk_level'] as String? ?? 'Moderate';
+
+        // Normalize into the original _result shape so the UI card stays the same,
+        // but now backed entirely by the Mysuru AI advisory outputs.
+        final result = <String, dynamic>{
+          'predicted_yield_per_hectare': predictedYieldPerHa,
+          'total_expected_production': totalYield,
+          'confidence': confidencePct / 100.0, // card expects 0–1, shows ×100
+          'risk': riskLevel,
+          'explanation_text': advisoryResp['advisory'] ?? '',
+        };
+
+        setState(() {
+          _result = result;
+          _advisory = advisoryResp['advisory'] as String?;
+        });
       } catch (e) {
         if (mounted) {
           ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text("Error: $e")));
@@ -105,6 +159,10 @@ class _YieldScreenState extends State<YieldScreen> {
               if (_result != null) ...[
                 const SizedBox(height: 24),
                 _buildResultCard(),
+              ],
+              if (_advisory != null && _advisory!.isNotEmpty) ...[
+                const SizedBox(height: 16),
+                _buildAdvisoryCard(),
               ],
             ],
           ),
@@ -208,6 +266,32 @@ class _YieldScreenState extends State<YieldScreen> {
           ),
         ),
       ],
+    );
+  }
+
+  Widget _buildAdvisoryCard() {
+    return AppCard(
+      padding: const EdgeInsets.all(16),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              const Icon(Icons.article_outlined, color: AppTheme.accentBlue, size: 20),
+              const SizedBox(width: 8),
+              Text(
+                "AI Advisory (Mysuru Model)",
+                style: AppTheme.headingMedium.copyWith(fontSize: 14),
+              ),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Text(
+            _advisory ?? '',
+            style: AppTheme.bodyMedium.copyWith(fontSize: 11, height: 1.4),
+          ),
+        ],
+      ),
     );
   }
 
