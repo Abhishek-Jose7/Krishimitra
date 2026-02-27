@@ -98,7 +98,7 @@ def get_intelligent_dashboard():
     # 3. Fetch mandi prices
     mandi_prices = None
     try:
-        mandi_prices = MandiService.get_nearby_prices(crop, district=district)
+        mandi_prices = MandiService.get_nearby_prices(crop, district=district, state=state)
     except Exception:
         unavailable.append('mandi_prices')
 

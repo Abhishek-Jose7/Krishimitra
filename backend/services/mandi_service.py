@@ -133,7 +133,8 @@ class MandiService:
     def get_nearby_prices(crop, district=None, state=None):
         """
         Returns nearby mandi prices filtered by the farmer's state.
-        Integrates real model predictions where available (Karnataka crops).
+        Sorting: nearest mandi first, then best effective price.
+        Integrates real model predictions where available.
         """
         results = []
         msp = MandiService.MSP_DATA.get(crop, 0)
@@ -148,7 +149,6 @@ class MandiService:
             filtered = MandiService.MANDIS_DB
 
         if not filtered:
-            # Fallback to all mandis if state has none
             filtered = MandiService.MANDIS_DB
 
         # Try to get real price from Karnataka models
@@ -156,7 +156,7 @@ class MandiService:
         try:
             from services.karnataka_predictor import KarnatakaForecaster
             if state and KarnatakaForecaster.is_supported(state, crop):
-                for mandi in filtered[:1]:  # Use first mandi as reference
+                for mandi in filtered[:1]:
                     forecast = KarnatakaForecaster.get_forecast(
                         crop=crop, market=mandi['name'], quantity=10
                     )
@@ -166,10 +166,23 @@ class MandiService:
         except Exception as e:
             logger.debug(f"Karnataka model not available for {crop}: {e}")
 
+        district_lower = (district or '').lower().strip()
+
         for mandi in filtered:
+            mandi_district_lower = mandi['district'].lower()
+
+            # Fuzzy district match: exact, substring, or starts-with
+            is_local = False
+            if district_lower:
+                is_local = (
+                    district_lower == mandi_district_lower
+                    or district_lower in mandi_district_lower
+                    or mandi_district_lower in district_lower
+                    or district_lower[:4] == mandi_district_lower[:4]  # "myso" matches "mysuru"
+                )
+
             # Use real price if available, else simulate
             if real_price:
-                # Add small per-mandi variation (±3%)
                 variation = random.uniform(-0.03, 0.03) * real_price
                 today_price = real_price + variation
                 yesterday_price = today_price - random.uniform(-50, 50)
@@ -179,11 +192,11 @@ class MandiService:
 
             price_change = today_price - yesterday_price
 
-            # Distance based on matching district
-            if district and district.lower() == mandi['district'].lower():
+            # Distance: local mandis are close, others are far
+            if is_local:
                 distance = round(random.uniform(3, 15), 1)
             else:
-                distance = round(random.uniform(20, 90), 1)
+                distance = round(random.uniform(25, 90), 1)
 
             transport_cost = round(distance * 2, 0)
             effective_price = today_price - transport_cost
@@ -201,18 +214,17 @@ class MandiService:
                 "transport_cost": transport_cost,
                 "effective_price": round(effective_price, 2),
                 "price_source": "model" if real_price else "estimated",
+                "is_nearest": is_local,
             })
 
-        # Sort by distance (nearest first)
-        results.sort(key=lambda x: x['distance_km'])
+        # Sort: nearest mandis first (by distance), then the rest by best effective price
+        nearest = [r for r in results if r['is_nearest']]
+        others = [r for r in results if not r['is_nearest']]
 
-        # Tag nearest and best-price mandis
-        if results:
-            results[0]['is_nearest'] = True
-            best_idx = max(range(len(results)), key=lambda i: results[i]['effective_price'])
-            results[best_idx]['is_best_price'] = True
+        nearest.sort(key=lambda x: x['distance_km'])
+        others.sort(key=lambda x: x['effective_price'], reverse=True)
 
-        return results
+        return nearest + others
 
     @staticmethod
     def get_mandi_forecast(crop, state, mandi_name=None):

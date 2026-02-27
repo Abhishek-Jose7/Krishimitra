@@ -356,8 +356,11 @@ class _MandiScreenState extends State<MandiScreen> {
 
   Widget _buildMandiCard(Map<String, dynamic> mandi, int index) {
     final isNearest = mandi['is_nearest'] == true;
-    final isBestPrice = mandi['is_best_price'] == true;
-    final isHighlighted = isNearest || isBestPrice;
+    // "Best price" is the first non-nearest mandi (they're sorted by effective_price)
+    final isFirstNonNearest = !isNearest &&
+        _mandis.where((m) => m['is_nearest'] != true).toList().indexOf(mandi) == 0;
+    final isHighlighted = isNearest || isFirstNonNearest;
+
     final priceChange = (mandi['price_change'] ?? 0).toDouble();
     final isUp = priceChange >= 0;
     final distanceKm = (mandi['distance_km'] ?? 0).toDouble();
@@ -367,19 +370,20 @@ class _MandiScreenState extends State<MandiScreen> {
     final mandiRisk = _getMandiRisk(mandi);
     final mandiState = mandi['state'] ?? '';
 
-    Color borderColor = Colors.grey.shade200;
-    if (isNearest) borderColor = AppTheme.accentBlue;
-    if (isBestPrice) borderColor = AppTheme.primaryGreen;
-
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-        border: Border.all(color: borderColor, width: isHighlighted ? 2 : 1),
-        boxShadow: isHighlighted
-            ? [BoxShadow(color: borderColor.withOpacity(0.12), blurRadius: 8, offset: const Offset(0, 2))]
-            : [],
+        border: Border.all(
+          color: isNearest
+              ? AppTheme.primaryGreen
+              : isFirstNonNearest
+                  ? AppTheme.accentBlue
+                  : Colors.grey.shade200,
+          width: isHighlighted ? 2 : 1,
+        ),
+        boxShadow: isHighlighted ? [BoxShadow(color: (isNearest ? AppTheme.primaryGreen : AppTheme.accentBlue).withOpacity(0.1), blurRadius: 8, offset: const Offset(0, 2))] : [],
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -398,23 +402,23 @@ class _MandiScreenState extends State<MandiScreen> {
                           if (isNearest)
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              margin: const EdgeInsets.only(right: 4),
-                              decoration: BoxDecoration(
-                                color: AppTheme.accentBlue,
-                                borderRadius: BorderRadius.circular(2),
-                              ),
-                              child: const Text("NEAREST",
-                                  style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
-                            ),
-                          if (isBestPrice)
-                            Container(
-                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              margin: const EdgeInsets.only(right: 4),
+                              margin: const EdgeInsets.only(right: 6),
                               decoration: BoxDecoration(
                                 color: AppTheme.primaryGreen,
                                 borderRadius: BorderRadius.circular(2),
                               ),
-                              child: const Text("BEST PRICE",
+                              child: const Text("📍 NEAREST",
+                                  style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
+                            )
+                          else if (isFirstNonNearest)
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              margin: const EdgeInsets.only(right: 6),
+                              decoration: BoxDecoration(
+                                color: AppTheme.accentBlue,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                              child: const Text("⭐ BEST PRICE",
                                   style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
                             ),
                           Expanded(
@@ -454,7 +458,7 @@ class _MandiScreenState extends State<MandiScreen> {
                   children: [
                     Text("₹${netPrice.toStringAsFixed(0)}",
                         style: AppTheme.headingLarge.copyWith(
-                          color: isBestPrice ? AppTheme.primaryGreen : AppTheme.textDark,
+                          color: isNearest ? AppTheme.primaryGreen : isFirstNonNearest ? AppTheme.accentBlue : AppTheme.textDark,
                           fontSize: 24, fontWeight: FontWeight.w800)),
                     Text("Net / Quintal", style: AppTheme.bodyMedium.copyWith(fontSize: 10, color: AppTheme.textLight)),
                     const SizedBox(height: 2),
