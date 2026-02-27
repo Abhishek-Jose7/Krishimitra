@@ -1,0 +1,256 @@
+{
+  "created_at": "2026-02-27T18:07:49.118041",
+  "feature_spec": {
+    "numeric": [
+      "Rainfall",
+      "Temperature",
+      "Humidity",
+      "N",
+      "P",
+      "K",
+      "ph",
+      "nutrient_rainfall",
+      "rain_per_degree",
+      "heat_stress_index"
+    ],
+    "categorical": [
+      "district",
+      "Crops",
+      "Season",
+      "Soil type",
+      "Irrigation"
+    ]
+  },
+  "rainfall_stats": {
+    "Rainfall": {
+      "mean": 2918.990695443645,
+      "std": 1047.7444968187424
+    },
+    "nutrient_rainfall": {
+      "mean": 169.85304710421062,
+      "std": 22.8457374839563
+    },
+    "rain_per_degree": {
+      "mean": 61.79373626052838,
+      "std": 50.32940784050817
+    }
+  },
+  "numeric_means": {
+    "Rainfall": 2918.990695443645,
+    "Temperature": 60.2674340527578,
+    "Humidity": 55.63899280575539,
+    "N": 26.598292565947244,
+    "P": 19.72458513189449,
+    "K": 30.02035491606714,
+    "ph": 6.064753757668974,
+    "nutrient_rainfall": 169.85304710421062,
+    "rain_per_degree": 61.79373626052838,
+    "heat_stress_index": 26.73736023980815
+  },
+  "model_name": "XGBRegressor_unified",
+  "model_type": "unified",
+  "version": "v20260227180801",
+  "global_metrics": {
+    "cv_r2_mean": -0.07896716843823988,
+    "cv_r2_std": 0.10911000224926864,
+    "confidence_pct": 46.05164157808801,
+    "test_r2": -0.03903461897246263,
+    "mae": 3.697443855207534,
+    "rmse": 6.726269894816267,
+    "best_params": {
+      "model__subsample": "0.7",
+      "model__reg_lambda": "1.0",
+      "model__reg_alpha": "0.0",
+      "model__n_estimators": "150",
+      "model__min_child_weight": "3",
+      "model__max_depth": "5",
+      "model__learning_rate": "0.03",
+      "model__gamma": "0.1",
+      "model__colsample_bytree": "1.0"
+    },
+    "top_features": [
+      [
+        "cat__Crops_Cardamum",
+        0.03359055891633034
+      ],
+      [
+        "cat__Crops_Pepper",
+        0.027015967294573784
+      ],
+      [
+        "cat__Soil type_Red",
+        0.025720516219735146
+      ],
+      [
+        "cat__district_Gulbarga",
+        0.024738295003771782
+      ],
+      [
+        "cat__district_Raichur",
+        0.02335069142282009
+      ],
+      [
+        "cat__Soil type_River Basins",
+        0.022347377613186836
+      ],
+      [
+        "cat__Soil type_Clay Loam",
+        0.022125165909528732
+      ],
+      [
+        "cat__Soil type_Loam",
+        0.02140115574002266
+      ],
+      [
+        "cat__Soil type_Laterite",
+        0.021387942135334015
+      ],
+      [
+        "cat__Irrigation_Spray",
+        0.021303730085492134
+      ],
+      [
+        "num__P",
+        0.021018747240304947
+      ],
+      [
+        "cat__Soil type_Alluvial",
+        0.02071657031774521
+      ],
+      [
+        "cat__Soil type_Sandy",
+        0.020506825298070908
+      ],
+      [
+        "cat__Soil type_Medium Textured Clay",
+        0.020292313769459724
+      ],
+      [
+        "cat__Soil type_Light Sandy",
+        0.020251840353012085
+      ]
+    ]
+  },
+  "per_district": {
+    "Bangalore": {
+      "n_rows": 13,
+      "cv_r2_mean": -0.07896716843823988,
+      "cv_r2_std": 0.10911000224926864,
+      "confidence_pct": 46.05164157808801,
+      "test_r2": -0.1337717735497217,
+      "mae": 6.766035943001452,
+      "rmse": 9.592379276171764
+    },
+    "Chikmangaluru": {
+      "n_rows": 192,
+      "cv_r2_mean": -0.37501070458811114,
+      "cv_r2_std": 0.5379447445307374,
+      "confidence_pct": 31.249464770594443,
+      "test_r2": 0.022566210016777055,
+      "mae": 3.719052961796848,
+      "rmse": 6.727459074522596
+    },
+    "Davangere": {
+      "n_rows": 28,
+      "cv_r2_mean": -1.6471404178936009,
+      "cv_r2_std": 1.4793672507331097,
+      "confidence_pct": 0.0,
+      "test_r2": 0.12888896606061273,
+      "mae": 5.7228512544206565,
+      "rmse": 8.266619141891288
+    },
+    "Gulbarga": {
+      "n_rows": 317,
+      "cv_r2_mean": -0.7033856255422004,
+      "cv_r2_std": 0.5979366505056994,
+      "confidence_pct": 14.830718722889976,
+      "test_r2": 0.222398229807368,
+      "mae": 2.5996764476603573,
+      "rmse": 4.707841248580057
+    },
+    "Hassan": {
+      "n_rows": 421,
+      "cv_r2_mean": -0.12252624513392382,
+      "cv_r2_std": 0.080247772685543,
+      "confidence_pct": 43.87368774330381,
+      "test_r2": 0.009475607992310842,
+      "mae": 4.088120868030819,
+      "rmse": 7.080193608255344
+    },
+    "Kasaragodu": {
+      "n_rows": 122,
+      "cv_r2_mean": -0.9866992993492986,
+      "cv_r2_std": 1.0866077459799668,
+      "confidence_pct": 0.6650350325350729,
+      "test_r2": 0.19770999923375165,
+      "mae": 3.7887157996485903,
+      "rmse": 6.815546470203595
+    },
+    "Kodagu": {
+      "n_rows": 121,
+      "cv_r2_mean": -0.8407406165982877,
+      "cv_r2_std": 1.1173962871782313,
+      "confidence_pct": 7.962969170085614,
+      "test_r2": 0.12279236578977926,
+      "mae": 2.9080116697677654,
+      "rmse": 5.616972310797605
+    },
+    "Madikeri": {
+      "n_rows": 127,
+      "cv_r2_mean": -0.14452304636505997,
+      "cv_r2_std": 0.18395015388081654,
+      "confidence_pct": 42.773847681747,
+      "test_r2": 0.15304799728870044,
+      "mae": 3.2881553711349794,
+      "rmse": 5.430515657764474
+    },
+    "Mangalore": {
+      "n_rows": 174,
+      "cv_r2_mean": -0.5259340411081884,
+      "cv_r2_std": 0.4577171531897788,
+      "confidence_pct": 23.703297944590577,
+      "test_r2": 0.16190026925699041,
+      "mae": 3.9157611867438393,
+      "rmse": 6.6527468116407595
+    },
+    "Mysuru": {
+      "n_rows": 116,
+      "cv_r2_mean": -0.4149879530991344,
+      "cv_r2_std": 0.2795438017777108,
+      "confidence_pct": 29.25060234504328,
+      "test_r2": 0.019202320642426995,
+      "mae": 4.224487341620259,
+      "rmse": 7.219985180003204
+    },
+    "Pune": {
+      "n_rows": 320,
+      "cv_r2_mean": 0.03915756703118174,
+      "cv_r2_std": 0.035907467533122794,
+      "confidence_pct": 51.95787835155909,
+      "test_r2": -0.015252058765925725,
+      "mae": 0.6877671324466537,
+      "rmse": 0.8079194303498178
+    },
+    "Raichur": {
+      "n_rows": 134,
+      "cv_r2_mean": -0.6759229095902096,
+      "cv_r2_std": 0.39259723862401125,
+      "confidence_pct": 16.20385452048952,
+      "test_r2": -0.010987168273212555,
+      "mae": 4.3862835492177785,
+      "rmse": 7.239493389712196
+    }
+  },
+  "references": {
+    "weather_by_district_season": {},
+    "nutrients_by_district": {
+      "Pune": {
+        "N": 13.091266292542521,
+        "P": 52.506216033082126,
+        "K": 70.4914713007589,
+        "ph": 7.020802012724831
+      }
+    }
+  },
+  "target_transform": "log1p"
+}

@@ -101,14 +101,12 @@ def load_weather_data(path: Path, district: str = "Mysuru") -> pd.DataFrame:
     ]
 
     # If some expected weather attributes are absent (e.g. humidity, windspeed,
-    # solar radiation), synthesise reasonable constant columns so that the rest
-    # of the pipeline can still operate, and log a warning for transparency.
+    # solar radiation), EXCLUDE them rather than creating synthetic constant
+    # columns that add zero signal but noise to the model.
     if missing:
         logger.warning(
-            "Weather dataset is missing expected columns %s. "
-            "Synthetic constant columns will be created; model performance may "
-            "be limited by lack of variability in these features. Available "
-            "columns: %s",
+            "Weather dataset is missing columns %s — they will be excluded "
+            "from features (not synthesised). Available columns: %s",
             missing,
             original_cols,
         )
@@ -120,36 +118,27 @@ def load_weather_data(path: Path, district: str = "Mysuru") -> pd.DataFrame:
                 f"column. Available columns: {original_cols}"
             )
 
-        # Use rainfall mean as a generic magnitude for missing weather metrics.
-        default_val = float(df[precip_col].mean())
-
-        if humid_col is None:
-            humid_col = "humidity_synth"
-            df[humid_col] = default_val
-        if wind_col is None:
-            wind_col = "windspeed_synth"
-            df[wind_col] = default_val
-        if solar_col is None:
-            solar_col = "solarradiation_synth"
-            df[solar_col] = default_val
-
-    # Basic cleaning
+    # Basic cleaning — only require columns that actually exist
     df = df.drop_duplicates()
-    df = df.dropna(
-        subset=[temp_col, humid_col, precip_col, wind_col, solar_col],
-        how="any",
-    )
+    required_cols = [c for c in [temp_col, humid_col, precip_col, wind_col, solar_col] if c is not None]
+    df = df.dropna(subset=required_cols, how="any")
+
+    # Build aggregation dict from available columns only
+    agg_dict = {
+        "avg_temp": (temp_col, "mean"),
+        "total_rainfall": (precip_col, "sum"),
+        "rainfall_variability": (precip_col, "std"),
+    }
+    if humid_col is not None:
+        agg_dict["avg_humidity"] = (humid_col, "mean")
+    if solar_col is not None:
+        agg_dict["avg_solar_radiation"] = (solar_col, "mean")
+    if wind_col is not None:
+        agg_dict["avg_windspeed"] = (wind_col, "mean")
 
     seasonal = (
         df.groupby(["year", "Season"], as_index=False)
-        .agg(
-            avg_temp=(temp_col, "mean"),
-            total_rainfall=(precip_col, "sum"),
-            avg_humidity=(humid_col, "mean"),
-            avg_solar_radiation=(solar_col, "mean"),
-            avg_windspeed=(wind_col, "mean"),
-            rainfall_variability=(precip_col, "std"),
-        )
+        .agg(**agg_dict)
         .reset_index(drop=True)
     )
 
@@ -177,7 +166,7 @@ def load_weather_data(path: Path, district: str = "Mysuru") -> pd.DataFrame:
     seasonal["total_rainfall"] = seasonal["seasonal_rainfall_total"]
     seasonal["avg_humidity"] = seasonal["seasonal_avg_humidity"]
 
-    logger.info("Built seasonal weather features with %d rows.", len(seasonal))
+    logger.info("Built seasonal weather features with %d rows. Columns: %s", len(seasonal), seasonal.columns.tolist())
     return seasonal
 
 
@@ -454,30 +443,96 @@ def build_feature_matrix(
     logger.info("Merging seasonal weather with crop management and soil nutrients.")
 
     # Merge weather onto crop management by district/year/season when available.
-    if (
-        {"district", "year", "Season"}.issubset(weather_seasonal.columns)
-        and {"district", "Year", "Season"}.issubset(crop_mgmt.columns)
-    ):
-        merged = pd.merge(
-            crop_mgmt,
-            weather_seasonal,
-            left_on=["district", "Year", "Season"],
-            right_on=["district", "year", "Season"],
-            how="left",
-        )
-    elif "year" in weather_seasonal.columns and "Year" in crop_mgmt.columns:
-        merged = pd.merge(
-            crop_mgmt,
-            weather_seasonal,
-            left_on=["Year", "Season"],
-            right_on=["year", "Season"],
-            how="left",
-        )
+    if weather_seasonal.empty or "Season" not in weather_seasonal.columns:
+        logger.warning("No weather data available to merge; proceeding with management features only.")
+        merged = crop_mgmt.copy()
     else:
-        if "district" in crop_mgmt.columns and "district" in weather_seasonal.columns:
-            merged = pd.merge(crop_mgmt, weather_seasonal, on=["district", "Season"], how="left")
+        # Pre-merge check for join keys
+        weather_keys = ["district", "year", "Season"]
+        crop_keys = ["district", "Year", "Season"]
+        
+        if (
+            all(k in weather_seasonal.columns for k in weather_keys)
+            and all(k in crop_mgmt.columns for k in crop_keys)
+        ):
+            merged = pd.merge(
+                crop_mgmt,
+                weather_seasonal,
+                left_on=crop_keys,
+                right_on=weather_keys,
+                how="left",
+                suffixes=("_mgmt", "_sensor") # ── PHASE 3 FIX 1: Resolve Conflicts ──
+            )
         else:
-            merged = pd.merge(crop_mgmt, weather_seasonal, on="Season", how="left")
+            # Fallback to season-only merge if district/year columns are missing
+            merged = pd.merge(
+                crop_mgmt, 
+                weather_seasonal, 
+                on="Season", 
+                how="left",
+                suffixes=("_mgmt", "_sensor")
+            )
+
+        # ── PHASE 3 FIX 2: Feature Coalescing ──
+        # data_season.csv already contains base climate data (mgmt). 
+        # External sensor files (sensor) provide bonus features.
+        # Merge them so that Sensor > Mgmt.
+        COALESCE_MAP = {
+            "Rainfall": "Rainfall_sensor",
+            "Temperature": "Temperature_sensor",
+            "Humidity": "Humidity_sensor"
+        }
+        
+        for base_col, sensor_col in COALESCE_MAP.items():
+            mgmt_col = f"{base_col}_mgmt"
+            if sensor_col in merged.columns and mgmt_col in merged.columns:
+                # Use sensor data if present, else fallback to management CSV data
+                merged[base_col] = merged[sensor_col].fillna(merged[mgmt_col])
+                # Drop the temporary conflict columns
+                merged.drop(columns=[sensor_col, mgmt_col], inplace=True)
+            elif mgmt_col in merged.columns:
+                merged.rename(columns={mgmt_col: base_col}, inplace=True)
+            elif sensor_col in merged.columns:
+                merged.rename(columns={sensor_col: base_col}, inplace=True)
+
+        # ── INTER-PHASE FIX 2: Regional Weather Proxy ──
+        # If a row has no weather data (because of missing district files),
+        # fill it with the mean weather across ALL OTHER districts for that Year/Season.
+        # This provides a "monsoon proxy" which is better than a global median.
+        weather_cols = ["Rainfall", "Temperature", "Humidity", "avg_temp", 
+                        "total_rainfall", "avg_humidity", "avg_solar_radiation", 
+                        "avg_windspeed", "rainfall_variability"]
+        
+        # Identify columns that exist in merged and are likely from weather sensor
+        weather_cols = [c for c in weather_cols if c in merged.columns]
+        
+        if weather_cols:
+            # Group by year/season across all districts to find the regional "norm"
+            regional_weather = (
+                weather_seasonal.groupby(["year", "Season"])[weather_cols]
+                .mean().reset_index()
+            )
+            
+            if not regional_weather.empty:
+                # Merge regional norm as secondary backup
+                merged = pd.merge(
+                    merged, 
+                    regional_weather, 
+                    left_on=["Year", "Season"], 
+                    right_on=["year", "Season"], 
+                    how="left",
+                    suffixes=("", "_regional")
+                )
+                
+                # Fill gaps using the regional norm
+                for col in weather_cols:
+                    regional_col = f"{col}_regional"
+                    if regional_col in merged.columns:
+                        merged[col] = merged[col].fillna(merged[col_regional])
+                        merged.drop(columns=[regional_col], inplace=True)
+                
+                if "year_regional" in merged.columns:
+                    merged.drop(columns=["year_regional"], inplace=True)
 
     # Merge soil/nutrient features by crop when available, else by district.
     if "Crops" in soil_nutrients.columns:
@@ -489,49 +544,85 @@ def build_feature_matrix(
     if "district" not in merged.columns:
         merged["district"] = "Unknown"
 
-    # Construct a yield-per-area target to avoid the very large absolute
-    # production numbers present in the raw `yeilds` column.
+    # ── PHASE 2 FIX: Target Normalization (Relative Yield Index) ──
+    # Yields often have wildly different units/magnitudes (Coconut nuts ~10K 
+    # vs Paddy tons ~2). Predictive indices (actual / median_for_crop) allow 
+    # the model to learn universal patterns.
+    
+    # First calculate raw yield per area
+    # Calculate raw yield per area
     if "Area" in merged.columns:
         merged["yield_per_area"] = merged["yeilds"] / merged["Area"].replace(0, np.nan)
     else:
         merged["yield_per_area"] = merged["yeilds"]
-
-    # Drop rows without a valid target
+    
     merged = merged.dropna(subset=["yield_per_area"])
 
-    # Filter out implausible agronomic outliers. Most rows are in ~0–20 range,
-    # but a few reach extremely high values (e.g. >1e5) which destabilise the
-    # model. Keep only reasonable yields per acre.
-    valid_mask = merged["yield_per_area"].between(0.1, 30)
+    # ── PHASE 2.1 FIX: Robust Normalization ──
+    # Aggressively filter outliers BEFORE calculating medians to avoid skew.
+    def filter_crop_outliers(group):
+        if len(group) < 5: return group
+        q_low = group["yield_per_area"].quantile(0.01)
+        q_high = group["yield_per_area"].quantile(0.95) # Drop top 5% extreme outliers
+        return group[group["yield_per_area"].between(q_low, q_high)]
+
+    cleaned_for_median = merged.groupby("Crops", group_keys=False).apply(filter_crop_outliers)
+    crop_medians = cleaned_for_median.groupby("Crops")["yield_per_area"].median().to_dict()
+    
+    # Apply normalization: RYI = yield_per_area / crop_median
+    merged["yield_index"] = merged.apply(
+        lambda r: r["yield_per_area"] / crop_medians.get(r["Crops"], 1.0) 
+        if pd.notna(r["yield_per_area"]) and r["Crops"] in crop_medians else np.nan,
+        axis=1
+    )
+
+    # Drop rows without a valid target
+    merged = merged.dropna(subset=["yield_index"])
+
+    # Filter out remaining relative outliers (e.g. data errors)
+    valid_mask = merged["yield_index"].between(0.01, 10.0)
     merged = merged.loc[valid_mask].copy()
 
-    # Add simple interaction features that capture important agronomic
-    # relationships.
+    # ── FIX 3: Stable ratio-based interaction features ──
+    # Replace raw product features (rain_temp ~ 170,000) with normalised ratios
+    # that have agronomic meaning.
     if {"Rainfall", "Temperature"}.issubset(merged.columns):
-        merged["rain_temp"] = merged["Rainfall"] * merged["Temperature"]
+        merged["rain_per_degree"] = merged["Rainfall"] / merged["Temperature"].replace(0, np.nan)
+        merged["rain_per_degree"] = merged["rain_per_degree"].fillna(0.0)
     if {"Temperature", "Humidity"}.issubset(merged.columns):
-        merged["temp_humidity"] = merged["Temperature"] * merged["Humidity"]
-    if {"Season", "Crops"}.issubset(merged.columns):
-        merged["season_crop"] = (
-            merged["Season"].astype(str).str.strip()
-            + "_"
-            + merged["Crops"].astype(str).str.strip()
-        )
+        # Vapour-pressure-deficit proxy: high temp + low humidity = stress
+        merged["heat_stress_index"] = merged["Temperature"] * (100 - merged["Humidity"]) / 100.0
 
-    # Fill numeric NaNs with column medians to stabilise the model.
-    numeric_cols = merged.select_dtypes(include=[np.number]).columns.tolist()
-    # Exclude target, area, and other obvious leakage columns from the
-    # feature list.
-    for leak_col in ["yeilds", "yield_per_area", "Area"]:
-        if leak_col in numeric_cols:
-            numeric_cols.remove(leak_col)
+    # ── FIX 1: Explicit feature whitelist ──
+    # Only include features that would be KNOWN at prediction time.
+    # Excludes: price (leakage), year/Year (overfitting to time), Location,
+    #           season_crop (redundant with separate Season + Crops categoricals),
+    #           and any other metadata columns.
+    NUMERIC_WHITELIST = {
+        # Climate features
+        "Rainfall", "Temperature", "Humidity",
+        # Seasonal weather aggregates
+        "avg_temp", "seasonal_rainfall_total", "seasonal_avg_humidity",
+        "avg_solar_radiation", "avg_windspeed", "rainfall_variability",
+        "extreme_heat_days", "total_rainfall", "avg_humidity",
+        # Soil nutrient features
+        "N", "P", "K", "ph", "nutrient_rainfall",
+        # Interaction features (ratio-based)
+        "rain_per_degree", "heat_stress_index",
+    }
+
+    numeric_cols = [
+        col for col in merged.select_dtypes(include=[np.number]).columns
+        if col in NUMERIC_WHITELIST
+    ]
+
     numeric_means: Dict[str, float] = {}
     for col in numeric_cols:
         merged[col] = merged[col].fillna(merged[col].median())
         numeric_means[col] = float(merged[col].mean())
 
     # Minimal rainfall statistics for later risk analysis.
-    rainfall_cols = [c for c in merged.columns if "rainfall" in c.lower()]
+    rainfall_cols = [c for c in numeric_cols if "rainfall" in c.lower() or "rain" in c.lower()]
     rainfall_stats = {}
     for col in rainfall_cols:
         rainfall_stats[col] = {
@@ -545,11 +636,12 @@ def build_feature_matrix(
         if col in merged.columns
     ]
 
-    # Drop the original production column, the derived target, and Area from X
-    # to prevent label leakage and ensure we are truly modelling per-acre yield.
-    drop_cols = [c for c in ["yeilds", "yield_per_area", "Area"] if c in merged.columns]
-    y = merged["yield_per_area"].astype(float)
-    X = merged.drop(columns=drop_cols)
+    # Build X by selecting ONLY whitelisted features + categoricals.
+    keep_cols = numeric_cols + categorical_features
+    # Ensure all kept columns exist
+    keep_cols = [c for c in keep_cols if c in merged.columns]
+    y = merged["yield_index"].astype(float)
+    X = merged[keep_cols].copy()
 
     feature_spec = FeatureSpec(
         numeric_features=numeric_cols,
@@ -564,6 +656,7 @@ def build_feature_matrix(
         },
         "rainfall_stats": rainfall_stats,
         "numeric_means": numeric_means,
+        "crop_medians": crop_medians,
     }
 
     return X, y, feature_spec, metadata
