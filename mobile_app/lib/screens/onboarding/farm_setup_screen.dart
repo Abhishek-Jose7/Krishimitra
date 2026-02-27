@@ -27,11 +27,13 @@ class _FarmSetupScreenState extends State<FarmSetupScreen>
   String? _irrigationType;
   bool _isLoading = false;
   String _areaUnit = 'Acres'; // Acres or Hectares
+  bool _loadingCrops = true;
 
   late AnimationController _animCtrl;
   late Animation<double> _fadeAnim;
 
-  final List<Map<String, dynamic>> _crops = [
+  // Default crop list — replaced by API response when available
+  List<Map<String, dynamic>> _crops = [
     {'name': 'Rice', 'icon': '🌾', 'color': const Color(0xFF4CAF50), 'perishable': false},
     {'name': 'Wheat', 'icon': '🌿', 'color': const Color(0xFFF9A825), 'perishable': false},
     {'name': 'Maize', 'icon': '🌽', 'color': const Color(0xFFFF9800), 'perishable': false},
@@ -43,6 +45,17 @@ class _FarmSetupScreenState extends State<FarmSetupScreen>
     {'name': 'Tomato', 'icon': '🍅', 'color': const Color(0xFFF44336), 'perishable': true},
     {'name': 'Potato', 'icon': '🥔', 'color': const Color(0xFF795548), 'perishable': false},
   ];
+
+  // Map icons to colors for dynamic crops
+  static const _iconColors = <String, Color>{
+    '🌾': Color(0xFF4CAF50), '🌿': Color(0xFF66BB6A), '🌽': Color(0xFFFF9800),
+    '🫘': Color(0xFF8BC34A), '☁️': Color(0xFF90A4AE), '🎋': Color(0xFF66BB6A),
+    '🥜': Color(0xFFD7A86E), '🧅': Color(0xFFE91E63), '🍅': Color(0xFFF44336),
+    '🥔': Color(0xFF795548), '🥥': Color(0xFF8D6E63), '🍌': Color(0xFFF9A825),
+    '🌻': Color(0xFFFFC107), '🌶️': Color(0xFFD32F2F), '🍇': Color(0xFF7B1FA2),
+    '🍎': Color(0xFFE91E63), '🥭': Color(0xFFFF9800), '🌴': Color(0xFF388E3C),
+    '🌱': Color(0xFF78909C),
+  };
 
   final List<Map<String, dynamic>> _customCrops = [];
 
@@ -64,6 +77,48 @@ class _FarmSetupScreenState extends State<FarmSetupScreen>
     );
     _fadeAnim = CurvedAnimation(parent: _animCtrl, curve: Curves.easeOut);
     _animCtrl.forward();
+    _loadSuggestedCrops();
+  }
+
+  /// Fetch region-appropriate crops from the API
+  Future<void> _loadSuggestedCrops() async {
+    final profile = Provider.of<FarmerProfile>(context, listen: false);
+    final state = profile.state;
+    if (state == null || state.isEmpty) {
+      setState(() => _loadingCrops = false);
+      return;
+    }
+
+    try {
+      final uri = Uri.parse(
+        '${ApiService.baseUrl}/crops/suggest?state=$state'
+        '${profile.district != null ? "&district=${profile.district}" : ""}',
+      );
+      final response = await http.get(uri);
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final cropsJson = data['crops'] as List<dynamic>? ?? [];
+
+        if (cropsJson.isNotEmpty) {
+          setState(() {
+            _crops = cropsJson.map((c) {
+              final icon = c['icon'] ?? '🌱';
+              return <String, dynamic>{
+                'name': c['name'] ?? 'Unknown',
+                'icon': icon,
+                'color': _iconColors[icon] ?? const Color(0xFF78909C),
+                'perishable': c['perishable'] ?? false,
+              };
+            }).toList();
+          });
+        }
+      }
+    } catch (_) {
+      // Keep static fallback
+    }
+
+    if (mounted) setState(() => _loadingCrops = false);
   }
 
   @override

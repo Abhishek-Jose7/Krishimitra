@@ -18,10 +18,18 @@ class _MandiScreenState extends State<MandiScreen> {
 
   List<String> _crops = ['Rice', 'Wheat', 'Maize', 'Soybean'];
 
+  // Forecast data from real models
+  Map<String, dynamic>? _forecast;
+  bool _loadingForecast = false;
+
   static const Map<String, String> cropEmojis = {
     'Rice': '🌾', 'Wheat': '🌿', 'Maize': '🌽', 'Soybean': '🫘',
     'Cotton': '☁️', 'Sugarcane': '🎋', 'Groundnut': '🥜', 'Onion': '🧅',
-    'Tomato': '🍅', 'Potato': '🥔',
+    'Tomato': '🍅', 'Potato': '🥔', 'Coconut': '🥥', 'Ragi': '🌾',
+    'Jowar': '🌾', 'Bajra': '🌾', 'Mustard': '🌻', 'Gram': '🫘',
+    'Lentils': '🫘', 'Arecanut': '🌴', 'Sunflower': '🌻', 'Banana': '🍌',
+    'Chilli': '🌶️', 'Turmeric': '🌿', 'Cumin': '🌿', 'Pepper': '🌶️',
+    'Cardamom': '🌿', 'Mango': '🥭', 'Grapes': '🍇',
   };
 
   @override
@@ -41,7 +49,11 @@ class _MandiScreenState extends State<MandiScreen> {
     try {
       final profile = Provider.of<FarmerProfile>(context, listen: false);
       final api = Provider.of<ApiService>(context, listen: false);
-      final mandis = await api.getMandiPrices(_selectedCrop, district: profile.district ?? 'Pune');
+      final mandis = await api.getMandiPrices(
+        _selectedCrop,
+        district: profile.district ?? '',
+        state: profile.state ?? '',
+      );
       setState(() {
         _mandis = mandis;
         _isLoading = false;
@@ -49,9 +61,28 @@ class _MandiScreenState extends State<MandiScreen> {
     } catch (e) {
       if (mounted) setState(() => _isLoading = false);
     }
+    // Also load forecast in background
+    _loadForecast();
   }
 
-  // Estimate travel time from distance (assume 30 km/h for rural roads)
+  Future<void> _loadForecast() async {
+    setState(() => _loadingForecast = true);
+    try {
+      final profile = Provider.of<FarmerProfile>(context, listen: false);
+      final api = Provider.of<ApiService>(context, listen: false);
+      final bestMandi = _mandis.isNotEmpty ? _mandis[0]['mandi'] as String? : null;
+      final forecast = await api.getMandiForecast(
+        _selectedCrop,
+        state: profile.state ?? '',
+        mandi: bestMandi,
+      );
+      if (mounted) setState(() => _forecast = forecast);
+    } catch (_) {
+      // No forecast available
+    }
+    if (mounted) setState(() => _loadingForecast = false);
+  }
+
   String _estimateTravelTime(double distanceKm) {
     final minutes = (distanceKm / 30 * 60).round();
     if (minutes < 60) return '$minutes min drive';
@@ -61,17 +92,19 @@ class _MandiScreenState extends State<MandiScreen> {
     return '${hours}h ${remainingMin}m drive';
   }
 
-  // Simulate arrival volume risk per mandi
   Map<String, dynamic> _getMandiRisk(Map<String, dynamic> mandi) {
-    final arrival = (mandi['arrival_volume'] ?? 'normal').toString().toLowerCase();
     final priceChange = (mandi['price_change'] ?? 0).toDouble();
+    final priceSource = mandi['price_source'] ?? 'estimated';
 
-    if (arrival == 'high' || priceChange < -30) {
-      return {'level': 'HIGH', 'message': 'High arrival today — price may drop', 'color': AppTheme.error, 'icon': Icons.warning_amber_rounded};
-    } else if (arrival == 'medium' || priceChange < -10) {
-      return {'level': 'MEDIUM', 'message': 'Moderate arrivals', 'color': AppTheme.accentOrange, 'icon': Icons.info_outline};
+    if (priceSource == 'model') {
+      return {'level': 'MODEL', 'message': 'Price from AI model prediction', 'color': AppTheme.accentBlue, 'icon': Icons.auto_awesome};
     }
-    return {'level': 'LOW', 'message': 'Normal arrivals', 'color': AppTheme.primaryGreen, 'icon': Icons.check_circle_outline};
+    if (priceChange < -30) {
+      return {'level': 'HIGH', 'message': 'Price dropped today — stay alert', 'color': AppTheme.error, 'icon': Icons.warning_amber_rounded};
+    } else if (priceChange < -10) {
+      return {'level': 'MEDIUM', 'message': 'Slight price dip today', 'color': AppTheme.accentOrange, 'icon': Icons.info_outline};
+    }
+    return {'level': 'LOW', 'message': 'Stable prices today', 'color': AppTheme.primaryGreen, 'icon': Icons.check_circle_outline};
   }
 
   @override
@@ -94,7 +127,10 @@ class _MandiScreenState extends State<MandiScreen> {
                 final isSelected = crop == _selectedCrop;
                 return GestureDetector(
                   onTap: () {
-                    setState(() => _selectedCrop = crop);
+                    setState(() {
+                      _selectedCrop = crop;
+                      _forecast = null;
+                    });
                     _loadPrices();
                   },
                   child: Container(
@@ -124,24 +160,180 @@ class _MandiScreenState extends State<MandiScreen> {
           ),
           Divider(height: 1, color: Colors.grey.shade300),
 
+          // Forecast banner — shows real model predictions
+          if (_forecast != null) _buildForecastBanner(),
+
           // Mandi list
           Expanded(
             child: _isLoading
                 ? const Center(child: CircularProgressIndicator(color: AppTheme.primaryGreen))
-                : RefreshIndicator(
-                    onRefresh: _loadPrices,
-                    color: AppTheme.primaryGreen,
-                    child: ListView.builder(
-                      padding: const EdgeInsets.all(12),
-                      itemCount: _mandis.length,
-                      itemBuilder: (context, index) {
-                        final mandi = _mandis[index];
-                        return _buildMandiCard(mandi, index);
-                      },
-                    ),
-                  ),
+                : _mandis.isEmpty
+                    ? Center(
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            Icon(Icons.store_mall_directory, size: 56, color: Colors.grey.shade300),
+                            const SizedBox(height: 12),
+                            Text("No mandis found for your state",
+                                style: AppTheme.bodyMedium.copyWith(color: AppTheme.textLight)),
+                          ],
+                        ),
+                      )
+                    : RefreshIndicator(
+                        onRefresh: _loadPrices,
+                        color: AppTheme.primaryGreen,
+                        child: ListView.builder(
+                          padding: const EdgeInsets.all(12),
+                          itemCount: _mandis.length,
+                          itemBuilder: (context, index) {
+                            final mandi = _mandis[index];
+                            return _buildMandiCard(mandi, index);
+                          },
+                        ),
+                      ),
           ),
         ],
+      ),
+    );
+  }
+
+  /// Forecast banner — top section with real model predictions
+  Widget _buildForecastBanner() {
+    final todayPrice = _forecast!['today_price'];
+    final trend = _forecast!['trend_7d_pct'] ?? 0;
+    final source = _forecast!['source'] ?? 'estimated';
+    final bestDay = _forecast!['best_day'];
+    final isModelBased = source == 'xgboost_model';
+    final trendUp = (trend as num).toDouble() > 0;
+
+    return Container(
+      margin: const EdgeInsets.fromLTRB(12, 10, 12, 4),
+      padding: const EdgeInsets.all(14),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(
+          colors: isModelBased
+              ? [AppTheme.primaryGreen.withOpacity(0.08), AppTheme.accentBlue.withOpacity(0.06)]
+              : [Colors.grey.shade50, Colors.grey.shade100],
+          begin: Alignment.topLeft,
+          end: Alignment.bottomRight,
+        ),
+        borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+        border: Border.all(color: isModelBased ? AppTheme.accentBlue.withOpacity(0.3) : Colors.grey.shade200),
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Row(
+            children: [
+              if (isModelBased) ...[
+                Icon(Icons.auto_awesome, size: 14, color: AppTheme.accentBlue),
+                const SizedBox(width: 4),
+                Text("AI Price Prediction",
+                    style: AppTheme.bodyMedium.copyWith(fontSize: 10, color: AppTheme.accentBlue, fontWeight: FontWeight.w600)),
+              ] else ...[
+                Icon(Icons.show_chart, size: 14, color: AppTheme.textLight),
+                const SizedBox(width: 4),
+                Text("Price Forecast",
+                    style: AppTheme.bodyMedium.copyWith(fontSize: 10, color: AppTheme.textLight, fontWeight: FontWeight.w600)),
+              ],
+              const Spacer(),
+              if (_loadingForecast)
+                const SizedBox(width: 12, height: 12, child: CircularProgressIndicator(strokeWidth: 1.5, color: AppTheme.primaryGreen)),
+            ],
+          ),
+          const SizedBox(height: 8),
+          Row(
+            children: [
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("Today's Price", style: AppTheme.bodyMedium.copyWith(fontSize: 10)),
+                  Text("₹${(todayPrice as num).toStringAsFixed(0)}/qtl",
+                      style: AppTheme.headingMedium.copyWith(fontSize: 20, color: AppTheme.primaryGreen)),
+                ],
+              ),
+              const SizedBox(width: 24),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text("7-Day Trend", style: AppTheme.bodyMedium.copyWith(fontSize: 10)),
+                  Row(
+                    children: [
+                      Icon(trendUp ? Icons.trending_up : Icons.trending_down,
+                          color: trendUp ? AppTheme.primaryGreen : AppTheme.error, size: 18),
+                      const SizedBox(width: 4),
+                      Text("${trendUp ? '+' : ''}${(trend as num).toStringAsFixed(1)}%",
+                          style: TextStyle(
+                            fontSize: 16, fontWeight: FontWeight.w700,
+                            color: trendUp ? AppTheme.primaryGreen : AppTheme.error,
+                          )),
+                    ],
+                  ),
+                ],
+              ),
+              if (bestDay != null) ...[
+                const SizedBox(width: 24),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Best Sell Day", style: AppTheme.bodyMedium.copyWith(fontSize: 10)),
+                    Text(bestDay['label'] ?? 'Day ${bestDay['day'] ?? '?'}',
+                        style: AppTheme.headingMedium.copyWith(fontSize: 14)),
+                  ],
+                ),
+              ],
+            ],
+          ),
+
+          // Mini 7-day forecast bars
+          if (_forecast!['forecast_7day'] != null) ...[
+            const SizedBox(height: 10),
+            _buildMiniChart(_forecast!['forecast_7day']),
+          ],
+        ],
+      ),
+    );
+  }
+
+  /// Mini bar chart of 7-day forecast
+  Widget _buildMiniChart(List<dynamic> forecast) {
+    if (forecast.isEmpty) return const SizedBox.shrink();
+    final prices = forecast.take(7).map((f) => (f['price'] as num).toDouble()).toList();
+    final minP = prices.reduce((a, b) => a < b ? a : b);
+    final maxP = prices.reduce((a, b) => a > b ? a : b);
+    final range = maxP - minP;
+
+    return SizedBox(
+      height: 36,
+      child: Row(
+        crossAxisAlignment: CrossAxisAlignment.end,
+        children: List.generate(prices.length, (i) {
+          final normalized = range > 0 ? (prices[i] - minP) / range : 0.5;
+          final barHeight = 8 + (normalized * 24);
+          final isMax = prices[i] == maxP;
+          return Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 2),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  if (isMax)
+                    Text("₹${prices[i].toStringAsFixed(0)}",
+                        style: TextStyle(fontSize: 7, color: AppTheme.primaryGreen, fontWeight: FontWeight.w600)),
+                  Container(
+                    height: barHeight,
+                    decoration: BoxDecoration(
+                      color: isMax ? AppTheme.primaryGreen : AppTheme.primaryGreen.withOpacity(0.3),
+                      borderRadius: BorderRadius.circular(2),
+                    ),
+                  ),
+                  const SizedBox(height: 2),
+                  Text("D${i + 1}", style: TextStyle(fontSize: 7, color: Colors.grey.shade500)),
+                ],
+              ),
+            ),
+          );
+        }),
       ),
     );
   }
@@ -155,6 +347,7 @@ class _MandiScreenState extends State<MandiScreen> {
     final rawPrice = (mandi['today_price'] ?? 0).toDouble();
     final transportCost = (mandi['transport_cost'] ?? 0).toDouble();
     final mandiRisk = _getMandiRisk(mandi);
+    final mandiState = mandi['state'] ?? '';
 
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
@@ -199,7 +392,14 @@ class _MandiScreenState extends State<MandiScreen> {
                           ),
                         ],
                       ),
-                      const SizedBox(height: 6),
+                      const SizedBox(height: 4),
+                      // State + district label
+                      if (mandiState.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.only(bottom: 4),
+                          child: Text("${mandi['district'] ?? ''}, $mandiState",
+                              style: AppTheme.bodyMedium.copyWith(fontSize: 10, color: Colors.grey.shade500)),
+                        ),
                       // Tags row — distance + travel time
                       Row(
                         children: [
@@ -216,21 +416,18 @@ class _MandiScreenState extends State<MandiScreen> {
 
                 const SizedBox(width: 10),
 
-                // Price column — NET price is primary, raw is secondary
+                // Price column
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    // NET price — large and primary
                     Text("₹${netPrice.toStringAsFixed(0)}",
                         style: AppTheme.headingLarge.copyWith(
                           color: isBest ? AppTheme.primaryGreen : AppTheme.textDark,
                           fontSize: 24, fontWeight: FontWeight.w800)),
                     Text("Net / Quintal", style: AppTheme.bodyMedium.copyWith(fontSize: 10, color: AppTheme.textLight)),
                     const SizedBox(height: 2),
-                    // Raw price — smaller
                     Text("Market: ₹${rawPrice.toStringAsFixed(0)}",
                         style: AppTheme.bodyMedium.copyWith(fontSize: 11, color: Colors.grey)),
-                    // Price change
                     Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -245,7 +442,7 @@ class _MandiScreenState extends State<MandiScreen> {
               ],
             ),
 
-            // Risk indicator per mandi
+            // Risk / source indicator
             const SizedBox(height: 8),
             Container(
               padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),

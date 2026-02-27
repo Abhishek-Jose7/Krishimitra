@@ -78,3 +78,24 @@ def get_active_crop(user_id):
         context = FarmerService.get_crop_context(crop.id)
         return jsonify({"active_crop": context})
     return jsonify({"active_crop": None, "message": "No crops registered"})
+
+
+# ──────────────────────────────────────────
+# CROP SUGGESTIONS (Groq-powered)
+# ──────────────────────────────────────────
+
+@farm_bp.route('/crops/suggest', methods=['GET'])
+def suggest_crops():
+    """
+    GET /crops/suggest?state=Karnataka&district=Dharwad
+    Returns Groq-suggested or curated crops for the region.
+    """
+    state = request.args.get('state', '')
+    district = request.args.get('district', '')
+
+    if not state:
+        return jsonify({"error": "state is required"}), 400
+
+    from services.groq_crop_advisor import suggest_crops as do_suggest
+    result = do_suggest(state, district or None)
+    return jsonify(result), 200

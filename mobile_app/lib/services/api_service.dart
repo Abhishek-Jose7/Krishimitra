@@ -34,15 +34,27 @@ class ApiService {
   }
 
   // ── Mandi Prices ──
-  Future<List<dynamic>> getMandiPrices(String crop, {String? district}) async {
+  Future<List<dynamic>> getMandiPrices(String crop, {String? district, String? state}) async {
     String url = '$baseUrl/mandi/prices?crop=$crop';
     if (district != null) url += '&district=$district';
+    if (state != null) url += '&state=$state';
     final response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
       throw Exception('Failed to load mandi prices');
     }
+  }
+
+  Future<Map<String, dynamic>?> getMandiForecast(String crop, {String? state, String? mandi}) async {
+    String url = '$baseUrl/mandi/forecast?crop=$crop';
+    if (state != null) url += '&state=$state';
+    if (mandi != null) url += '&mandi=$mandi';
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    }
+    return null;
   }
 
   // ── Market Risk ──
