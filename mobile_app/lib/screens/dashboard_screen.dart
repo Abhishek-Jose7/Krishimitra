@@ -380,11 +380,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
           Container(
             padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
             decoration: BoxDecoration(color: Colors.white.withOpacity(0.12), borderRadius: BorderRadius.circular(4)),
-            child: Row(mainAxisSize: MainAxisSize.min, children: [
+            child: Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
               Icon(Icons.verified, color: Colors.white.withOpacity(0.7), size: 14),
               const SizedBox(width: 6),
-              Text("Based on 3-year seasonal data & current market trends",
-                  style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 10)),
+              Expanded(
+                child: Text("Based on 3-year seasonal data & current market trends",
+                    style: TextStyle(color: Colors.white.withOpacity(0.7), fontSize: 10)),
+              ),
             ]),
           ),
         ]),
