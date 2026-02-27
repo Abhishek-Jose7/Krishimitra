@@ -203,7 +203,15 @@ class MandiService:
                 "price_source": "model" if real_price else "estimated",
             })
 
-        results.sort(key=lambda x: x['effective_price'], reverse=True)
+        # Sort by distance (nearest first)
+        results.sort(key=lambda x: x['distance_km'])
+
+        # Tag nearest and best-price mandis
+        if results:
+            results[0]['is_nearest'] = True
+            best_idx = max(range(len(results)), key=lambda i: results[i]['effective_price'])
+            results[best_idx]['is_best_price'] = True
+
         return results
 
     @staticmethod

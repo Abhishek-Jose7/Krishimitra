@@ -3,6 +3,7 @@ import 'package:provider/provider.dart';
 import '../providers/farmer_profile_provider.dart';
 import '../services/api_service.dart';
 import '../theme.dart';
+import 'forecast_detail_screen.dart';
 
 class MandiScreen extends StatefulWidget {
   const MandiScreen({super.key});
@@ -202,100 +203,117 @@ class _MandiScreenState extends State<MandiScreen> {
     final todayPrice = _forecast!['today_price'];
     final trend = _forecast!['trend_7d_pct'] ?? 0;
     final source = _forecast!['source'] ?? 'estimated';
-    final bestDay = _forecast!['best_day'];
     final isModelBased = source == 'xgboost_model';
     final trendUp = (trend as num).toDouble() > 0;
 
-    return Container(
-      margin: const EdgeInsets.fromLTRB(12, 10, 12, 4),
-      padding: const EdgeInsets.all(14),
-      decoration: BoxDecoration(
-        gradient: LinearGradient(
-          colors: isModelBased
-              ? [AppTheme.primaryGreen.withOpacity(0.08), AppTheme.accentBlue.withOpacity(0.06)]
-              : [Colors.grey.shade50, Colors.grey.shade100],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-        border: Border.all(color: isModelBased ? AppTheme.accentBlue.withOpacity(0.3) : Colors.grey.shade200),
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Row(
-            children: [
-              if (isModelBased) ...[
-                Icon(Icons.auto_awesome, size: 14, color: AppTheme.accentBlue),
-                const SizedBox(width: 4),
-                Text("AI Price Prediction",
-                    style: AppTheme.bodyMedium.copyWith(fontSize: 10, color: AppTheme.accentBlue, fontWeight: FontWeight.w600)),
-              ] else ...[
-                Icon(Icons.show_chart, size: 14, color: AppTheme.textLight),
-                const SizedBox(width: 4),
-                Text("Price Forecast",
-                    style: AppTheme.bodyMedium.copyWith(fontSize: 10, color: AppTheme.textLight, fontWeight: FontWeight.w600)),
-              ],
-              const Spacer(),
-              if (_loadingForecast)
-                const SizedBox(width: 12, height: 12, child: CircularProgressIndicator(strokeWidth: 1.5, color: AppTheme.primaryGreen)),
-            ],
+    return GestureDetector(
+      onTap: () {
+        Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (_) => ForecastDetailScreen(
+              forecast: _forecast!,
+              cropName: _selectedCrop,
+            ),
           ),
-          const SizedBox(height: 8),
-          Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Today's Price", style: AppTheme.bodyMedium.copyWith(fontSize: 10)),
-                  Text("₹${(todayPrice as num).toStringAsFixed(0)}/qtl",
-                      style: AppTheme.headingMedium.copyWith(fontSize: 20, color: AppTheme.primaryGreen)),
-                ],
-              ),
-              const SizedBox(width: 24),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("7-Day Trend", style: AppTheme.bodyMedium.copyWith(fontSize: 10)),
-                  Row(
-                    children: [
-                      Icon(trendUp ? Icons.trending_up : Icons.trending_down,
-                          color: trendUp ? AppTheme.primaryGreen : AppTheme.error, size: 18),
-                      const SizedBox(width: 4),
-                      Text("${trendUp ? '+' : ''}${(trend as num).toStringAsFixed(1)}%",
-                          style: TextStyle(
-                            fontSize: 16, fontWeight: FontWeight.w700,
-                            color: trendUp ? AppTheme.primaryGreen : AppTheme.error,
-                          )),
-                    ],
+        );
+      },
+      child: Container(
+        margin: const EdgeInsets.fromLTRB(12, 10, 12, 4),
+        padding: const EdgeInsets.all(14),
+        decoration: BoxDecoration(
+          gradient: LinearGradient(
+            colors: isModelBased
+                ? [AppTheme.primaryGreen.withOpacity(0.08), AppTheme.accentBlue.withOpacity(0.06)]
+                : [Colors.grey.shade50, Colors.grey.shade100],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          borderRadius: BorderRadius.circular(AppTheme.cardRadius),
+          border: Border.all(color: isModelBased ? AppTheme.accentBlue.withOpacity(0.3) : Colors.grey.shade200),
+        ),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              children: [
+                if (isModelBased) ...[
+                  Icon(Icons.auto_awesome, size: 14, color: AppTheme.accentBlue),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text("AI Price Prediction",
+                        style: AppTheme.bodyMedium.copyWith(fontSize: 10, color: AppTheme.accentBlue, fontWeight: FontWeight.w600)),
+                  ),
+                ] else ...[
+                  Icon(Icons.show_chart, size: 14, color: AppTheme.textLight),
+                  const SizedBox(width: 4),
+                  Expanded(
+                    child: Text("Price Forecast",
+                        style: AppTheme.bodyMedium.copyWith(fontSize: 10, color: AppTheme.textLight, fontWeight: FontWeight.w600)),
                   ),
                 ],
-              ),
-              if (bestDay != null) ...[
-                const SizedBox(width: 24),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text("Best Sell Day", style: AppTheme.bodyMedium.copyWith(fontSize: 10)),
-                    Text(bestDay['label'] ?? 'Day ${bestDay['day'] ?? '?'}',
-                        style: AppTheme.headingMedium.copyWith(fontSize: 14)),
-                  ],
+                Text("Tap for details →",
+                    style: AppTheme.bodyMedium.copyWith(fontSize: 9, color: AppTheme.accentBlue)),
+              ],
+            ),
+            const SizedBox(height: 10),
+
+            // Price + Trend row — use Flexible to prevent overflow
+            Row(
+              children: [
+                Flexible(
+                  flex: 3,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("Today's Price", style: AppTheme.bodyMedium.copyWith(fontSize: 10)),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        alignment: Alignment.centerLeft,
+                        child: Text("₹${(todayPrice as num).toStringAsFixed(0)}/qtl",
+                            style: AppTheme.headingMedium.copyWith(fontSize: 18, color: AppTheme.primaryGreen)),
+                      ),
+                    ],
+                  ),
+                ),
+                const SizedBox(width: 16),
+                Flexible(
+                  flex: 2,
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text("7-Day Trend", style: AppTheme.bodyMedium.copyWith(fontSize: 10)),
+                      Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(trendUp ? Icons.trending_up : Icons.trending_down,
+                              color: trendUp ? AppTheme.primaryGreen : AppTheme.error, size: 16),
+                          const SizedBox(width: 3),
+                          Text("${trendUp ? '+' : ''}${(trend as num).toStringAsFixed(1)}%",
+                              style: TextStyle(
+                                fontSize: 14, fontWeight: FontWeight.w700,
+                                color: trendUp ? AppTheme.primaryGreen : AppTheme.error,
+                              )),
+                        ],
+                      ),
+                    ],
+                  ),
                 ),
               ],
-            ],
-          ),
+            ),
 
-          // Mini 7-day forecast bars
-          if (_forecast!['forecast_7day'] != null) ...[
-            const SizedBox(height: 10),
-            _buildMiniChart(_forecast!['forecast_7day']),
+            // Mini 7-day forecast bars
+            if (_forecast!['forecast_7day'] != null) ...[
+              const SizedBox(height: 8),
+              _buildMiniChart(_forecast!['forecast_7day']),
+            ],
           ],
-        ],
+        ),
       ),
     );
   }
 
-  /// Mini bar chart of 7-day forecast
+  /// Mini bar chart of 7-day forecast — compact version
   Widget _buildMiniChart(List<dynamic> forecast) {
     if (forecast.isEmpty) return const SizedBox.shrink();
     final prices = forecast.take(7).map((f) => (f['price'] as num).toDouble()).toList();
@@ -304,22 +322,20 @@ class _MandiScreenState extends State<MandiScreen> {
     final range = maxP - minP;
 
     return SizedBox(
-      height: 36,
+      height: 44,
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.end,
         children: List.generate(prices.length, (i) {
           final normalized = range > 0 ? (prices[i] - minP) / range : 0.5;
-          final barHeight = 8 + (normalized * 24);
+          final barHeight = 10.0 + (normalized * 20.0);
           final isMax = prices[i] == maxP;
           return Expanded(
             child: Padding(
               padding: const EdgeInsets.symmetric(horizontal: 2),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.end,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  if (isMax)
-                    Text("₹${prices[i].toStringAsFixed(0)}",
-                        style: TextStyle(fontSize: 7, color: AppTheme.primaryGreen, fontWeight: FontWeight.w600)),
                   Container(
                     height: barHeight,
                     decoration: BoxDecoration(
@@ -339,7 +355,9 @@ class _MandiScreenState extends State<MandiScreen> {
   }
 
   Widget _buildMandiCard(Map<String, dynamic> mandi, int index) {
-    final isBest = index == 0;
+    final isNearest = mandi['is_nearest'] == true;
+    final isBestPrice = mandi['is_best_price'] == true;
+    final isHighlighted = isNearest || isBestPrice;
     final priceChange = (mandi['price_change'] ?? 0).toDouble();
     final isUp = priceChange >= 0;
     final distanceKm = (mandi['distance_km'] ?? 0).toDouble();
@@ -349,16 +367,19 @@ class _MandiScreenState extends State<MandiScreen> {
     final mandiRisk = _getMandiRisk(mandi);
     final mandiState = mandi['state'] ?? '';
 
+    Color borderColor = Colors.grey.shade200;
+    if (isNearest) borderColor = AppTheme.accentBlue;
+    if (isBestPrice) borderColor = AppTheme.primaryGreen;
+
     return Container(
       margin: const EdgeInsets.only(bottom: 10),
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(AppTheme.cardRadius),
-        border: Border.all(
-          color: isBest ? AppTheme.primaryGreen : Colors.grey.shade200,
-          width: isBest ? 2 : 1,
-        ),
-        boxShadow: isBest ? [BoxShadow(color: AppTheme.primaryGreen.withOpacity(0.1), blurRadius: 8, offset: const Offset(0, 2))] : [],
+        border: Border.all(color: borderColor, width: isHighlighted ? 2 : 1),
+        boxShadow: isHighlighted
+            ? [BoxShadow(color: borderColor.withOpacity(0.12), blurRadius: 8, offset: const Offset(0, 2))]
+            : [],
       ),
       child: Padding(
         padding: const EdgeInsets.all(14),
@@ -374,16 +395,27 @@ class _MandiScreenState extends State<MandiScreen> {
                     children: [
                       Row(
                         children: [
-                          if (isBest)
+                          if (isNearest)
                             Container(
                               padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                              margin: const EdgeInsets.only(right: 6),
+                              margin: const EdgeInsets.only(right: 4),
+                              decoration: BoxDecoration(
+                                color: AppTheme.accentBlue,
+                                borderRadius: BorderRadius.circular(2),
+                              ),
+                              child: const Text("NEAREST",
+                                  style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
+                            ),
+                          if (isBestPrice)
+                            Container(
+                              padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
+                              margin: const EdgeInsets.only(right: 4),
                               decoration: BoxDecoration(
                                 color: AppTheme.primaryGreen,
                                 borderRadius: BorderRadius.circular(2),
                               ),
-                              child: const Text("BEST",
-                                  style: TextStyle(color: Colors.white, fontSize: 9, fontWeight: FontWeight.bold)),
+                              child: const Text("BEST PRICE",
+                                  style: TextStyle(color: Colors.white, fontSize: 8, fontWeight: FontWeight.bold)),
                             ),
                           Expanded(
                             child: Text(mandi['mandi'] ?? '',
@@ -422,7 +454,7 @@ class _MandiScreenState extends State<MandiScreen> {
                   children: [
                     Text("₹${netPrice.toStringAsFixed(0)}",
                         style: AppTheme.headingLarge.copyWith(
-                          color: isBest ? AppTheme.primaryGreen : AppTheme.textDark,
+                          color: isBestPrice ? AppTheme.primaryGreen : AppTheme.textDark,
                           fontSize: 24, fontWeight: FontWeight.w800)),
                     Text("Net / Quintal", style: AppTheme.bodyMedium.copyWith(fontSize: 10, color: AppTheme.textLight)),
                     const SizedBox(height: 2),
