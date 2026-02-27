@@ -480,11 +480,11 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen>
               filled: true,
               fillColor: Colors.white,
               border: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppTheme.inputRadius),
+                borderRadius: BorderRadius.circular(12.0),
                 borderSide: BorderSide(color: Colors.grey.shade300),
               ),
               focusedBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(AppTheme.inputRadius),
+                borderRadius: BorderRadius.circular(12.0),
                 borderSide:
                     const BorderSide(color: AppTheme.primaryGreen, width: 2),
               ),
@@ -512,11 +512,11 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen>
             filled: true,
             fillColor: Colors.white,
             border: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppTheme.inputRadius),
+              borderRadius: BorderRadius.circular(12.0),
               borderSide: BorderSide(color: Colors.grey.shade300),
             ),
             focusedBorder: OutlineInputBorder(
-              borderRadius: BorderRadius.circular(AppTheme.inputRadius),
+              borderRadius: BorderRadius.circular(12.0),
               borderSide:
                   const BorderSide(color: AppTheme.primaryGreen, width: 2),
             ),
@@ -566,7 +566,7 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen>
     return Container(
       decoration: BoxDecoration(
         color: Colors.white,
-        borderRadius: BorderRadius.circular(AppTheme.inputRadius),
+        borderRadius: BorderRadius.circular(12.0),
         border: Border.all(color: Colors.grey.shade300),
       ),
       child: Row(
@@ -577,8 +577,8 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen>
             decoration: BoxDecoration(
               color: Colors.grey.shade50,
               borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(AppTheme.inputRadius),
-                bottomLeft: Radius.circular(AppTheme.inputRadius),
+                topLeft: Radius.circular(12.0),
+                bottomLeft: Radius.circular(12.0),
               ),
             ),
             child: Text(
@@ -627,11 +627,11 @@ class _PhoneLoginScreenState extends State<PhoneLoginScreen>
         filled: true,
         fillColor: Colors.white,
         border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.inputRadius),
+          borderRadius: BorderRadius.circular(12.0),
           borderSide: BorderSide(color: Colors.grey.shade300),
         ),
         focusedBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(AppTheme.inputRadius),
+          borderRadius: BorderRadius.circular(12.0),
           borderSide: const BorderSide(color: AppTheme.primaryGreen, width: 2),
         ),
       ),

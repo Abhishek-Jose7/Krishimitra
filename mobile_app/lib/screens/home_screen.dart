@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import '../theme.dart';
 import 'dashboard_screen.dart';
 import 'mandi_screen.dart';
@@ -30,7 +31,13 @@ class _HomeScreenState extends State<HomeScreen> {
       bottomNavigationBar: Container(
         decoration: BoxDecoration(
           color: Colors.white,
-          border: Border(top: BorderSide(color: Colors.grey.shade300, width: 1)),
+          boxShadow: [
+            BoxShadow(
+              color: AppTheme.primaryGreen.withOpacity(0.08),
+              blurRadius: 12,
+              offset: const Offset(0, -2),
+            ),
+          ],
         ),
         child: BottomNavigationBar(
           currentIndex: _currentIndex,
@@ -41,27 +48,40 @@ class _HomeScreenState extends State<HomeScreen> {
           showUnselectedLabels: true,
           type: BottomNavigationBarType.fixed,
           elevation: 0,
-          selectedFontSize: 12,
-          unselectedFontSize: 11,
-          items: const [
+          selectedFontSize: 11,
+          unselectedFontSize: 10,
+          selectedLabelStyle: GoogleFonts.dmSans(fontWeight: FontWeight.w600),
+          unselectedLabelStyle: GoogleFonts.dmSans(),
+          items: [
             BottomNavigationBarItem(
-              icon: Icon(Icons.home_outlined),
-              activeIcon: Icon(Icons.home),
+              icon: const Icon(Icons.home_outlined),
+              activeIcon: _buildActiveIcon(Icons.home),
               label: 'Home',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.storefront_outlined),
-              activeIcon: Icon(Icons.storefront),
+              icon: const Icon(Icons.storefront_outlined),
+              activeIcon: _buildActiveIcon(Icons.storefront),
               label: 'Mandi',
             ),
             BottomNavigationBarItem(
-              icon: Icon(Icons.person_outline),
-              activeIcon: Icon(Icons.person),
+              icon: const Icon(Icons.person_outline),
+              activeIcon: _buildActiveIcon(Icons.person),
               label: 'Profile',
             ),
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildActiveIcon(IconData icon) {
+    return Container(
+      padding: const EdgeInsets.all(8),
+      decoration: BoxDecoration(
+        color: AppTheme.primaryGreen.withOpacity(0.1),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Icon(icon, color: AppTheme.primaryGreen, size: 22),
     );
   }
 }

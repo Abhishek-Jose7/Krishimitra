@@ -230,7 +230,7 @@ class _ProfitCalculatorScreenState extends State<ProfitCalculatorScreen> {
             borderRadius: BorderRadius.circular(1),
             child: LinearProgressIndicator(
               value: pct,
-              backgroundColor: Colors.grey.shade200,
+              backgroundColor: AppTheme.cardBorder,
               color: AppTheme.accentOrange,
               minHeight: 5,
             ),
