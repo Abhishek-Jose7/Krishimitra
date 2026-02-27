@@ -1,0 +1,83 @@
+{
+  "created_at": "2026-02-27T07:01:28.308268",
+  "feature_spec": {
+    "numeric": [
+      "Year",
+      "Area",
+      "Rainfall",
+      "Temperature",
+      "Humidity",
+      "price",
+      "year",
+      "avg_temp",
+      "total_rainfall",
+      "avg_humidity",
+      "avg_solar_radiation",
+      "avg_windspeed",
+      "N",
+      "P",
+      "K",
+      "ph",
+      "nutrient_rainfall"
+    ],
+    "categorical": [
+      "Crops",
+      "Season",
+      "Soil type",
+      "Irrigation"
+    ]
+  },
+  "rainfall_stats": {
+    "Rainfall": {
+      "mean": 2850.6377337110484,
+      "std": 1125.367107638234
+    },
+    "total_rainfall": {
+      "mean": 285.85229461756376,
+      "std": 85.17535900636558
+    },
+    "nutrient_rainfall": {
+      "mean": 168.7953974815859,
+      "std": 24.684323546102373
+    }
+  },
+  "numeric_means": {
+    "Year": 2009.7127478753541,
+    "Area": 7668.335410764873,
+    "Rainfall": 2850.6377337110484,
+    "Temperature": 64.30458923512748,
+    "Humidity": 55.573541076487246,
+    "price": 87284.03116147309,
+    "year": 2016.9206798866855,
+    "avg_temp": 24.152038763570825,
+    "total_rainfall": 285.85229461756376,
+    "avg_humidity": 3.1347429266808646,
+    "avg_solar_radiation": 3.1347429266808646,
+    "avg_windspeed": 3.1347429266808646,
+    "N": 27.43560339943343,
+    "P": 20.2312521246459,
+    "K": 29.917076487252118,
+    "ph": 6.080743175274227,
+    "nutrient_rainfall": 168.7953974815859
+  },
+  "model_name": "RandomForestRegressor",
+  "version": "v20260227070141",
+  "metrics": {
+    "RandomForestRegressor": {
+      "r2": 0.4237249737994063,
+      "mae": 3.5632624791934093,
+      "rmse": 5.528828190434423
+    },
+    "XGBRegressor": {
+      "r2": 0.3618477764216528,
+      "mae": 3.9455536597916034,
+      "rmse": 5.818088702309093
+    }
+  },
+  "selected_metrics": {
+    "r2": 0.4237249737994063,
+    "mae": 3.5632624791934093,
+    "rmse": 5.528828190434423
+  },
+  "cv_confidence": 12.374771273139233
+}
