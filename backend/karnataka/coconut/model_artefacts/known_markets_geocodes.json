@@ -1,0 +1,78 @@
+{
+  "Hassan": {
+    "lat": 13.0033,
+    "lon": 76.1004
+  },
+  "Bangalore": {
+    "lat": 12.9716,
+    "lon": 77.5946
+  },
+  "Mysore": {
+    "lat": 12.2958,
+    "lon": 76.6394
+  },
+  "Tumkur": {
+    "lat": 13.3409,
+    "lon": 77.101
+  },
+  "Shivamogga": {
+    "lat": 13.9299,
+    "lon": 75.5681
+  },
+  "Davangere": {
+    "lat": 14.4644,
+    "lon": 75.9218
+  },
+  "Hubli": {
+    "lat": 15.3647,
+    "lon": 75.124
+  },
+  "Mandya": {
+    "lat": 12.5218,
+    "lon": 76.8951
+  },
+  "Mangalore": {
+    "lat": 12.8703,
+    "lon": 74.843
+  },
+  "Udupi": {
+    "lat": 13.3409,
+    "lon": 74.7421
+  },
+  "Chitradurga": {
+    "lat": 14.2251,
+    "lon": 76.398
+  },
+  "Arasikere": {
+    "lat": 13.3146,
+    "lon": 76.2559
+  },
+  "Arakalgud": {
+    "lat": 12.7686,
+    "lon": 76.0508
+  },
+  "Channarayapatna": {
+    "lat": 12.9033,
+    "lon": 76.3883
+  },
+  "Holenarasipur": {
+    "lat": 12.783,
+    "lon": 75.9896
+  },
+  "Sakleshpur": {
+    "lat": 12.9408,
+    "lon": 75.7898
+  },
+  "Tiptur": {
+    "lat": 13.2588,
+    "lon": 76.4775
+  },
+  "Belur": {
+    "lat": 13.1637,
+    "lon": 75.8632
+  },
+  "Chikmagalur": {
+    "lat": 13.3161,
+    "lon": 75.772
+  }
+}

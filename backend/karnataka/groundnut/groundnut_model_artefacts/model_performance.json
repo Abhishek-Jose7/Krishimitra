@@ -1,0 +1,13 @@
+{
+  "MAE_inr": 608.11,
+  "MAPE_pct": 11.53,
+  "avg_test_price": 5422.06,
+  "train_start": "2021-04-01",
+  "train_end": "2024-08-07",
+  "test_start": "2024-08-07",
+  "test_end": "2026-02-25",
+  "n_features": 28,
+  "n_train": 9861,
+  "n_test": 1741,
+  "built_at": "20260226_143240"
+}

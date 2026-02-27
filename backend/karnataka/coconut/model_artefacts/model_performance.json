@@ -1,0 +1,15 @@
+{
+  "train_period_start": "2021-02-01",
+  "train_period_end": "2025-03-20",
+  "test_period_start": "2025-03-21",
+  "test_period_end": "2026-02-24",
+  "n_train_rows": 6772,
+  "n_test_rows": 1196,
+  "MAE_inr": 5470.72,
+  "MAPE_pct": 28.07,
+  "avg_test_price_inr": 22708.09,
+  "n_markets": 64,
+  "n_features": 22,
+  "model_type": "XGBRegressor",
+  "built_at": "20260225_135940"
+}

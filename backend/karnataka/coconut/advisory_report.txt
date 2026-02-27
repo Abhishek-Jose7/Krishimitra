@@ -1,0 +1,52 @@
+
+================================================================
+  KARNATAKA COCONUT PRICE ADVISORY
+================================================================
+  Market   : Hassan APMC
+  Date     : 25 Feb 2026, 13:59
+  Quantity : 15,000 nuts
+  Season   : 🌾 Harvest Season → supply glut, prices typically lower
+================================================================
+
+TODAYS PREDICTED MANDI PRICE
+   Rs.    23,320  per 1000 nuts
+   (Base: Rs.23,320  +  Festival [None]: +0%)
+
+7-DAY PRICE FORECAST (seasonality-adjusted)
+   Day             Rs./1000  Season         Festival                 Rain   Temp
+   ───────────── ──────────  ────────────── ────────────────────── ────── ──────
+   Thu 26 Feb    Rs.  23,685  🌾Harvest                                0.4mm  24.0C
+   Fri 27 Feb    Rs.  24,296  🌾Harvest                                0.0mm  24.6C
+   Sat 28 Feb    Rs.  22,697  🌾Harvest                                0.0mm  23.6C
+   Sun 01 Mar    Rs.  17,667  ☀Summer                                 0.0mm  24.5C
+   Mon 02 Mar    Rs.  17,532  ☀Summer                                 0.0mm  24.1C
+   Tue 03 Mar    Rs.  17,759  ☀Summer                                 0.0mm  25.1C
+   Wed 04 Mar    Rs.  21,132  ☀Summer                                 0.0mm  25.4C
+
+TREND          : DOWN -9.4% over 7 days
+PEAK IN 7 DAYS : Fri 27 Feb  ->  Rs.24,296
+
+STORAGE
+   Window        : 20 days
+   Best sell day : Day +2 (Fri 27 Feb)
+   Gross price   : Rs.24,296
+   Storage loss  : 0.8%  (0.4%/day x 2 days)
+   NET price     : Rs.24,102
+   Net gain      : Rs.+782  (+3.4%)
+
+REVENUE ESTIMATE (price per 1000 nuts)
+   Sell today    : Rs.349,799
+   Best scenario : Rs.361,524
+   Difference    : Rs.+11,724
+
+TOP 5 MARKETS BY RECENT PRICE
+   1. Kumta APMC                       Rs.  42,781
+   2. Honnali APMC                     Rs.  42,000
+   3. Bhadravathi APMC                 Rs.  40,000
+   4. Kundapura APMC                   Rs.  40,000
+   5. Srirangapattana APMC             Rs.  39,000
+
+================================================================
+  DECISION : 🤔 MARGINAL — Consider selling by Fri 27 Feb
+  Small 3.4% net gain. Weigh against cash needs.
+================================================================

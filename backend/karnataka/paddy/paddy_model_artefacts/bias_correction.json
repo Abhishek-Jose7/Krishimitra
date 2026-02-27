@@ -1,0 +1,30 @@
+{
+  "description": "Monthly residual correction (Rs.) \u2014 add to raw output",
+  "commodity": "Paddy (Common)",
+  "price_unit": "Rs. per quintal (100 kg)",
+  "msp_common": 2300,
+  "msp_grade_a": 2320,
+  "loss_per_day_dry": 0.1,
+  "loss_per_day_wet": 0.4,
+  "max_storage_days": 365,
+  "fci_months": [
+    11,
+    12,
+    1,
+    2,
+    3
+  ],
+  "stale_warn_days": 365,
+  "stale_error_days": 730,
+  "iqr_fence_used": 2.5,
+  "corrections": {
+    "1": 10.74,
+    "2": -7.61,
+    "7": -5.55,
+    "8": -2.85,
+    "9": -2.48,
+    "10": 23.93,
+    "11": 16.66,
+    "12": 29.58
+  }
+}

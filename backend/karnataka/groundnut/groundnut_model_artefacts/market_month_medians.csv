@@ -1,0 +1,387 @@
+market,month,median_price
+Badami APMC,2,3845.0
+Badami APMC,3,3812.5
+Badami APMC,4,3328.0
+Badami APMC,5,2933.5
+Badami APMC,6,4600.0
+Badami APMC,7,5500.0
+Badami APMC,8,5750.0
+Badami APMC,12,5400.0
+Bagalakot APMC,1,5262.0
+Bagalakot APMC,2,5333.5
+Bagalakot APMC,3,5419.0
+Bagalakot APMC,4,5586.0
+Bagalakot APMC,5,5882.0
+Bagalakot APMC,6,5784.5
+Bagalakot APMC,7,6017.0
+Bagalakot APMC,8,5788.0
+Bagalakot APMC,9,5385.0
+Bagalakot APMC,10,5126.0
+Bagalakot APMC,11,4510.0
+Bagalakot APMC,12,6478.0
+Bagalkot(Bilagi) APMC,9,4825.0
+Bangalore APMC,1,5100.0
+Bangalore APMC,2,4750.0
+Bangalore APMC,3,4650.0
+Bangalore APMC,4,4225.0
+Bangalore APMC,5,4250.0
+Bangalore APMC,6,4100.0
+Bangalore APMC,7,3925.0
+Bangalore APMC,8,4350.0
+Bangalore APMC,9,4250.0
+Bangalore APMC,10,4350.0
+Bangalore APMC,11,4250.0
+Bangalore APMC,12,4300.0
+Basava Kalayana APMC,5,6000.0
+Basava Kalayana APMC,6,4950.0
+Basava Kalayana APMC,8,6950.0
+Basava Kalayana APMC,9,16000.0
+Bellary APMC,1,6101.0
+Bellary APMC,2,6167.5
+Bellary APMC,3,6216.0
+Bellary APMC,4,6130.5
+Bellary APMC,5,6167.0
+Bellary APMC,6,5980.0
+Bellary APMC,7,6059.0
+Bellary APMC,8,5952.0
+Bellary APMC,9,6460.5
+Bellary APMC,10,5967.0
+Bellary APMC,11,5951.0
+Bellary APMC,12,6389.5
+Bijapur APMC,1,4767.0
+Bijapur APMC,3,6250.0
+Bijapur APMC,4,5350.0
+Bijapur APMC,8,5600.0
+Bijapur APMC,9,5992.5
+Bijapur APMC,12,4181.5
+Challakere APMC,1,5889.0
+Challakere APMC,2,6332.0
+Challakere APMC,3,6370.5
+Challakere APMC,4,6110.0
+Challakere APMC,5,6223.5
+Challakere APMC,6,6117.0
+Challakere APMC,7,6169.5
+Challakere APMC,8,6430.0
+Challakere APMC,9,6426.5
+Challakere APMC,10,5872.0
+Challakere APMC,11,6147.0
+Challakere APMC,12,6118.0
+Chickkaballapura APMC,1,5750.0
+Chickkaballapura APMC,10,3500.0
+Chickkaballapura APMC,11,4400.0
+Chintamani APMC,1,4800.0
+Chintamani APMC,6,3500.0
+Chintamani APMC,10,3000.0
+Chintamani APMC,11,6000.0
+Chintamani APMC,12,4600.0
+Chitradurga APMC,1,6127.5
+Chitradurga APMC,2,5777.0
+Chitradurga APMC,3,6310.0
+Chitradurga APMC,4,5585.5
+Chitradurga APMC,5,5422.0
+Chitradurga APMC,6,5380.5
+Chitradurga APMC,7,5306.0
+Chitradurga APMC,8,5376.5
+Chitradurga APMC,9,5362.5
+Chitradurga APMC,10,5676.0
+Chitradurga APMC,11,6096.0
+Chitradurga APMC,12,6499.0
+Davangere APMC,1,5593.0
+Davangere APMC,2,5427.5
+Davangere APMC,3,5523.5
+Davangere APMC,4,5138.0
+Davangere APMC,5,4807.0
+Davangere APMC,6,4699.5
+Davangere APMC,7,4651.0
+Davangere APMC,8,4416.0
+Davangere APMC,9,5080.5
+Davangere APMC,10,5230.0
+Davangere APMC,11,5304.5
+Davangere APMC,12,4714.5
+Dharwar APMC,2,2319.0
+Dharwar APMC,3,2800.0
+Dharwar APMC,8,2475.0
+Dharwar APMC,9,4297.5
+Dharwar APMC,10,5547.0
+Dharwar APMC,11,7232.0
+Gadag APMC,1,5169.0
+Gadag APMC,2,5093.0
+Gadag APMC,3,5532.5
+Gadag APMC,4,5379.0
+Gadag APMC,5,5593.0
+Gadag APMC,6,5291.0
+Gadag APMC,7,5474.0
+Gadag APMC,8,5403.0
+Gadag APMC,9,5345.0
+Gadag APMC,10,5747.0
+Gadag APMC,11,5550.0
+Gadag APMC,12,5640.0
+Gangavathi APMC,1,4400.0
+Gangavathi APMC,2,5500.0
+Gangavathi APMC,3,5500.0
+Gangavathi APMC,7,5500.0
+Gangavathi APMC,9,4000.0
+Gangavathi APMC,10,4050.0
+Gangavathi APMC,11,4500.0
+Gubbi APMC,1,7200.0
+Gubbi APMC,5,5500.0
+Gubbi APMC,6,5400.0
+Gundlupet APMC,8,4215.0
+Gundlupet APMC,9,3400.0
+Gundlupet APMC,10,3670.0
+Gundlupet APMC,11,3750.0
+Gundlupet APMC,12,4500.0
+H.B. Halli APMC,1,6500.0
+H.B. Halli APMC,2,6790.0
+H.B. Halli APMC,3,6500.0
+H.B. Halli APMC,4,6200.0
+H.B. Halli APMC,5,6500.0
+H.B. Halli APMC,6,5700.0
+H.B. Halli APMC,7,4800.0
+H.B. Halli APMC,8,4700.0
+H.B. Halli APMC,9,4915.0
+H.B. Halli APMC,11,6000.0
+Haveri APMC,3,6498.0
+Haveri APMC,10,4487.5
+Haveri APMC,12,7590.0
+Hiriyur APMC,1,5223.5
+Hiriyur APMC,2,6414.0
+Hiriyur APMC,3,6544.0
+Hiriyur APMC,4,6789.0
+Hiriyur APMC,5,6580.5
+Hiriyur APMC,8,10700.0
+Hiriyur APMC,9,6280.0
+Hiriyur APMC,10,5904.0
+Hiriyur APMC,11,5721.0
+Hiriyur APMC,12,5501.0
+Hubli (Amaragol) APMC,1,5240.5
+Hubli (Amaragol) APMC,2,4684.5
+Hubli (Amaragol) APMC,3,4829.0
+Hubli (Amaragol) APMC,4,5112.0
+Hubli (Amaragol) APMC,5,5066.5
+Hubli (Amaragol) APMC,6,4819.5
+Hubli (Amaragol) APMC,7,4755.0
+Hubli (Amaragol) APMC,8,4900.0
+Hubli (Amaragol) APMC,9,5153.5
+Hubli (Amaragol) APMC,10,5761.0
+Hubli (Amaragol) APMC,11,5700.0
+Hubli (Amaragol) APMC,12,5805.0
+Hungund APMC,2,4555.0
+Hungund APMC,3,4900.0
+Jagalur APMC,1,6560.0
+Jagalur APMC,4,5276.0
+Jagalur APMC,5,5767.5
+Jagalur APMC,11,6375.0
+Jagalur APMC,12,6493.0
+Kadur APMC,1,3500.0
+Kadur APMC,9,4828.0
+Koppal APMC,1,7929.0
+Koppal APMC,2,6547.0
+Koppal APMC,3,6060.0
+Koppal APMC,6,6118.5
+Koppal APMC,7,6405.5
+Koppal APMC,8,6291.0
+Koppal APMC,9,5953.5
+Koppal APMC,10,4682.0
+Koppal APMC,11,4264.5
+Koppal APMC,12,6147.0
+Kottur APMC,1,6337.0
+Kottur APMC,2,6540.0
+Kottur APMC,3,6390.0
+Kottur APMC,4,5702.5
+Kottur APMC,5,6006.0
+Kottur APMC,6,6080.0
+Kottur APMC,7,6350.0
+Kottur APMC,8,6106.0
+Kottur APMC,9,5728.0
+Kottur APMC,10,5880.5
+Kottur APMC,11,6295.0
+Kottur APMC,12,6829.0
+Kumta APMC,2,9200.0
+Kundagol APMC,1,6250.0
+Kundagol APMC,10,6021.5
+Kundagol APMC,11,5700.0
+Kundagol APMC,12,7700.0
+Kustagi APMC,1,5977.0
+Kustagi APMC,2,6222.0
+Kustagi APMC,3,6717.0
+Kustagi APMC,4,5954.5
+Kustagi APMC,5,6193.0
+Kustagi APMC,6,5561.0
+Kustagi APMC,7,5236.0
+Kustagi APMC,8,5309.0
+Kustagi APMC,9,5975.0
+Kustagi APMC,10,4900.0
+Kustagi APMC,11,4675.0
+Kustagi APMC,12,4854.5
+Laxmeshwar APMC,1,5216.0
+Laxmeshwar APMC,2,5056.0
+Laxmeshwar APMC,3,5806.0
+Laxmeshwar APMC,4,5603.0
+Laxmeshwar APMC,5,5441.0
+Laxmeshwar APMC,6,4902.0
+Laxmeshwar APMC,7,4854.0
+Laxmeshwar APMC,8,4827.5
+Laxmeshwar APMC,9,5288.0
+Laxmeshwar APMC,10,5399.0
+Laxmeshwar APMC,11,5357.0
+Laxmeshwar APMC,12,5365.0
+Lingasugur APMC,1,4800.0
+Lingasugur APMC,2,5500.0
+Lingasugur APMC,3,6000.0
+Lingasugur APMC,4,5700.0
+Lingasugur APMC,5,5790.0
+Lingasugur APMC,6,4940.0
+Lingasugur APMC,7,5450.0
+Lingasugur APMC,8,5175.0
+Lingasugur APMC,9,6652.0
+Madhugiri APMC,1,5440.5
+Madhugiri APMC,2,4765.0
+Madhugiri APMC,3,4000.0
+Madhugiri APMC,4,5857.5
+Madhugiri APMC,5,5979.0
+Madhugiri APMC,6,5899.5
+Madhugiri APMC,7,6131.5
+Madhugiri APMC,8,5000.0
+Madhugiri APMC,9,5935.0
+Madhugiri APMC,10,5985.0
+Madhugiri APMC,11,5607.0
+Madhugiri APMC,12,5626.5
+Mulabagilu APMC,1,4400.0
+Mulabagilu APMC,7,4250.0
+Mulabagilu APMC,9,4300.0
+Mulabagilu APMC,10,4450.0
+Mulabagilu APMC,11,4450.0
+Mulabagilu APMC,12,4500.0
+Mundaragi APMC,1,5855.5
+Mundaragi APMC,2,6725.0
+Mundaragi APMC,3,6333.0
+Mundaragi APMC,4,5790.0
+Mundaragi APMC,5,5955.5
+Mundaragi APMC,6,5879.0
+Mundaragi APMC,7,6017.0
+Mundaragi APMC,8,5963.0
+Mundaragi APMC,9,6016.0
+Mundaragi APMC,10,6051.5
+Mundaragi APMC,11,6137.0
+Mundaragi APMC,12,5635.0
+Mysore (Bandipalya) APMC,1,5161.0
+Mysore (Bandipalya) APMC,2,7100.0
+Mysore (Bandipalya) APMC,3,10860.0
+Mysore (Bandipalya) APMC,4,5815.0
+Mysore (Bandipalya) APMC,5,6518.5
+Mysore (Bandipalya) APMC,6,4469.5
+Mysore (Bandipalya) APMC,7,4579.0
+Mysore (Bandipalya) APMC,8,4736.5
+Mysore (Bandipalya) APMC,9,4757.0
+Mysore (Bandipalya) APMC,10,5318.0
+Mysore (Bandipalya) APMC,11,5413.0
+Mysore (Bandipalya) APMC,12,4789.0
+Pavagada APMC,1,5225.0
+Pavagada APMC,7,6500.0
+Pavagada APMC,9,6500.0
+Pavagada APMC,10,6800.0
+Pavagada APMC,11,5500.0
+Pavagada APMC,12,5225.0
+Raichur APMC,1,6599.0
+Raichur APMC,2,6658.5
+Raichur APMC,3,6689.0
+Raichur APMC,4,5925.5
+Raichur APMC,5,6085.5
+Raichur APMC,6,5619.0
+Raichur APMC,7,5219.0
+Raichur APMC,8,5219.0
+Raichur APMC,9,5029.0
+Raichur APMC,10,4745.0
+Raichur APMC,11,5255.0
+Raichur APMC,12,5819.0
+Ramdurga APMC,1,5858.5
+Ramdurga APMC,2,5918.0
+Ramdurga APMC,3,5989.0
+Ramdurga APMC,4,5847.0
+Ramdurga APMC,5,6184.0
+Ramdurga APMC,6,5684.5
+Ramdurga APMC,7,5479.0
+Ramdurga APMC,8,5850.0
+Ramdurga APMC,9,5517.0
+Ramdurga APMC,10,5603.0
+Ramdurga APMC,11,6212.0
+Ramdurga APMC,12,5833.0
+Ranebennur APMC,1,5520.0
+Ranebennur APMC,2,4246.0
+Ranebennur APMC,3,4727.0
+Ranebennur APMC,4,4662.0
+Ranebennur APMC,5,4544.5
+Ranebennur APMC,6,4591.5
+Ranebennur APMC,7,4585.0
+Ranebennur APMC,8,4687.5
+Ranebennur APMC,9,4508.0
+Ranebennur APMC,10,5004.0
+Ranebennur APMC,11,5332.0
+Ranebennur APMC,12,5397.5
+Rona APMC,1,4789.0
+Rona APMC,2,5423.0
+Rona APMC,3,5465.0
+Rona APMC,4,5128.0
+Rona APMC,5,5427.5
+Rona APMC,6,4995.0
+Rona APMC,7,4957.0
+Rona APMC,8,5357.5
+Rona APMC,9,4516.0
+Rona APMC,10,3954.5
+Rona APMC,11,5093.0
+Rona APMC,12,4937.0
+Savanur APMC,1,4949.0
+Savanur APMC,2,4620.0
+Savanur APMC,3,6097.5
+Savanur APMC,4,5633.5
+Savanur APMC,5,5476.0
+Savanur APMC,6,4910.5
+Savanur APMC,7,4649.0
+Savanur APMC,8,5075.0
+Savanur APMC,9,5485.0
+Savanur APMC,10,5241.0
+Savanur APMC,11,5256.5
+Savanur APMC,12,5550.0
+Sira APMC,1,4739.0
+Sira APMC,2,5850.5
+Sira APMC,3,6399.0
+Sira APMC,4,6206.0
+Sira APMC,5,5960.0
+Sira APMC,6,5588.0
+Sira APMC,7,6783.0
+Sira APMC,8,7063.0
+Sira APMC,9,6350.0
+Sira APMC,10,5830.0
+Sira APMC,11,6101.0
+Sira APMC,12,6383.0
+Soundati APMC,5,5514.5
+Soundati APMC,8,5125.0
+Soundati APMC,9,4139.0
+Soundati APMC,10,4632.5
+Soundati APMC,11,4450.0
+Tumkur APMC,1,6200.0
+Tumkur APMC,2,5300.0
+Tumkur APMC,5,6100.0
+Tumkur APMC,6,6050.0
+Tumkur APMC,7,6700.0
+Tumkur APMC,10,5800.0
+Tumkur APMC,11,6100.0
+Tumkur APMC,12,6150.0
+Yadgir APMC,1,6676.0
+Yadgir APMC,2,6032.0
+Yadgir APMC,3,5948.5
+Yadgir APMC,4,5608.0
+Yadgir APMC,5,5845.0
+Yadgir APMC,6,5538.0
+Yadgir APMC,7,4789.0
+Yadgir APMC,8,5194.0
+Yadgir APMC,9,4523.0
+Yadgir APMC,10,5009.0
+Yadgir APMC,11,4302.0
+Yadgir APMC,12,6586.0
+Yalburga APMC,2,6550.0
+Yalburga APMC,5,5350.0
+Yalburga APMC,6,5323.0
+Yalburga APMC,7,5337.5
+Yalburga APMC,8,4774.0

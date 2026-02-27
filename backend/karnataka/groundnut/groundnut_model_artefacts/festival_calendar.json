@@ -1,0 +1,58 @@
+[
+  {
+    "month": 1,
+    "day_start": 13,
+    "day_end": 15,
+    "name": "Makar Sankranti",
+    "boost_pct": 7
+  },
+  {
+    "month": 3,
+    "day_start": 18,
+    "day_end": 25,
+    "name": "Ugadi",
+    "boost_pct": 4
+  },
+  {
+    "month": 8,
+    "day_start": 19,
+    "day_end": 31,
+    "name": "Ganesh Chaturthi",
+    "boost_pct": 6
+  },
+  {
+    "month": 9,
+    "day_start": 1,
+    "day_end": 15,
+    "name": "Navratri",
+    "boost_pct": 5
+  },
+  {
+    "month": 10,
+    "day_start": 1,
+    "day_end": 31,
+    "name": "Dasara + Diwali build-up",
+    "boost_pct": 7
+  },
+  {
+    "month": 11,
+    "day_start": 1,
+    "day_end": 14,
+    "name": "Diwali",
+    "boost_pct": 10
+  },
+  {
+    "month": 11,
+    "day_start": 15,
+    "day_end": 30,
+    "name": "Diwali tail / Karthika",
+    "boost_pct": 5
+  },
+  {
+    "month": 12,
+    "day_start": 24,
+    "day_end": 31,
+    "name": "Year-end",
+    "boost_pct": 3
+  }
+]

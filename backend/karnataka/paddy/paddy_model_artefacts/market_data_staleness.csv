@@ -1,0 +1,96 @@
+market,last_date,days_stale,level
+Hoovinahadagali APMC,2021-02-06,1846,error
+Holenarsipura APMC,2021-02-15,1837,error
+Basava Kalayana APMC,2021-11-12,1567,error
+Huliyar APMC,2022-01-25,1493,error
+Mandya APMC,2022-09-13,1262,error
+T. Narasipura APMC,2022-12-30,1154,error
+Gubbi APMC,2023-01-25,1128,error
+Ranebennur APMC,2023-05-24,1009,error
+Gadag APMC,2023-05-25,1008,error
+Arakalgud APMC,2023-07-29,943,error
+Bagepalli APMC,2023-08-20,921,error
+Nandagada APMC,2024-01-16,772,error
+Kalburgi APMC,2024-02-17,740,error
+Bangalore APMC,2024-05-23,644,warn
+Kunigal APMC,2024-07-12,594,warn
+Dharwar APMC,2024-07-29,577,warn
+Doddaballa Pur APMC,2024-09-26,518,warn
+Shikaripura APMC,2024-10-15,499,warn
+Kustagi APMC,2024-10-20,494,warn
+Pavagada APMC,2024-10-28,486,warn
+Nippani APMC,2024-11-14,469,warn
+Harihara APMC,2024-11-20,463,warn
+Holalkere APMC,2024-12-04,449,warn
+Shimogga(Theertahalli) APMC,2024-12-19,434,warn
+Koppal APMC,2025-01-19,403,warn
+Tarikere APMC,2025-01-22,400,warn
+Haveri APMC,2025-01-24,398,warn
+Hiriyur APMC,2025-01-31,391,warn
+Challakere APMC,2025-02-02,389,warn
+Bellary APMC,2025-02-05,386,warn
+Kolar APMC,2025-02-12,379,warn
+Belur APMC,2025-02-13,378,warn
+Kollegal APMC,2025-02-14,377,warn
+Sakaleshpura APMC,2025-02-15,376,warn
+Gangavathi APMC,2025-02-19,372,warn
+Lingasugur APMC,2025-02-21,370,warn
+Nagamangala APMC,2025-02-21,370,warn
+Hirekerur APMC,2025-02-28,363,fresh
+Santhesargur APMC,2025-02-28,363,fresh
+Shiggauv APMC,2025-03-01,362,fresh
+Sira APMC,2025-03-26,337,fresh
+Gowribidanoor APMC,2025-06-16,255,fresh
+Piriya Pattana APMC,2025-08-01,209,fresh
+Malavalli APMC,2025-09-09,170,fresh
+Kudchi APMC,2025-10-28,121,fresh
+Hanagal APMC,2025-11-05,113,fresh
+K.R.Nagar APMC,2025-11-18,100,fresh
+Gundlupet APMC,2025-11-24,94,fresh
+Bantwala APMC,2025-11-28,90,fresh
+Gonikappal APMC,2025-12-19,69,fresh
+H.B. Halli APMC,2025-12-20,68,fresh
+Mundgod APMC,2025-12-26,62,fresh
+Harappana Halli APMC,2025-12-27,61,fresh
+Hospet APMC,2026-01-04,53,fresh
+Yellapur APMC,2026-01-05,52,fresh
+Kumta APMC,2026-01-27,30,fresh
+Madikeri APMC,2026-01-29,28,fresh
+Koppa APMC,2026-01-30,27,fresh
+Channarayapatna APMC,2026-02-03,23,fresh
+Channagiri APMC,2026-02-07,19,fresh
+Bailahongal APMC,2026-02-10,16,fresh
+Kalburgi  (Jevargi) APMC,2026-02-12,14,fresh
+Hunsur APMC,2026-02-16,10,fresh
+Sindhanur APMC,2026-02-16,10,fresh
+Shimoga APMC,2026-02-18,8,fresh
+Karwar APMC,2026-02-19,7,fresh
+Chikkamagalore APMC,2026-02-21,5,fresh
+Honnali APMC,2026-02-21,5,fresh
+Bhadravathi APMC,2026-02-23,3,fresh
+Chintamani APMC,2026-02-23,3,fresh
+Karkala APMC,2026-02-23,3,fresh
+Maddur APMC,2026-02-23,3,fresh
+Pandavapura APMC,2026-02-23,3,fresh
+Sirsi APMC,2026-02-23,3,fresh
+Udupi APMC,2026-02-23,3,fresh
+K.R. Pet APMC,2026-02-24,2,fresh
+Madhugiri APMC,2026-02-24,2,fresh
+Moodigere APMC,2026-02-24,2,fresh
+Mysore (Bandipalya) APMC,2026-02-24,2,fresh
+Nanjangud APMC,2026-02-24,2,fresh
+Shimoga(Theertahalli) APMC,2026-02-24,2,fresh
+Bangarpet APMC,2026-02-25,1,fresh
+Belthangdi APMC,2026-02-25,1,fresh
+Hassan APMC,2026-02-25,1,fresh
+Hubli (Amaragol) APMC,2026-02-25,1,fresh
+Kalagategi APMC,2026-02-25,1,fresh
+Shahapur APMC,2026-02-25,1,fresh
+Somvarpet APMC,2026-02-25,1,fresh
+Sorabha APMC,2026-02-25,1,fresh
+Chamaraj Nagar APMC,2026-02-26,0,fresh
+Davangere APMC,2026-02-26,0,fresh
+Haliyala APMC,2026-02-26,0,fresh
+Raichur APMC,2026-02-26,0,fresh
+Srirangapattana APMC,2026-02-26,0,fresh
+Tumkur APMC,2026-02-26,0,fresh

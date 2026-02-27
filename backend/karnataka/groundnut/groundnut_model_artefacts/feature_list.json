@@ -1,0 +1,52 @@
+{
+  "features": [
+    "market_cat",
+    "arrival_quantity_log",
+    "qty_rolling_14d_log",
+    "temp_avg_c",
+    "precipitation_mm",
+    "rain_7d_rolling",
+    "month_sin",
+    "month_cos",
+    "doy_sin",
+    "doy_cos",
+    "week_sin",
+    "week_cos",
+    "year_trend",
+    "kharif_harvest",
+    "rabi_harvest",
+    "lean_kharif",
+    "lean_inter",
+    "pod_fill_window",
+    "harvest_rain_risk",
+    "oil_demand_kharif",
+    "oil_demand_rabi",
+    "festival_demand",
+    "lag_7",
+    "lag_30",
+    "lag_90",
+    "market_month_median",
+    "market_price_trend",
+    "price_spread"
+  ],
+  "target": "modal_price",
+  "model_type": "XGBRegressor",
+  "commodity": "Groundnut",
+  "price_unit": "Rs. per quintal (100 kg)",
+  "msp_floor": 6783,
+  "storage": {
+    "loss_pct_per_day": 0.25,
+    "max_days": 180
+  },
+  "season_notes": {
+    "kharif_harvest": "peaks Dec \u2014 Kharif arrivals Nov-Jan glut \u2192 price dip",
+    "rabi_harvest": "peaks Apr \u2014 Rabi arrivals Mar-May",
+    "lean_kharif": "peaks Aug \u2014 pre-Kharif stock depletion \u2192 price HIGH",
+    "lean_inter": "peaks Feb \u2014 between seasons \u2192 price firm",
+    "pod_fill_window": "peaks Aug-Sep \u2014 drought stress window",
+    "harvest_rain_risk": "peaks Oct-Nov \u2014 excess rain = aflatoxin risk",
+    "oil_demand_kharif": "peaks Nov \u2014 edible oil crushing season",
+    "festival_demand": "peaks Nov (Diwali) \u2014 chikki/sweets demand",
+    "lag_90": "extra 90-day lag \u2014 groundnut stored months, longer memory"
+  }
+}

@@ -1,0 +1,110 @@
+{
+  "Kalaburagi": {
+    "lat": 17.3297,
+    "lon": 76.82
+  },
+  "Gulbarga": {
+    "lat": 17.3297,
+    "lon": 76.82
+  },
+  "Raichur": {
+    "lat": 16.212,
+    "lon": 77.3439
+  },
+  "Ballari": {
+    "lat": 15.1394,
+    "lon": 76.9214
+  },
+  "Bellary": {
+    "lat": 15.1394,
+    "lon": 76.9214
+  },
+  "Vijayapura": {
+    "lat": 16.8302,
+    "lon": 75.71
+  },
+  "Bijapur": {
+    "lat": 16.8302,
+    "lon": 75.71
+  },
+  "Dharwad": {
+    "lat": 15.4589,
+    "lon": 75.0078
+  },
+  "Haveri": {
+    "lat": 14.7939,
+    "lon": 75.3996
+  },
+  "Koppal": {
+    "lat": 15.3543,
+    "lon": 76.1542
+  },
+  "Gadag": {
+    "lat": 15.4326,
+    "lon": 75.6322
+  },
+  "Bidar": {
+    "lat": 17.9104,
+    "lon": 77.5199
+  },
+  "Yadgir": {
+    "lat": 16.7666,
+    "lon": 77.1338
+  },
+  "Bangalore": {
+    "lat": 12.9716,
+    "lon": 77.5946
+  },
+  "Mysore": {
+    "lat": 12.2958,
+    "lon": 76.6394
+  },
+  "Tumkur": {
+    "lat": 13.3409,
+    "lon": 77.101
+  },
+  "Chitradurga": {
+    "lat": 14.2251,
+    "lon": 76.398
+  },
+  "Davangere": {
+    "lat": 14.4644,
+    "lon": 75.9218
+  },
+  "Shivamogga": {
+    "lat": 13.9299,
+    "lon": 75.5681
+  },
+  "Mangalore": {
+    "lat": 12.8703,
+    "lon": 74.843
+  },
+  "Bagalkot": {
+    "lat": 16.1691,
+    "lon": 75.6615
+  },
+  "Hubli": {
+    "lat": 15.3647,
+    "lon": 75.124
+  },
+  "Hospet": {
+    "lat": 15.2689,
+    "lon": 76.3909
+  },
+  "Sindhanur": {
+    "lat": 15.77,
+    "lon": 76.75
+  },
+  "Gangavathi": {
+    "lat": 15.4295,
+    "lon": 76.5317
+  },
+  "Hiriyur": {
+    "lat": 13.9477,
+    "lon": 76.6174
+  },
+  "Holalkere": {
+    "lat": 14.0459,
+    "lon": 76.185
+  }
+}

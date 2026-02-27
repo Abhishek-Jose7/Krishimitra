@@ -1,0 +1,150 @@
+{
+  "Mandya": {
+    "lat": 12.5218,
+    "lon": 76.8951
+  },
+  "Mysore": {
+    "lat": 12.2958,
+    "lon": 76.6394
+  },
+  "Hassan": {
+    "lat": 13.0033,
+    "lon": 76.1004
+  },
+  "Shivamogga": {
+    "lat": 13.9299,
+    "lon": 75.5681
+  },
+  "Shimoga": {
+    "lat": 13.9299,
+    "lon": 75.5681
+  },
+  "Davangere": {
+    "lat": 14.4644,
+    "lon": 75.9218
+  },
+  "Davanagere": {
+    "lat": 14.4644,
+    "lon": 75.9218
+  },
+  "Chitradurga": {
+    "lat": 14.2251,
+    "lon": 76.398
+  },
+  "Tumkur": {
+    "lat": 13.3409,
+    "lon": 77.101
+  },
+  "Channapatna": {
+    "lat": 12.651,
+    "lon": 77.2085
+  },
+  "Maddur": {
+    "lat": 12.5832,
+    "lon": 77.0408
+  },
+  "Malavalli": {
+    "lat": 12.3817,
+    "lon": 77.056
+  },
+  "Nagamangala": {
+    "lat": 12.8197,
+    "lon": 76.7571
+  },
+  "Pandavapura": {
+    "lat": 12.49,
+    "lon": 76.67
+  },
+  "Srirangapattana": {
+    "lat": 12.4183,
+    "lon": 76.695
+  },
+  "K.R.Pete": {
+    "lat": 12.9217,
+    "lon": 76.8014
+  },
+  "Holenarasipur": {
+    "lat": 12.783,
+    "lon": 75.9896
+  },
+  "Arsikere": {
+    "lat": 13.3146,
+    "lon": 76.2559
+  },
+  "Udupi": {
+    "lat": 13.3409,
+    "lon": 74.7421
+  },
+  "Mangalore": {
+    "lat": 12.8703,
+    "lon": 74.843
+  },
+  "Puttur": {
+    "lat": 12.7626,
+    "lon": 75.2035
+  },
+  "Sulya": {
+    "lat": 12.5597,
+    "lon": 75.3834
+  },
+  "Bantwal": {
+    "lat": 12.896,
+    "lon": 75.0345
+  },
+  "Raichur": {
+    "lat": 16.212,
+    "lon": 77.3439
+  },
+  "Ballari": {
+    "lat": 15.1394,
+    "lon": 76.9214
+  },
+  "Bellary": {
+    "lat": 15.1394,
+    "lon": 76.9214
+  },
+  "Gangavathi": {
+    "lat": 15.4295,
+    "lon": 76.5317
+  },
+  "Sindhanur": {
+    "lat": 15.77,
+    "lon": 76.75
+  },
+  "Koppal": {
+    "lat": 15.3543,
+    "lon": 76.1542
+  },
+  "Hosapete": {
+    "lat": 15.2689,
+    "lon": 76.3909
+  },
+  "Bangalore": {
+    "lat": 12.9716,
+    "lon": 77.5946
+  },
+  "Kolar": {
+    "lat": 13.1358,
+    "lon": 78.129
+  },
+  "Chintamani": {
+    "lat": 13.4016,
+    "lon": 78.0564
+  },
+  "Tiptur": {
+    "lat": 13.2588,
+    "lon": 76.4775
+  },
+  "Hiriyur": {
+    "lat": 13.9477,
+    "lon": 76.6174
+  },
+  "Ranebennur": {
+    "lat": 14.622,
+    "lon": 75.6368
+  },
+  "Haveri": {
+    "lat": 14.7939,
+    "lon": 75.3996
+  }
+}

@@ -1,0 +1,19 @@
+{
+  "MAE_inr": 154.69,
+  "MAPE_pct": 6.9,
+  "avg_test_price": 2330.15,
+  "msp_2024_25": 2300,
+  "mae_as_pct_msp": 6.7,
+  "train_start": "2021-01-31",
+  "train_end": "2025-07-21",
+  "test_start": "2025-07-21",
+  "test_end": "2026-02-26",
+  "n_train": 6754,
+  "n_test": 1193,
+  "n_markets": 77,
+  "n_features": 29,
+  "iqr_rows_dropped": 107,
+  "stale_warn_markets": 24,
+  "stale_error_markets": 13,
+  "built_at": "20260226_195609"
+}
