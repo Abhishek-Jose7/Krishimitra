@@ -16,6 +16,7 @@ from routes.dashboard_routes import dashboard_bp
 from routes.notification_routes import notification_bp
 from routes.evaluation_routes import evaluation_bp
 from routes.financial_routes import financial_bp
+from routes.loan_routes import loan_bp
 import atexit
 import logging
 
@@ -63,6 +64,7 @@ def create_app(config_class=Config):
     app.register_blueprint(auth_bp)
     app.register_blueprint(dashboard_bp)
     app.register_blueprint(financial_bp)
+    app.register_blueprint(loan_bp)
 
     # Register new blueprints
     app.register_blueprint(notification_bp)

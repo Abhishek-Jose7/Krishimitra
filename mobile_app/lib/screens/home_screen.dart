@@ -3,6 +3,7 @@ import 'package:google_fonts/google_fonts.dart';
 import '../theme.dart';
 import 'dashboard_screen.dart';
 import 'financial_protection_screen.dart';
+import 'loan_risk_screen.dart';
 import 'mandi_screen.dart';
 import 'profile_screen.dart';
 
@@ -17,8 +18,9 @@ class _HomeScreenState extends State<HomeScreen> {
   int _currentIndex = 0;
   final List<Widget> _screens = [
     const DashboardScreen(),
-    const FinancialProtectionScreen(),
     const MandiScreen(),
+    const FinancialProtectionScreen(),
+    const LoanRiskScreen(),
     const ProfileScreen(),
   ];
 
@@ -61,14 +63,19 @@ class _HomeScreenState extends State<HomeScreen> {
               label: 'Home',
             ),
             BottomNavigationBarItem(
+              icon: const Icon(Icons.storefront_outlined),
+              activeIcon: _buildActiveIcon(Icons.storefront),
+              label: 'Mandi',
+            ),
+            BottomNavigationBarItem(
               icon: const Icon(Icons.shield_outlined),
               activeIcon: _buildActiveIcon(Icons.shield),
               label: 'Protection',
             ),
             BottomNavigationBarItem(
-              icon: const Icon(Icons.storefront_outlined),
-              activeIcon: _buildActiveIcon(Icons.storefront),
-              label: 'Mandi',
+              icon: const Icon(Icons.account_balance_wallet_outlined),
+              activeIcon: _buildActiveIcon(Icons.account_balance_wallet),
+              label: 'Loan',
             ),
             BottomNavigationBarItem(
               icon: const Icon(Icons.person_outline),

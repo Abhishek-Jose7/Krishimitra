@@ -45,6 +45,25 @@ class ApiService {
     }
   }
 
+  // ── Loan & Credit Risk Assistant ──
+  Future<Map<String, dynamic>> getLoanRisk({
+    required String crop,
+    required String district,
+    required double loanAmount,
+    required double interestRate,
+    required int tenureMonths,
+  }) async {
+    final url = '$baseUrl/loan-risk?crop=$crop&district=$district'
+        '&loan_amount=$loanAmount&interest_rate=$interestRate'
+        '&tenure_months=$tenureMonths';
+    final response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Failed to load loan risk');
+    }
+  }
+
   // ── Farm Financial Protection Center ──
   Future<Map<String, dynamic>> getFinancialProtection({
     required String crop,
