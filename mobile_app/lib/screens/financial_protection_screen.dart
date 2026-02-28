@@ -24,6 +24,10 @@ class _FinancialProtectionScreenState extends State<FinancialProtectionScreen> {
   List<String> _crops = ['Chickpea', 'Sugarcane', 'Onion'];
   String _selectedCrop = 'Onion';
 
+  /// Persistent per-crop cache so score stays stable on navigation/rebuild.
+  /// Key: crop name, Value: last API response for that crop.
+  static final Map<String, Map<String, dynamic>> _cropDataCache = {};
+
   @override
   void initState() {
     super.initState();
@@ -34,7 +38,15 @@ class _FinancialProtectionScreenState extends State<FinancialProtectionScreen> {
     _selectedCrop = _crops.contains('Onion')
         ? 'Onion'
         : (profile.primaryCrop ?? profile.activeCrop?.cropName ?? _crops.first);
-    _load();
+    final cached = _cropDataCache[_selectedCrop];
+    if (cached != null) {
+      _data = Map<String, dynamic>.from(cached);
+      _lastUpdated = _formatNow();
+      _loading = false;
+      _error = null;
+    } else {
+      _load();
+    }
   }
 
   Future<void> _load() async {
@@ -54,6 +66,7 @@ class _FinancialProtectionScreenState extends State<FinancialProtectionScreen> {
         district: district,
         mandi: mandi,
       );
+      _cropDataCache[_selectedCrop] = Map<String, dynamic>.from(resp);
       _data = resp;
       _lastUpdated = _formatNow();
     } catch (e) {
@@ -112,8 +125,20 @@ class _FinancialProtectionScreenState extends State<FinancialProtectionScreen> {
                       crops: _crops,
                       selectedCrop: _selectedCrop,
                       onCropSelected: (crop) {
-                        setState(() => _selectedCrop = crop);
-                        _load();
+                        setState(() {
+                          _selectedCrop = crop;
+                          final cached = _cropDataCache[crop];
+                          if (cached != null) {
+                            _data = Map<String, dynamic>.from(cached);
+                            _lastUpdated = _formatNow();
+                            _loading = false;
+                            _error = null;
+                          } else {
+                            _loading = true;
+                            _error = null;
+                          }
+                        });
+                        if (_cropDataCache[crop] == null) _load();
                       },
                     ),
                     const SizedBox(height: 12),
