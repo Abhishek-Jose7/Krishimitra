@@ -210,11 +210,13 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   children: [
                     // ═══ 1. GREETING + WEATHER (NEW HEADER) ═══
                     _buildGreetingWeatherHeader(context, profile),
-
-                    // ═══ 2. HERO: SELL/HOLD RECOMMENDATION ═══
-                    _buildRecommendationHero(crop, landSize, expectedYield),
-
-                    const SizedBox(height: 20),
+                    // Remove top gap and apply negative margin via Transform to overlap image
+                    Transform.translate(
+                      offset: const Offset(0, -60),
+                      child: _buildRecommendationHero(
+                          crop, landSize, expectedYield),
+                    ),
+                    const SizedBox(height: 8),
 
                     // ═══ 3. QUICK ACTIONS (2x2 GRID) ═══
                     _buildQuickActionsGrid(),
@@ -230,7 +232,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   // ═══════════════════════════════════════════════════
-  // RECOMMENDATION HERO — Styled as 'Our agriculture field' reference
+  // RECOMMENDATION HERO — Overlaps the header image
   // ═══════════════════════════════════════════════════
   Widget _buildRecommendationHero(
       String crop, double landSize, double expectedYield) {
@@ -255,7 +257,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 : const Color(0xFFE65100);
 
     return Container(
-      margin: const EdgeInsets.symmetric(horizontal: 16),
+      margin: EdgeInsets.zero,
       decoration: BoxDecoration(
         color: bgColor,
         borderRadius: BorderRadius.circular(28),
@@ -682,10 +684,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
       height:
           screenHeight * 0.52, // Larger image spanning roughly half the screen
       decoration: const BoxDecoration(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(36),
-          bottomRight: Radius.circular(36),
-        ),
+        borderRadius: BorderRadius.zero,
       ),
       clipBehavior: Clip.antiAlias,
       child: Stack(
@@ -945,11 +944,12 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       const SizedBox(height: 12),
 
                       // Bottom Weather Pills
-                      Row(
+                      Wrap(
+                        spacing: 14,
+                        runSpacing: 8,
                         children: [
                           _weatherDetailPill("🌬️",
                               "${(rainfall * 2).toStringAsFixed(1)} km/h"),
-                          const SizedBox(width: 14),
                           _weatherDetailPill(
                               "💧", "${humidity.toStringAsFixed(1)}%"),
                         ],
@@ -1230,7 +1230,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     final finalItems = items.take(4).toList();
 
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 16),
+      padding: EdgeInsets.zero,
       child: Column(
         children: [
           // First Row

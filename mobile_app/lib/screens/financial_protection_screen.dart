@@ -260,73 +260,81 @@ class _FinancialProtectionScreenState extends State<FinancialProtectionScreen> {
     return AppCard(
       child: Row(
         children: [
-          SizedBox(
-            width: 92,
-            height: 92,
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                CircularProgressIndicator(
-                  value: 1,
-                  strokeWidth: 10,
-                  valueColor: AlwaysStoppedAnimation<Color>(Colors.grey.shade200),
-                ),
-                CircularProgressIndicator(
-                  value: progress,
-                  strokeWidth: 10,
-                  valueColor: AlwaysStoppedAnimation<Color>(c),
-                  backgroundColor: Colors.transparent,
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    "${score.toStringAsFixed(0)}",
-                    textAlign: TextAlign.center,
-                    style: GoogleFonts.roboto(
-                      fontSize: 26,
-                      fontWeight: FontWeight.w900,
-                      color: AppTheme.textDark,
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Padding(
-                    padding: const EdgeInsets.only(bottom: 12),
-                    child: Text(
-                      "Health",
-                      style: AppTheme.bodyMedium.copyWith(fontSize: 10),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-          const SizedBox(width: 14),
           Expanded(
-            child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-              Text("Financial Health Score", style: AppTheme.headingMedium.copyWith(fontSize: 14)),
-              const SizedBox(height: 4),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 10, vertical: 6),
-                decoration: BoxDecoration(
-                  color: c.withOpacity(0.08),
-                  borderRadius: BorderRadius.circular(10),
-                  border: Border.all(color: c.withOpacity(0.25)),
-                ),
-                child: Row(mainAxisSize: MainAxisSize.min, children: [
-                  Icon(level == 'HIGH' ? Icons.warning_amber : level == 'MODERATE' ? Icons.info_outline : Icons.verified,
-                      size: 16, color: c),
-                  const SizedBox(width: 6),
-                  Text(label, style: AppTheme.bodyMedium.copyWith(fontSize: 11, color: c, fontWeight: FontWeight.w700)),
-                ]),
+            child: Center(
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    width: 100, // Reduced from 120
+                    height: 100, // Reduced from 120
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        CircularProgressIndicator(
+                          value: 1,
+                          strokeWidth: 10,
+                          valueColor: AlwaysStoppedAnimation<Color>(
+                              Colors.grey.shade200),
+                        ),
+                        CircularProgressIndicator(
+                          value: progress,
+                          strokeWidth: 10,
+                          valueColor: AlwaysStoppedAnimation<Color>(c),
+                          backgroundColor: Colors.transparent,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "${score.toStringAsFixed(0)}",
+                              style: GoogleFonts.roboto(
+                                fontSize: 32, // Reduced from 36
+                                fontWeight: FontWeight.w900,
+                                color: AppTheme.textDark,
+                              ),
+                            ),
+                            Text(
+                              "Health",
+                              style: AppTheme.bodyMedium.copyWith(fontSize: 11), // Reduced from 12
+                            ),
+                          ],
+                        ),
+                      ],
+                    ),
+                  ),
+                  const SizedBox(height: 12),
+                  Text("Financial Health Score",
+                      style: AppTheme.headingMedium.copyWith(fontSize: 15)), // Reduced from 16
+                  const SizedBox(height: 6),
+                  Container(
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 10, vertical: 4),
+                    decoration: BoxDecoration(
+                      color: c.withOpacity(0.08),
+                      borderRadius: BorderRadius.circular(8),
+                      border: Border.all(color: c.withOpacity(0.25)),
+                    ),
+                    child: Row(mainAxisSize: MainAxisSize.min, children: [
+                      Icon(
+                          level == 'HIGH'
+                              ? Icons.warning_amber
+                              : level == 'MODERATE'
+                                  ? Icons.info_outline
+                                  : Icons.verified,
+                          size: 14,
+                          color: c),
+                      const SizedBox(width: 6),
+                      Text(label,
+                          style: AppTheme.bodyMedium.copyWith(
+                              fontSize: 11,
+                              color: c,
+                              fontWeight: FontWeight.w700)),
+                    ]),
+                  ),
+                ],
               ),
-              const SizedBox(height: 8),
-              Text(
-                "This score blends weather, market and yield uncertainties to highlight protection urgency.",
-                style: AppTheme.bodyMedium.copyWith(fontSize: 11, color: AppTheme.textDark),
-              ),
-            ]),
+            ),
           ),
         ],
       ),
@@ -369,50 +377,119 @@ class _FinancialProtectionScreenState extends State<FinancialProtectionScreen> {
         ? AppTheme.error
         : (severity == "MODERATE" ? AppTheme.accentOrange : AppTheme.success);
 
-    return AppCard(
-      padding: const EdgeInsets.all(12),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
+    String imageUrl;
+    if (title.toLowerCase().contains('weather')) {
+      imageUrl =
+          'https://images.unsplash.com/photo-1592210454359-9043f067919b?w=400&q=80';
+    } else if (title.toLowerCase().contains('market')) {
+      imageUrl =
+          'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&q=80';
+    } else {
+      imageUrl =
+          'https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=400&q=80';
+    }
+
+    return Container(
+      height: 180,
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(12),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.05),
+            blurRadius: 10,
+            offset: const Offset(0, 4),
+          )
+        ],
+      ),
+      clipBehavior: Clip.antiAlias,
+      child: Stack(
+        fit: StackFit.expand,
         children: [
-          Row(
-            children: [
-              Container(
-                padding: const EdgeInsets.all(6),
-                decoration: BoxDecoration(
-                  color: color.withOpacity(0.10),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Icon(icon, size: 16, color: color),
-              ),
-              const Spacer(),
-              Container(
-                padding: const EdgeInsets.symmetric(horizontal: 6, vertical: 2),
-                decoration: BoxDecoration(
-                  color: chipColor.withOpacity(0.12),
-                  borderRadius: BorderRadius.circular(6),
-                  border: Border.all(color: chipColor.withOpacity(0.35)),
-                ),
-                child: Text(
-                  severity,
-                  style: AppTheme.bodyMedium.copyWith(fontSize: 9, color: chipColor, fontWeight: FontWeight.w800),
-                ),
-              ),
-            ],
+          // Background Image
+          Image.network(
+            imageUrl,
+            fit: BoxFit.cover,
+            errorBuilder: (_, __, ___) => Container(color: color),
           ),
-          const SizedBox(height: 10),
-          Text(title, style: AppTheme.bodyMedium.copyWith(fontSize: 11, color: AppTheme.textDark, fontWeight: FontWeight.w700)),
-          const SizedBox(height: 6),
-          Text(
-            s.toStringAsFixed(0),
-            style: GoogleFonts.roboto(fontSize: 24, fontWeight: FontWeight.w900, color: AppTheme.textDark),
+          // Gradient Overlay
+          Container(
+            decoration: BoxDecoration(
+              gradient: LinearGradient(
+                colors: [
+                  Colors.black.withOpacity(0.2),
+                  Colors.black.withOpacity(0.7),
+                ],
+                begin: Alignment.topCenter,
+                end: Alignment.bottomCenter,
+              ),
+            ),
           ),
-          const SizedBox(height: 6),
-          LinearProgressIndicator(
-            value: s / 100.0,
-            backgroundColor: Colors.grey.shade200,
-            valueColor: AlwaysStoppedAnimation<Color>(chipColor),
-            minHeight: 6,
-            borderRadius: BorderRadius.circular(10),
+          // Content
+          Padding(
+            padding: const EdgeInsets.all(12),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: const EdgeInsets.all(6),
+                      decoration: BoxDecoration(
+                        color: Colors.white.withOpacity(0.2),
+                        borderRadius: BorderRadius.circular(8),
+                      ),
+                      child: Icon(icon, size: 16, color: Colors.white),
+                    ),
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 6, vertical: 2),
+                      decoration: BoxDecoration(
+                        color: chipColor.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(6),
+                      ),
+                      child: Text(
+                        severity,
+                        style: AppTheme.bodyMedium.copyWith(
+                            fontSize: 9,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w800),
+                      ),
+                    ),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(title,
+                        style: AppTheme.bodyMedium.copyWith(
+                            fontSize: 12,
+                            color: Colors.white,
+                            fontWeight: FontWeight.w700)),
+                    const SizedBox(height: 4),
+                    Text(
+                      s.toStringAsFixed(0),
+                      style: GoogleFonts.roboto(
+                          fontSize: 24,
+                          fontWeight: FontWeight.w900,
+                          color: Colors.white),
+                    ),
+                    const SizedBox(height: 4),
+                    ClipRRect(
+                      borderRadius: BorderRadius.circular(10),
+                      child: LinearProgressIndicator(
+                        value: s / 100.0,
+                        backgroundColor: Colors.white.withOpacity(0.2),
+                        valueColor: AlwaysStoppedAnimation<Color>(chipColor),
+                        minHeight: 4,
+                      ),
+                    ),
+                  ],
+                ),
+              ],
+            ),
           ),
         ],
       ),
