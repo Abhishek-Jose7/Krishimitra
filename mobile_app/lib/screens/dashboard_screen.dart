@@ -1186,14 +1186,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       ));
     }
 
-<<<<<<< HEAD
-=======
-    addAction('pest', "Scan Leaf", "Identify issues", Icons.camera_alt,
-        AppTheme.primaryGreen, PestVisionScreen(currentCrop: crop));
-    addAction('yield', "Yield Estimate", "Predict harvest", Icons.grass,
-        AppTheme.primaryGreen, const YieldScreen());
-
->>>>>>> 9565f7142df88aad442db5b69b2871b4b77dc928
     for (final card in _strategy.cardPriority) {
       if (card.contains('price') || card == 'daily_price') {
         addItem('price', "Price Forecast", "Short & long term",
@@ -1217,7 +1209,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     }
 
-<<<<<<< HEAD
     addItem('yield', "Yield Estimate", "Predict harvest", Icons.grass,
         AppTheme.primaryGreen, const YieldScreen(),
         'https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=400&q=80');
@@ -1225,11 +1216,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         AppTheme.accentBlue, const PriceScreen(),
         'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&q=80');
     addItem(
-=======
-    addAction('price', "Price Forecast", "Short & long term", Icons.show_chart,
-        AppTheme.accentBlue, const PriceScreen());
-    addAction(
->>>>>>> 9565f7142df88aad442db5b69b2871b4b77dc928
         'rec',
         "Sell/Hold Advice",
         "When to sell",
@@ -1241,7 +1227,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         AppTheme.accentPurple, const MandiScreen(),
         'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&q=80');
 
-<<<<<<< HEAD
     final finalItems = items.take(4).toList();
 
     return Padding(
@@ -1274,9 +1259,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
         ],
       ),
     );
-=======
-    return actions.take(5).toList();
->>>>>>> 9565f7142df88aad442db5b69b2871b4b77dc928
   }
 
   // ═══════════════════════════════════════════════════
