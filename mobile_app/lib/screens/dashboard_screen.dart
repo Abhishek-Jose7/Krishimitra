@@ -1211,6 +1211,8 @@ class _DashboardScreenState extends State<DashboardScreen> {
 
     addAction('pest', "Scan Leaf", "Identify issues", Icons.camera_alt,
         AppTheme.primaryGreen, PestVisionScreen(currentCrop: crop));
+    addAction('yield', "Yield Estimate", "Predict harvest", Icons.grass,
+        AppTheme.primaryGreen, const YieldScreen());
 
     for (final card in _strategy.cardPriority) {
       if (card.contains('price') || card == 'daily_price') {
@@ -1232,8 +1234,6 @@ class _DashboardScreenState extends State<DashboardScreen> {
       }
     }
 
-    addAction('yield', "Yield Estimate", "Predict harvest", Icons.grass,
-        AppTheme.primaryGreen, const YieldScreen());
     addAction('price', "Price Forecast", "Short & long term", Icons.show_chart,
         AppTheme.accentBlue, const PriceScreen());
     addAction(
@@ -1246,7 +1246,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
     addAction('mandi', "Mandi Prices", "Compare nearby", Icons.storefront,
         AppTheme.accentPurple, const MandiScreen());
 
-    return actions.take(4).toList();
+    return actions.take(5).toList();
   }
 
   // ═══════════════════════════════════════════════════

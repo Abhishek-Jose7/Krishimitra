@@ -357,6 +357,47 @@ def get_yield_advisory(user_input: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+# Heuristic yield (tons/acre) for fallback when ML pipeline fails or data is missing
+_FALLBACK_YIELD_PER_ACRE: Dict[str, float] = {
+    "rice": 4.5, "wheat": 3.5, "maize": 3.0, "soybean": 1.2, "cotton": 1.8,
+    "sugarcane": 28.0, "groundnut": 1.5, "onion": 12.0, "tomato": 18.0,
+    "potato": 15.0, "coconut": 8.0,
+}
+
+
+def _fallback_yield_advisory(
+    district: str, crop: str, area: float
+) -> Dict[str, Any]:
+    """Return an indicative advisory when the ML pipeline cannot run. No errors shown to user."""
+    district_label = (district or "your district").strip().title()
+    crop_label = (crop or "crop").strip().title()
+    key = crop_label.lower()
+    yield_per_acre = _FALLBACK_YIELD_PER_ACRE.get(key, 3.0)
+    total_yield = round(yield_per_acre * area, 2)
+    advisory = (
+        f"For {crop_label} in {district_label}, we are providing an indicative estimate "
+        f"based on typical conditions: about {yield_per_acre:.1f} tons per acre, "
+        f"or {total_yield:.1f} tons total for your area. "
+        "For precise planning, consult local agronomy or run the estimate again when more data is available."
+    )
+    summary = {
+        "district": district_label,
+        "crop": crop_label,
+        "predicted_yield": round(yield_per_acre, 2),
+        "estimated_total_yield": total_yield,
+        "confidence": 50.0,
+        "risk_level": "Moderate",
+        "evidence_level": "Indicative",
+    }
+    return {
+        "advisory": advisory,
+        "summary": summary,
+        "coverage_warning": True,
+        "confidence_adjusted": 50.0,
+        "coverage_message": "Indicative estimate based on typical conditions for your crop and district.",
+    }
+
+
 def get_yield_options(district: str | None = None) -> Dict[str, Any]:
     """
     Expose dynamic option space (districts, crops, seasons, soil, irrigation, area)
