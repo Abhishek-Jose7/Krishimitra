@@ -3,6 +3,8 @@ import os
 import random
 import numpy as np
 import datetime
+from services.karnataka_predictor import KarnatakaForecaster
+from services.maharashtra_predictor import MaharashtraForecaster
 
 
 class DummyPriceModel:
@@ -43,9 +45,8 @@ class PriceService:
         mandi = data.get('mandi', '')
         state = data.get('state', '')
 
-        # ── Karnataka-specific models (groundnut / coconut) ──
+        # ── Karnataka-specific models (groundnut / coconut / paddy) ──
         try:
-            from services.karnataka_predictor import KarnatakaForecaster
             if KarnatakaForecaster.is_supported(state, crop):
                 ka_result = KarnatakaForecaster.get_forecast(
                     crop=crop,
@@ -94,6 +95,54 @@ class PriceService:
         except Exception as e:
             import logging
             logging.getLogger(__name__).warning(f"Karnataka model error: {e}")
+
+        # ── Maharashtra-specific models (cabbage) ─────────────
+        try:
+            if MaharashtraForecaster.is_supported(state, crop):
+                mh_result = MaharashtraForecaster.get_forecast(
+                    crop=crop,
+                    market=mandi,
+                    quantity=float(data.get('quantity', 10)),
+                )
+                if mh_result:
+                    today = mh_result["today"]
+                    fc7   = mh_result["forecast_7day"]
+                    d30   = mh_result["day_30"]
+
+                    trend = "Stable"
+                    if mh_result["trend_7d_pct"] > 5:
+                        trend = "Rising"
+                    elif mh_result["trend_7d_pct"] < -5:
+                        trend = "Falling"
+
+                    forecast_list = [
+                        {"date": f["date"], "price": f["price"]}
+                        for f in fc7
+                    ]
+
+                    peak = max(fc7, key=lambda x: x["price"])
+
+                    return {
+                        'current_price'      : today["predicted_price"],
+                        'trend'              : trend,
+                        'peak_date'          : peak["date"],
+                        'peak_price'         : peak["price"],
+                        'volatility'         : round(np.std([f["price"] for f in fc7]) /
+                                                     max(np.mean([f["price"] for f in fc7]), 1), 2),
+                        'forecast'           : forecast_list,
+                        'maharashtra_forecast' : {
+                            'today'             : today,
+                            'forecast_7day'     : fc7,
+                            'day_30'            : d30,
+                            'trend_7d_pct'      : mh_result["trend_7d_pct"],
+                            'best_day'          : mh_result["best_day"],
+                            'model_info'        : mh_result["model_info"],
+                            'available_markets' : mh_result["available_markets"],
+                        },
+                    }
+        except Exception as e:
+            import logging
+            logging.getLogger(__name__).warning(f"Maharashtra model error: {e}")
 
         # ── Fallback: existing dummy model ────────────────────
         PriceService.load_model()
