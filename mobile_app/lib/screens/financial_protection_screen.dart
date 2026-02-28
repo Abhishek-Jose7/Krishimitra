@@ -277,18 +277,27 @@ class _FinancialProtectionScreenState extends State<FinancialProtectionScreen> {
                   valueColor: AlwaysStoppedAnimation<Color>(c),
                   backgroundColor: Colors.transparent,
                 ),
-                Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "${score.toStringAsFixed(0)}",
-                      style: GoogleFonts.roboto(fontSize: 26, fontWeight: FontWeight.w900, color: AppTheme.textDark),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    "${score.toStringAsFixed(0)}",
+                    textAlign: TextAlign.center,
+                    style: GoogleFonts.roboto(
+                      fontSize: 26,
+                      fontWeight: FontWeight.w900,
+                      color: AppTheme.textDark,
                     ),
-                    Text(
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: const EdgeInsets.only(bottom: 12),
+                    child: Text(
                       "Health",
                       style: AppTheme.bodyMedium.copyWith(fontSize: 10),
                     ),
-                  ],
+                  ),
                 ),
               ],
             ),
