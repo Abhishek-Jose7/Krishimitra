@@ -266,7 +266,7 @@ Base URL: `http://localhost:5000` (or your backend host).
 - **Financial Protection:** `README_FINANCIAL_PROTECTION.md`, `backend/FINANCIAL_PROTECTION_CENTER.md`.
 - **ML (Mysuru):** `backend/mysuru_agri_ai/README.md` if present.
 - **Mobile:** `mobile_app/README.md` if present.
-
+'
 ---
 
 ## Quick Test: Yield Estimate
