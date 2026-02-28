@@ -4,10 +4,8 @@ import 'package:flutter/foundation.dart';
 
 class ApiService {
   static String get baseUrl {
-    if (kIsWeb) {
-      return 'http://localhost:5000';
-    }
-    return 'http://10.0.2.2:5000';
+    // Production Railway Backend URL
+    return 'https://krishimitra-production-2930.up.railway.app';
   }
 
   // ── Yield ──
