@@ -1,6 +1,6 @@
 # KrishiMitra AI
 
-**AI-powered decision support system for Indian farmers.** KrishiMitra helps farmers with yield estimation, price forecasting, sell/hold recommendations, mandi price comparison, pest identification, financial protection insights, and personalized dashboards—all through a single Flutter app backed by a Flask API and ML pipeline.
+**AI-powered decision support system for Indian farmers.** KrishiMitra helps farmers with yield estimation, price forecasting, sell/hold recommendations, mandi price comparison, pest identification, financial protection insights, loan risk simulation, and personalized dashboards—all through a single Flutter app backed by a Flask API and ML pipeline.
 
 ---
 
@@ -29,6 +29,7 @@
 | **Intelligent Dashboard** | Region- and crop-aware dashboard: weather, mandi prices, recommendation, Karnataka-specific forecasts, saved yield advisory. |
 | **Pest / Leaf Scan** | Identify crop issues via image (pest vision). |
 | **Financial Protection** | Risk assessment (weather, market, yield) and recommended schemes/insurance. |
+| **Loan & Credit Risk Assistant** | Financial stress simulator: loan amount, tenure, interest → risk score, repayment ratio, worst-case scenario, and recommendations (PMFBY, tenure, etc.). |
 | **Farmer Profile & Onboarding** | Multi-crop farm setup, soil/irrigation, preferred mandi. Optional: yield runs automatically after onboarding and is stored for the dashboard. |
 | **Notifications** | Price alerts and alerts management. |
 | **Auth** | OTP-based and password-based auth; JWT. |
@@ -64,6 +65,7 @@ Krishimitra/
 │   │   ├── farm_routes.py     # /farms, /crops/suggest, /farm/analyze-pest
 │   │   ├── weather_routes.py  # /weather-risk
 │   │   ├── financial_routes.py    # /financial-protection
+│   │   ├── loan_routes.py         # /loan-risk
 │   │   ├── notification_routes.py  # /notifications/alert, /alerts/...
 │   │   └── evaluation_routes.py    # /metrics/evaluation, accuracy, track
 │   ├── services/             # Business logic + ML invocation
@@ -72,6 +74,7 @@ Krishimitra/
 │   │   ├── recommendation_service.py
 │   │   ├── mandi_service.py
 │   │   ├── financial_advisor_service.py
+│   │   ├── loan_risk_service.py   # Loan & Credit Risk Assistant
 │   │   └── ...
 │   ├── database/
 │   │   ├── db.py
@@ -231,9 +234,10 @@ Base URL: `http://localhost:5000` (or your backend host).
 ### Recommendation
 - `POST /api/recommendation` — Sell/hold recommendation.
 
-### Financial & Weather
-- `GET /financial-protection` — Financial protection analysis (query params for crop, district, etc.).
-- `GET /weather-risk` — Weather risk.
+### Financial, Loan & Weather
+- `GET /financial-protection?crop=...&district=...` — Financial protection analysis (health score, risk breakdown, protection gap, recommended schemes).
+- `GET /loan-risk?crop=...&district=...&loan_amount=...&interest_rate=...&tenure_months=...` — Loan risk analysis (risk score, repayment ratio, worst-case ratio, EMI, recommendations).
+- `GET /weather-risk?district=...` — Weather risk.
 
 ### Notifications & Metrics
 - `POST /notifications/alert` — Create price alert.
@@ -246,7 +250,8 @@ Base URL: `http://localhost:5000` (or your backend host).
 
 - **Framework:** Flutter.
 - **Screens:** Welcome → Language → Location → Phone login → Farm setup (crops, soil, irrigation, area) → Home (dashboard).  
-  Home has quick actions: **Scan Leaf**, **Yield Estimate**, Price Forecast, Sell/Hold Advice, Mandi Prices. Tabs: Dashboard, Financial Protection.
+  Home has quick actions: **Scan Leaf**, **Yield Estimate**, Price Forecast, Sell/Hold Advice, Mandi Prices.
+- **Bottom tabs (in order):** **Home**, **Mandi**, **Protection** (Financial Protection), **Loan** (Loan Risk Assistant), **Profile**.
 - **Yield flow:** User selects crop, district, and land (acres); taps “Estimate Harvest”. App calls `POST /yield/simulate` and shows result card + advisory. On failure or empty result, an **indicative fallback** is shown (no error dialog).
 - **Options:** Crop and district lists can be loaded from `GET /yield/options` (or equivalent) so UI stays aligned with ML dataset.
 
@@ -266,7 +271,7 @@ Base URL: `http://localhost:5000` (or your backend host).
 - **Financial Protection:** `README_FINANCIAL_PROTECTION.md`, `backend/FINANCIAL_PROTECTION_CENTER.md`.
 - **ML (Mysuru):** `backend/mysuru_agri_ai/README.md` if present.
 - **Mobile:** `mobile_app/README.md` if present.
-'
+
 ---
 
 ## Quick Test: Yield Estimate
