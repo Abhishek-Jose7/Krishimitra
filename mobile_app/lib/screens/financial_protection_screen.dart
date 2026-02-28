@@ -7,6 +7,7 @@ import '../providers/farmer_profile_provider.dart';
 import '../services/api_service.dart';
 import '../theme.dart';
 import '../widgets/app_card.dart';
+import '../widgets/crop_selector_widget.dart';
 
 class FinancialProtectionScreen extends StatefulWidget {
   const FinancialProtectionScreen({super.key});
@@ -20,10 +21,19 @@ class _FinancialProtectionScreenState extends State<FinancialProtectionScreen> {
   String? _error;
   Map<String, dynamic>? _data;
   String? _lastUpdated;
+  List<String> _crops = ['Chickpea', 'Sugarcane', 'Onion'];
+  String _selectedCrop = 'Onion';
 
   @override
   void initState() {
     super.initState();
+    final profile = Provider.of<FarmerProfile>(context, listen: false);
+    if (profile.crops.isNotEmpty) {
+      _crops = profile.crops;
+    }
+    _selectedCrop = _crops.contains('Onion')
+        ? 'Onion'
+        : (profile.primaryCrop ?? profile.activeCrop?.cropName ?? _crops.first);
     _load();
   }
 
@@ -36,12 +46,11 @@ class _FinancialProtectionScreenState extends State<FinancialProtectionScreen> {
     try {
       final profile = Provider.of<FarmerProfile>(context, listen: false);
       final api = Provider.of<ApiService>(context, listen: false);
-      final crop = profile.activeCrop?.cropName ?? profile.primaryCrop ?? 'Rice';
       final district = profile.district ?? 'Pune';
       final mandi = profile.activeMandiName;
 
       final resp = await api.getFinancialProtection(
-        crop: crop,
+        crop: _selectedCrop,
         district: district,
         mandi: mandi,
       );
@@ -64,7 +73,6 @@ class _FinancialProtectionScreenState extends State<FinancialProtectionScreen> {
   @override
   Widget build(BuildContext context) {
     final profile = Provider.of<FarmerProfile>(context);
-    final crop = profile.activeCrop?.cropName ?? profile.primaryCrop ?? 'Rice';
     final district = profile.district ?? 'Pune';
 
     return Scaffold(
@@ -100,7 +108,16 @@ class _FinancialProtectionScreenState extends State<FinancialProtectionScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    _buildHeroHeader(crop: crop, district: district),
+                    CropSelectorWidget(
+                      crops: _crops,
+                      selectedCrop: _selectedCrop,
+                      onCropSelected: (crop) {
+                        setState(() => _selectedCrop = crop);
+                        _load();
+                      },
+                    ),
+                    const SizedBox(height: 12),
+                    _buildHeroHeader(crop: _selectedCrop, district: district),
                     const SizedBox(height: 12),
                     if (_error != null) _buildErrorCard(_error!),
                     if (_data != null) ...[
