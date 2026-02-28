@@ -3,7 +3,7 @@ import requests
 import time
 import re
 
-DB_PATH = "kpaddyprices.db"
+DB_PATH = "mwheatprices.db"
 
 # Words to strip from market names
 NOISE_PATTERN = re.compile(
