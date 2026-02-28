@@ -11,16 +11,16 @@ from datetime import date, datetime
 # ======================= CONFIG ===========================
 # ==========================================================
 
-STATE_ID        = 16
-STATE_NAME      = "Karnataka"
+STATE_ID        = 20
+STATE_NAME      = "Maharashtra"
 
-COMMODITY_ID    = 2
-COMMODITY_NAME  = "Paddy(Common)"
+COMMODITY_ID    = 1
+COMMODITY_NAME  = "Wheat"
 
 LIVE_DATE       = "2025-11-07"
 START_YEAR      = 2021
 
-DB_PATH         = "kpaddyprices.db"
+DB_PATH         = "mwheatprices.db"
 
 REQUEST_DELAY   = 2
 RETRY_ATTEMPTS  = 5

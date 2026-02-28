@@ -1,7 +1,7 @@
 import sqlite3
 import pandas as pd
 
-DB_PATH = "kpaddyprices.db"
+DB_PATH = "mwheatprices.db"
 
 with sqlite3.connect(DB_PATH) as conn:
 

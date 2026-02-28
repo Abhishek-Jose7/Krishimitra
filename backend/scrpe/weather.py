@@ -6,7 +6,7 @@ import logging
 import re
 from datetime import datetime
 
-DB_PATH = "kpaddyprices.db"
+DB_PATH = "mwheatprices.db"
 RETRY_ATTEMPTS = 5
 API_URL = "https://archive-api.open-meteo.com/v1/archive"
 
