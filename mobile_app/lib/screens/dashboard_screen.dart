@@ -13,7 +13,6 @@ import 'price_screen.dart';
 import 'recommendation_screen.dart';
 import 'yield_screen.dart';
 import 'profit_calculator_screen.dart';
-import 'pest_vision_screen.dart';
 
 class DashboardScreen extends StatefulWidget {
   const DashboardScreen({super.key});
@@ -209,40 +208,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: [
-                    Stack(
-                      clipBehavior: Clip.none,
-                      children: [
-                        // ═══ 1. GREETING + WEATHER (NEW HEADER) ═══
-                        _buildGreetingWeatherHeader(context, profile),
+                    // ═══ 1. GREETING + WEATHER (NEW HEADER) ═══
+                    _buildGreetingWeatherHeader(context, profile),
 
-                        // ═══ 2. QUICK ACTIONS (OVERLAPPING HEADER) ═══
-                        Positioned(
-                          left: 0,
-                          right: 0,
-                          bottom:
-                              -60, // Pull down to straddle the border of the photo
-                          child: SizedBox(
-                            height: 160,
-                            child: ListView(
-                              padding:
-                                  const EdgeInsets.symmetric(horizontal: 16),
-                              scrollDirection: Axis.horizontal,
-                              clipBehavior: Clip.none,
-                              children: _buildStrategyActions(crop),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-
-                    // Push content down to clear the overlapping Quick Actions
-                    const SizedBox(height: 64),
-
-                    // ═══ 3. HERO: RECOMMENDATION (THE answer) ═══
+                    // ═══ 2. HERO: SELL/HOLD RECOMMENDATION ═══
                     _buildRecommendationHero(crop, landSize, expectedYield),
+
+                    const SizedBox(height: 20),
+
+                    // ═══ 3. QUICK ACTIONS (2x2 GRID) ═══
+                    _buildQuickActionsGrid(),
+
                     const SizedBox(
                         height:
-                            100), // Massive bottom padding to ensure user can scroll the Intelligence box easily above navigation bar
+                            100), // Bottom padding to ensure user can scroll above navigation bar
                   ],
                 ),
               ),
@@ -276,23 +255,20 @@ class _DashboardScreenState extends State<DashboardScreen> {
                 : const Color(0xFFE65100);
 
     return Container(
+      margin: const EdgeInsets.symmetric(horizontal: 16),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: const BorderRadius.only(
-          topLeft: Radius.circular(32),
-          topRight: Radius.circular(32),
-        ),
+        borderRadius: BorderRadius.circular(28),
         boxShadow: [
           BoxShadow(
-            color: Colors.black.withOpacity(0.2),
-            blurRadius: 20,
-            offset: const Offset(0, -5),
+            color: bgColor.withOpacity(0.4),
+            blurRadius: 24,
+            offset: const Offset(0, 8),
           )
         ],
       ),
       child: Padding(
-        // Reduced bottom padding slightly to make it more compact
-        padding: const EdgeInsets.fromLTRB(24, 28, 24, 80),
+        padding: const EdgeInsets.fromLTRB(24, 28, 24, 28),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
@@ -352,7 +328,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                   child: Icon(
                     isSell ? Icons.shopping_cart_checkout : Icons.inventory_2,
                     color: Colors.white,
-                    size: 32,
+                    size: 40,
                   ),
                 ),
                 const SizedBox(width: 16),
@@ -364,7 +340,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                         isSell ? "SELL $crop" : "STORE $crop",
                         style: GoogleFonts.dmSans(
                           color: Colors.white,
-                          fontSize: 32,
+                          fontSize: 36,
                           fontWeight: FontWeight.w900,
                           height: 1.0,
                         ),
@@ -404,7 +380,7 @@ class _DashboardScreenState extends State<DashboardScreen> {
                       Text("₹${_formatNumber(revenueToday)}",
                           style: GoogleFonts.dmSans(
                               color: Colors.white,
-                              fontSize: 24,
+                              fontSize: 28,
                               fontWeight: FontWeight.w800)),
                     ],
                   ),
@@ -1188,143 +1164,227 @@ class _DashboardScreenState extends State<DashboardScreen> {
   }
 
   // ═══════════════════════════════════════════════════
-  // STRATEGY-ORDERED QUICK ACTIONS
+  // QUICK ACTIONS GRID (2x2)
   // ═══════════════════════════════════════════════════
-  List<Widget> _buildStrategyActions(String crop) {
-    final actions = <Widget>[];
+  Widget _buildQuickActionsGrid() {
+    final items = <_ActionItem>[];
     final added = <String>{};
 
-    void addAction(String id, String title, String sub, IconData icon, Color c,
-        Widget screen) {
+    void addItem(String id, String title, String sub, IconData icon, Color c,
+        Widget screen, String imageUrl) {
       if (added.contains(id)) return;
       added.add(id);
-      final isPrimary = actions.isEmpty; // Make the first one Primary
-      actions.add(_buildActionCard(
-          title,
-          sub,
-          icon,
-          c,
-          isPrimary,
-          () => Navigator.push(
-              context, MaterialPageRoute(builder: (_) => screen))));
+      items.add(_ActionItem(
+        id: id,
+        title: title,
+        subtitle: sub,
+        icon: icon,
+        color: c,
+        screen: screen,
+        isPrimary: items.isEmpty,
+        imageUrl: imageUrl,
+      ));
     }
-
-    addAction('pest', "Scan Leaf", "Identify issues", Icons.camera_alt,
-        AppTheme.primaryGreen, PestVisionScreen(currentCrop: crop));
 
     for (final card in _strategy.cardPriority) {
       if (card.contains('price') || card == 'daily_price') {
-        addAction('price', "Price Forecast", "Short & long term",
-            Icons.show_chart, AppTheme.accentBlue, const PriceScreen());
+        addItem('price', "Price Forecast", "Short & long term",
+            Icons.show_chart, AppTheme.accentBlue, const PriceScreen(),
+            'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&q=80');
       } else if (card.contains('mandi') || card == 'mandi_compare') {
-        addAction('mandi', "Mandi Prices", "Compare nearby", Icons.storefront,
-            AppTheme.accentPurple, const MandiScreen());
+        addItem('mandi', "Mandi Prices", "Compare nearby", Icons.storefront,
+            AppTheme.accentPurple, const MandiScreen(),
+            'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&q=80');
       } else if (card.contains('sell') ||
           card == 'sell_hold' ||
           card == 'sell_window') {
-        addAction(
+        addItem(
             'rec',
             "Sell/Hold Advice",
             "When to sell",
             Icons.lightbulb_outline,
             AppTheme.accentOrange,
-            const RecommendationScreen());
+            const RecommendationScreen(),
+            'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&q=80');
       }
     }
 
-    addAction('yield', "Yield Estimate", "Predict harvest", Icons.grass,
-        AppTheme.primaryGreen, const YieldScreen());
-    addAction('price', "Price Forecast", "Short & long term", Icons.show_chart,
-        AppTheme.accentBlue, const PriceScreen());
-    addAction(
+    addItem('yield', "Yield Estimate", "Predict harvest", Icons.grass,
+        AppTheme.primaryGreen, const YieldScreen(),
+        'https://images.unsplash.com/photo-1574943320219-553eb213f72d?w=400&q=80');
+    addItem('price', "Price Forecast", "Short & long term", Icons.show_chart,
+        AppTheme.accentBlue, const PriceScreen(),
+        'https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?w=400&q=80');
+    addItem(
         'rec',
         "Sell/Hold Advice",
         "When to sell",
         Icons.lightbulb_outline,
         AppTheme.accentOrange,
-        const RecommendationScreen());
-    addAction('mandi', "Mandi Prices", "Compare nearby", Icons.storefront,
-        AppTheme.accentPurple, const MandiScreen());
+        const RecommendationScreen(),
+        'https://images.unsplash.com/photo-1454165804606-c3d57bc86b40?w=400&q=80');
+    addItem('mandi', "Mandi Prices", "Compare nearby", Icons.storefront,
+        AppTheme.accentPurple, const MandiScreen(),
+        'https://images.unsplash.com/photo-1542838132-92c53300491e?w=400&q=80');
 
-    return actions.take(4).toList();
+    final finalItems = items.take(4).toList();
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 16),
+      child: Column(
+        children: [
+          // First Row
+          Row(
+            children: [
+              Expanded(child: _buildActionCard(finalItems[0])),
+              const SizedBox(width: 12),
+              Expanded(child: finalItems.length > 1
+                  ? _buildActionCard(finalItems[1])
+                  : const SizedBox()),
+            ],
+          ),
+          const SizedBox(height: 12),
+          // Second Row
+          Row(
+            children: [
+              Expanded(child: finalItems.length > 2
+                  ? _buildActionCard(finalItems[2])
+                  : const SizedBox()),
+              const SizedBox(width: 12),
+              Expanded(child: finalItems.length > 3
+                  ? _buildActionCard(finalItems[3])
+                  : const SizedBox()),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   // ═══════════════════════════════════════════════════
-  // HORIZONTAL QUICK ACTION CARDS
+  // QUICK ACTION CARD (GRID ITEM)
   // ═══════════════════════════════════════════════════
-  Widget _buildActionCard(String title, String subtitle, IconData icon,
-      Color color, bool isPrimary, VoidCallback onTap) {
+  Widget _buildActionCard(_ActionItem item) {
     return Container(
-      width: 160, // Exactly match the wide card ratio
-      margin: const EdgeInsets.only(right: 14),
+      height: 160,
       decoration: BoxDecoration(
-        color: isPrimary ? const Color(0xFFCAE87E) : Colors.white,
-        borderRadius: BorderRadius.circular(24), // Softer corners
-        boxShadow: isPrimary
-            ? []
-            : [
-                BoxShadow(
-                  color: Colors.black.withOpacity(0.04),
-                  blurRadius: 16,
-                  offset: const Offset(0, 4),
-                )
-              ],
+        borderRadius: BorderRadius.circular(24),
+        boxShadow: [
+          BoxShadow(
+            color: Colors.black.withOpacity(0.08),
+            blurRadius: 16,
+            offset: const Offset(0, 4),
+          )
+        ],
       ),
+      clipBehavior: Clip.antiAlias,
       child: Material(
         color: Colors.transparent,
         child: InkWell(
-          onTap: onTap,
+          onTap: () => Navigator.push(
+              context, MaterialPageRoute(builder: (_) => item.screen)),
           borderRadius: BorderRadius.circular(24),
-          child: Padding(
-            padding: const EdgeInsets.all(16), // Larger padding
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
+          child: Stack(
+            fit: StackFit.expand,
+            children: [
+              // Background image
+              Image.network(
+                item.imageUrl,
+                fit: BoxFit.cover,
+                errorBuilder: (_, __, ___) => Container(
+                  color: item.isPrimary
+                      ? const Color(0xFFCAE87E)
+                      : Colors.grey[200],
+                ),
+              ),
+              // Gradient overlay for text readability
+              Container(
+                decoration: BoxDecoration(
+                  gradient: LinearGradient(
+                    colors: [
+                      Colors.black.withOpacity(0.1),
+                      Colors.black.withOpacity(0.65),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+              ),
+              // Content
+              Padding(
+                padding: const EdgeInsets.all(14),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Icon(icon,
-                        color: isPrimary
-                            ? const Color(0xFF1B4332)
-                            : Colors.grey[400],
-                        size: 16),
-                    const SizedBox(width: 6),
-                    Text(isPrimary ? "Now" : "Later",
+                    // Status pill
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 10, vertical: 4),
+                      decoration: BoxDecoration(
+                        color: item.isPrimary
+                            ? const Color(0xFFCAE87E)
+                            : Colors.white.withOpacity(0.85),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Row(
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Icon(item.icon,
+                              color: item.isPrimary
+                                  ? const Color(0xFF1B4332)
+                                  : Colors.grey[600],
+                              size: 12),
+                          const SizedBox(width: 4),
+                          Text(item.isPrimary ? "Now" : "Later",
+                              style: GoogleFonts.dmSans(
+                                  color: item.isPrimary
+                                      ? const Color(0xFF1B4332)
+                                      : Colors.grey[700],
+                                  fontSize: 11,
+                                  fontWeight: FontWeight.w600)),
+                        ],
+                      ),
+                    ),
+                    const Spacer(),
+                    // Title
+                    Text(item.title,
+                        maxLines: 2,
+                        overflow: TextOverflow.ellipsis,
                         style: GoogleFonts.dmSans(
-                            color: isPrimary
-                                ? const Color(0xFF1B4332)
-                                : Colors.grey[500],
-                            fontSize: 12,
-                            fontWeight: FontWeight.w500)),
+                            color: Colors.white,
+                            fontSize: 17,
+                            fontWeight: FontWeight.w700,
+                            height: 1.15,
+                            shadows: [
+                              Shadow(
+                                color: Colors.black.withOpacity(0.5),
+                                blurRadius: 4,
+                              )
+                            ])),
+                    const SizedBox(height: 6),
+                    // Subtitle chip
+                    Container(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 12, vertical: 6),
+                      decoration: BoxDecoration(
+                        color: item.isPrimary
+                            ? const Color(0xFF1B4332)
+                            : Colors.white.withOpacity(0.9),
+                        borderRadius: BorderRadius.circular(16),
+                      ),
+                      child: Text(
+                          item.isPrimary ? item.subtitle : "Explore",
+                          style: GoogleFonts.dmSans(
+                              color: item.isPrimary
+                                  ? Colors.white
+                                  : AppTheme.textDark,
+                              fontSize: 10,
+                              fontWeight: FontWeight.w700)),
+                    ),
                   ],
                 ),
-                const Spacer(),
-                Text(title,
-                    maxLines: 3,
-                    overflow: TextOverflow.ellipsis,
-                    style: GoogleFonts.dmSans(
-                        color: AppTheme.textDark,
-                        fontSize: 18,
-                        fontWeight: FontWeight.w700,
-                        height: 1.1) // Bigger title, tighter line height
-                    ),
-                const SizedBox(height: 12),
-                Container(
-                  padding:
-                      const EdgeInsets.symmetric(horizontal: 14, vertical: 8),
-                  decoration: BoxDecoration(
-                    color: isPrimary
-                        ? const Color(0xFF1B4332)
-                        : const Color(0xFF555555),
-                    borderRadius: BorderRadius.circular(20), // Rounded capsule
-                  ),
-                  child: Text(isPrimary ? subtitle : "Pending",
-                      style: GoogleFonts.dmSans(
-                          color: Colors.white,
-                          fontSize: 10,
-                          fontWeight: FontWeight.w700)),
-                ),
-              ],
-            ),
+              ),
+            ],
           ),
         ),
       ),
@@ -1336,4 +1396,26 @@ class _DashboardScreenState extends State<DashboardScreen> {
     if (n >= 1000) return "${(n / 1000).toStringAsFixed(1)}K";
     return n.toStringAsFixed(0);
   }
+}
+
+class _ActionItem {
+  final String id;
+  final String title;
+  final String subtitle;
+  final IconData icon;
+  final Color color;
+  final Widget screen;
+  final bool isPrimary;
+  final String imageUrl;
+
+  const _ActionItem({
+    required this.id,
+    required this.title,
+    required this.subtitle,
+    required this.icon,
+    required this.color,
+    required this.screen,
+    required this.isPrimary,
+    required this.imageUrl,
+  });
 }
